@@ -5628,6 +5628,20 @@ def render_legacy_workflow_redirect(site_url: str) -> str:
 SITEMAP_SECTIONS: tuple[str, ...] = ("pages", "offers", "providers", "models", "english")
 
 
+def public_api_review_urls() -> list[str]:
+    registry_path = ACCESS_DATA_DIR / "public-api-directory.json"
+    if not registry_path.is_file():
+        return []
+    try:
+        registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError(f"cannot load public API directory from {registry_path}: {error}") from error
+    resources = registry.get("resources") if isinstance(registry, dict) else None
+    if not isinstance(resources, list):
+        raise ValueError("public API directory resources must be an array")
+    return [f"/public-api/reviews/{resource['id']}/" for resource in resources if isinstance(resource, dict) and resource.get("id")]
+
+
 def sitemap_section_paths(
     offers: list[dict],
     categories: list[str],
@@ -5650,6 +5664,8 @@ def sitemap_section_paths(
         "/submit/",
         "/tools/",
         "/health/",
+        "/public-api/",
+        *public_api_review_urls(),
         guide_url(),
         GETTING_STARTED_GUIDE_PATH,
         *[GETTING_STARTED_GUIDE_PATH + provider_id + "/" for provider_id in GETTING_STARTED_PROVIDER_IDS],
@@ -6318,7 +6334,7 @@ def _read_manifest(output_root: Path) -> list[str]:
     return manifest["files"]
 
 
-MANAGED_PAGE_ROOTS = {"offers", "category", "guides", "models", "providers", "logs", "skills", "workflow", "prompts"}
+MANAGED_PAGE_ROOTS = {"offers", "category", "guides", "models", "providers", "logs", "skills", "workflow", "prompts", "public-api"}
 
 
 def _safe_manifest_page(output_root: Path, relative: str) -> Path | None:
@@ -6638,7 +6654,7 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         rail_note = '<div class="fl-site-rail-note"><span>More AI</span><br>A Brighter You.</div>'
         rail_footer = '<div class="fl-site-rail-footer">FreeLLM<br>让优质 AI 资源触手可及<small>© 2026 FreeLLM</small></div>'
     chrome = (
-        '<script src="/js/site-navigation.js?v=20261009-prompt-library"></script>'
+        '<script src="/js/site-navigation.js?v=20261016-public-api-menu"></script>'
         '<aside class="fl-site-rail" aria-label="FreeLLM 主导航">'
         f'<a class="fl-site-brand" href="/">{brand_mark}'
         f'<span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>{brand_subtitle}</small></span></a>'

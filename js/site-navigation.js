@@ -3,13 +3,14 @@
 
   if (window.FreeLLMNavigation) return;
 
-  var navigationKeys = new Set(['home', 'models', 'health', 'skills', 'prompts', 'tools', 'workflow', 'logs', 'about']);
+  var navigationKeys = new Set(['home', 'models', 'health', 'skills', 'prompts', 'public-api', 'tools', 'workflow', 'logs', 'about']);
   var navigationPaths = new Map([
     ['/', 'home'],
     ['/models/', 'models'],
     ['/health/', 'health'],
     ['/skills/', 'skills'],
     ['/prompts/', 'prompts'],
+    ['/public-api/', 'public-api'],
     ['/tools/', 'tools'],
     ['/workflow/', 'workflow'],
     ['/logs/', 'logs'],
@@ -17,7 +18,8 @@
   ]);
   var navigationInProgress = false;
   var requestController = null;
-  var sharedNavigationCss = '/css/primary-menu.css?v=20261009-prompt-library';
+  var navigationEpoch = 0;
+  var sharedNavigationCss = '/css/primary-menu.css?v=20261016-public-api-menu';
   var updateIndicatorReady = false;
   // Cmd/Ctrl+K works on all pages, without hijacking a focused editor.
   document.addEventListener('keydown', function(event) {
@@ -127,18 +129,29 @@
         else link.removeAttribute('aria-current');
       });
     }
+    var english = /^en(?:-|$)/i.test(document.documentElement.lang || '');
     if (rail.dataset.flSharedNavigation === 'true') {
+      var navList = rail.querySelector('.fl-site-nav');
+      if (navList && !navList.querySelector('[data-site-nav="public-api"]')) {
+        var publicLink = document.createElement('a');
+        publicLink.href = '/public-api/';
+        publicLink.dataset.siteNav = 'public-api';
+        publicLink.setAttribute('aria-label', '公益 AI API 导航 / Public AI APIs');
+        publicLink.innerHTML = '<span class="fl-site-nav-icon" aria-hidden="true">♡</span><span>' + (english ? 'Public APIs' : '公益站') + '</span>';
+        var promptLink = navList.querySelector('[data-site-nav="prompts"]');
+        navList.insertBefore(publicLink, promptLink ? promptLink.nextSibling : null);
+      }
       updateCurrentItem();
       refreshUpdateIndicator();
       return;
     }
 
-    var english = /^en(?:-|$)/i.test(document.documentElement.lang || '');
     var labels = [
       ['home', '/', '⌂', english ? 'Home' : '首页'],
       ['models', '/models/', '▣', english ? 'Models' : '模型'],
       ['skills', '/skills/', '✦', english ? 'Skills' : '技能'],
       ['prompts', '/prompts/', '✧', english ? 'Prompts' : '提示词'],
+      ['public-api', '/public-api/', '♡', english ? 'Public APIs' : '公益站'],
       ['tools', '/tools/', '⌘', english ? 'Tools' : '工具'],
       ['workflow', '/workflow/', '⌁', english ? 'Workflows' : '工作流'],
       ['logs', '/logs/', '◷', english ? 'Discoveries' : '今日发现'],
@@ -148,7 +161,8 @@
     if (active === 'health') active = 'models';
     var links = labels.map(function (item) {
       var current = item[0] === active ? ' aria-current="page"' : '';
-      var accessibleLabel = item[0] === 'prompts' ? ' aria-label="Prompt 模板库 / Prompt library"' : '';
+      var accessibleLabel = item[0] === 'prompts' ? ' aria-label="Prompt 模板库 / Prompt library"' :
+        item[0] === 'public-api' ? ' aria-label="公益 AI API 导航 / Public AI APIs"' : '';
       return '<a href="' + item[1] + '" data-site-nav="' + item[0] + '"' + current + accessibleLabel + '><span class="fl-site-nav-icon" aria-hidden="true">' + item[2] + '</span><span>' + item[3] + '</span></a>';
     }).join('');
 
@@ -259,18 +273,33 @@
       return !node.hasAttribute('data-fl-shared-navigation-styles');
     });
     var nextStyles = [];
+    var addedStyles = [];
     var styleLoads = [];
     Array.from(parsed.head.querySelectorAll('link[rel="stylesheet"], style')).forEach(function (node) {
       var copy = node.cloneNode(true);
       copy.setAttribute('data-fl-navigation-style', '');
       if (copy.tagName === 'LINK') {
-        copy.href = new URL(node.getAttribute('href'), responseUrl).href;
-        copy.dataset.flNavigationMedia = copy.getAttribute('media') || '';
+        var href = new URL(node.getAttribute('href'), responseUrl).href;
+        var printLoader = /this\.media\s*=\s*['"]all['"]/.test(node.getAttribute('onload') || '');
+        var desiredMedia = printLoader ? 'all' : (node.getAttribute('media') || '');
+        var reused = previousStyles.find(function (existing) {
+          return existing.tagName === 'LINK' && existing.href === href &&
+            !nextStyles.includes(existing) &&
+            ((existing.getAttribute('media') || '') === desiredMedia ||
+             (desiredMedia === 'all' && !existing.getAttribute('media')));
+        });
+        if (reused) {
+          nextStyles.push(reused);
+          return;
+        }
+        copy.href = href;
+        if (printLoader) copy.removeAttribute('onload');
+        copy.dataset.flNavigationMedia = desiredMedia;
         copy.setAttribute('media', 'not all');
       } else {
         copy.disabled = true;
       }
-      if (copy.tagName === 'LINK' && new URL(copy.href, window.location.href).origin === window.location.origin && !copy.sheet) {
+      if (copy.tagName === 'LINK' && new URL(copy.href, window.location.href).origin === window.location.origin) {
         styleLoads.push(new Promise(function (resolve) {
           copy.addEventListener('load', resolve, { once: true });
           copy.addEventListener('error', resolve, { once: true });
@@ -278,21 +307,30 @@
       }
       document.head.appendChild(copy);
       nextStyles.push(copy);
+      addedStyles.push(copy);
     });
 
-    // Keep the current page styled until every incoming stylesheet is ready.
-    // Removing the old sheets first briefly leaves the persistent sidebar
-    // unstyled, which looks like the menu itself is reloading on every click.
-    await Promise.all(styleLoads);
+    if (styleLoads.length) {
+      var timeoutId;
+      await Promise.race([
+        Promise.all(styleLoads),
+        new Promise(function (resolve) { timeoutId = setTimeout(resolve, 2500); })
+      ]);
+      clearTimeout(timeoutId);
+    }
 
-    return function commitStyles() {
+    return function commitStyles(activate) {
+      if (activate === false) {
+        addedStyles.forEach(function (node) { node.remove(); });
+        return;
+      }
       nextStyles.forEach(function (node) {
-        if (node.tagName === 'LINK') {
+        if (node.tagName === 'LINK' && node.hasAttribute('data-fl-navigation-style')) {
           var media = node.dataset.flNavigationMedia;
           if (media) node.setAttribute('media', media);
           else node.removeAttribute('media');
           delete node.dataset.flNavigationMedia;
-        } else {
+        } else if (node.tagName === 'STYLE' && node.hasAttribute('data-fl-navigation-style')) {
           node.disabled = false;
         }
       });
@@ -464,6 +502,7 @@
     var fromPage = currentPage();
     if (url.origin !== window.location.origin || !navigationPaths.has(url.pathname)) return false;
     if (url.href === window.location.href && !settings.force) return true;
+    var epoch = ++navigationEpoch;
     if (requestController) requestController.abort();
     requestController = new AbortController();
     navigationInProgress = true;
@@ -477,6 +516,7 @@
       if (!response.ok) throw new Error('Navigation returned HTTP ' + response.status);
       var responseUrl = response.url || pageUrl.href;
       var parsed = new DOMParser().parseFromString(await response.text(), 'text/html');
+      if (epoch !== navigationEpoch) return false;
       if (!parsed.body || !parsed.body.querySelector('.fl-site-rail') || !parsed.body.querySelector('.fl-site-ribbon')) {
         throw new Error('Navigation document is missing the shared site shell');
       }
@@ -495,6 +535,7 @@
       activateMenu(parsed);
       replaceMetadata(parsed);
       var commitStyles = await replaceStyles(parsed, responseUrl);
+      if (epoch !== navigationEpoch) { commitStyles(false); return false; }
       if (!replacePageChrome(parsed)) throw new Error('Current page is missing the shared site shell');
       commitStyles();
       for (var index = 0; index < scripts.length; index += 1) await runScript(scripts[index], responseUrl);
@@ -515,7 +556,7 @@
       }
       return false;
     } finally {
-      navigationInProgress = false;
+      if (epoch === navigationEpoch) navigationInProgress = false;
     }
   }
 

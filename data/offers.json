@@ -87,7 +87,8 @@
       "cnHost": "www.codebuddy.cn",
       "cnMs": 309,
       "intlMs": 413
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "qoder",
@@ -123,17 +124,17 @@
     },
     "kicker": "FREE IDE",
     "badges": [
-      "QWEN3.8 PROMO ENDED",
-      "BASE FREE/TRIAL CHECK"
+      "QWEN3.8-FLASH 0 CREDITS",
+      "延期 · 结束时间待官方公告"
     ],
-    "freeSummary": "Qwen3.8-Flash 0-Credit 活动于 2026-09-30 结束；基础免费/试用与每日 Credits 以 Qoder 当前官方页面为准。",
-    "validitySummary": "9 月 30 日 0-Credit 活动已结束；基础额度请按官方现行条款核实",
+    "freeSummary": "Qwen3.8-Flash 限时免费已延期：10 月 1 日起继续 0 Credits（计费系数 0.0×），结束时间官方将提前公告；免费账号、Credits 余额为 0 的国际版个人账号也可用。",
+    "validitySummary": "原定 2026-09-30 结束，官方已延长；新的结束日期尚未公布（以官方活动页公告为准）",
     "accessSummary": "International",
-    "checkedSummary": "2026-09-29 / official pricing + announcement",
+    "checkedSummary": "2026-10-10 / Qoder 官方活动页：Qwen3.8-Flash 免费期已延长，结束时间将提前公告",
     "title": "Qoder · Experience plan",
-    "why": "Qoder's official announcements state that Qwen3.8-Flash runs at 0.0× Credits from Sep 18 through Sep 30, 2026 (UTC+8), and individual users can manually claim 100 Credits per day. The daily reward expires 30 days after each claim.",
-    "mechanism": "Baseline free/trial plan plus a temporary Qwen3.8-Flash 0× Credits promotion and daily 100-Credit manual claims",
-    "validity": "Qwen3.8-Flash 0× Credits through 2026-09-30 23:59:59 UTC+8; each claimed daily 100-Credit reward expires after 30 days",
+    "why": "Qoder's official event page (docs.qoder.com/zh/events/flashoffer) says Qwen3.8-Flash runs at 0.0x Credits for international individual users since 2026-09-18 10:00 (UTC+8). The free period originally ending 2026-09-30 has been extended: it continues from October 1, and the end time will be announced on that page in advance. Free accounts and accounts with 0 Credits can use it; Teams/Enterprise plans are excluded.",
+    "mechanism": "Temporary Qwen3.8-Flash 0x Credits promotion (extended, end date TBA) on top of the baseline free/trial plan and daily 100-Credit claims",
+    "validity": "Qwen3.8-Flash 0x Credits since 2026-09-18; extended beyond 2026-09-30 with no announced end date yet; each claimed daily 100-Credit reward expires after 30 days",
     "access": "International product",
     "command": "Download Qoder from the official site, then sign in to claim the trial.",
     "register": "https://qoder.com/",
@@ -146,26 +147,31 @@
       [
         "Download",
         "https://qoder.com/"
+      ],
+      [
+        "Qwen3.8-Flash 限时免费活动页（已延期）",
+        "https://docs.qoder.com/zh/events/flashoffer"
       ]
     ],
     "originCountry": "China",
     "availability": "International product",
     "freeMechanism": "trial",
-    "quota": "Qwen3.8-Flash at 0× Credits during the promotion; 100 Credits/day claim window for eligible individual users; baseline trial rules still apply",
+    "quota": "Qwen3.8-Flash at 0x Credits (no Credits consumed) during the extended promotion; 100 Credits/day claim window for eligible individual users",
     "renewal": "Trial terms may change; check the official account page",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "check provider terms",
     "sourceUrls": [
+      "https://docs.qoder.com/zh/events/flashoffer",
       "https://docs.qoder.com/zh/account/pricing",
       "https://forum.qoder.com/t/qwen3-8-flash-free-through-sept-30-plus-100-credits-to-claim-every-day/12615"
     ],
-    "evidence": "Official Qoder announcement: Qwen3.8-Flash consumes no Credits from 2026-09-18 10:00 through 2026-09-30 23:59:59 (UTC+8); a new 100-Credit claim window opens daily at 10:00, and each reward is valid for 30 days.",
-    "status": "expired",
+    "evidence": "Official Qoder event page (checked 2026-10-10): 「活动延期：原定 9 月 30 日结束的免费期现已延长，10 月 1 日起继续免费。…结束时间将提前在本页公告。」 Applies to Qoder international individual users (free, Pro trial, Pro, Pro+, Ultra); Teams and Enterprise are excluded.",
+    "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-29",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
-    "notes": "The Qwen3.8-Flash 0× promotion is time-limited. Daily 100-Credit rewards require manual claiming and do not retroactively cover missed days.",
+    "notes": "The Qwen3.8-Flash 0x promotion is time-limited but was extended on 2026-09-29 (originally ending 2026-09-30); no end date has been announced yet, so do not mark it expired until Qoder posts one. Daily 100-Credit rewards require manual claiming and do not retroactively cover missed days.",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "OK",
@@ -182,13 +188,12 @@
     "freeModels": [
       {
         "model": "Qwen3.8-Flash",
-        "quota": "0× Credits through 2026-09-30 23:59:59 UTC+8",
-        "note": "Temporary Qoder promotion; no claim required for model usage.",
-        "sourceUrl": "https://forum.qoder.com/t/qwen3-8-flash-free-through-sept-30-plus-100-credits-to-claim-every-day/12615"
+        "quota": "0x Credits since 2026-09-18 10:00 UTC+8; extended past 2026-09-30, end date to be announced",
+        "note": "Temporary Qoder promotion for international individual users; no claim required. Teams/Enterprise excluded.",
+        "sourceUrl": "https://docs.qoder.com/zh/events/flashoffer"
       }
     ],
-    "expires_at": "2026-09-30",
-    "expired_scope": "promotion"
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "trae",
@@ -230,7 +235,7 @@
     "freeSummary": "免费版每月 500 积分，所有功能均可免费使用",
     "validitySummary": "Ongoing / subject to limits",
     "accessSummary": "China account",
-    "checkedSummary": "Today / official pricing",
+    "checkedSummary": "2026-10-10 / TRAE 官方定价页：Free ¥0，每月 500 积分",
     "title": "TraeCode CN · Personal plan",
     "why": "The official China pricing page lists the personal plan at ¥0. Exact quota depends on the product mode and current operating rules, so the directory intentionally avoids inventing a fixed token number.",
     "mechanism": "500 credits / month; all features usable free; 2 concurrent cloud tasks",
@@ -263,7 +268,7 @@
     "evidence": "Official China pricing page lists the personal version at ¥0; exact mode quota is not fixed in this directory.",
     "status": "verified",
     "confidence": "medium",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "notes": "2026-09-17 复验：官方定价页显示免费 Free 计划为 ¥0，含「每月 500 积分 / 所有功能均可免费使用 / 支持 2 个云端任务同时执行」。此前的 'mode-dependent quota' 描述与官方页面不符，已更正。",
     "key": true,
@@ -385,7 +390,8 @@
       "quotaTier": "high",
       "reason": "实测 191ms · 官方长期免费",
       "reasonEn": "191 ms measured · permanently free"
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "doubao",
@@ -478,7 +484,8 @@
       "cnHost": "www.volcengine.com",
       "cnMs": 327,
       "intlMs": 953
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "glm",
@@ -558,7 +565,7 @@
     "confidence": "high",
     "lastVerifiedAt": "2026-10-08",
     "checkedBy": "manual",
-    "notes": "Historical campaign entry. Do not describe the Sep 3–Oct 7 night benefit as currently available.",
+    "notes": "Historical campaign entry. Do not describe the Sep 3–Oct 7 night benefit as currently available. 2026-10-08 标记为 expired：限时活动已结束，剩余内容为付费套餐，不再作为免费入口展示。GLM-5.3 / GLM-5.3-Flash 为付费模型；官方免费模型是 glm-4.7-flash、glm-4-flash-250414、glm-4.6v-flash（glm-4.5-flash 已于 2026-01-30 下线）。",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "OK",
@@ -573,7 +580,8 @@
       "intlMs": 331
     },
     "expires_at": "2026-10-07",
-    "expired_scope": "promotion"
+    "expired_scope": "promotion",
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "longcat-2-0",
@@ -615,7 +623,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${LONGCAT_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.longcat.chat/openai/v1/chat/completions --header 'Authorization: Bearer ${LONGCAT_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"LongCat-2.5-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"max_tokens\":1000}'",
+        "curl": "curl --request POST https://api.longcat.chat/openai/v1/chat/completions --header \"Authorization: Bearer $LONGCAT_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"LongCat-2.5-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"max_tokens\":1000}'",
         "shell": "python -m pip install -U huggingface_hub\nhuggingface-cli download meituan-longcat/LongCat-2.0 --local-dir ./LongCat-2.0"
       },
       "docsUrl": "https://longcat.chat/platform/docs/zh/"
@@ -699,6 +707,10 @@
       [
         "Hugging Face (2.0 weights)",
         "https://huggingface.co/meituan-longcat/LongCat-2.0"
+      ],
+      [
+        "OpenCode Zen：LongCat 2.5 Preview Free（限时）",
+        "https://opencode.ai/docs/en/zen/"
       ]
     ],
     "originCountry": "China",
@@ -715,14 +727,15 @@
       "https://longcat.chat/platform/docs/zh/FAQ.html",
       "https://longcat.chat/platform/docs/zh/ChangeLog.html",
       "https://github.com/meituan-longcat/LongCat-2.0",
-      "https://huggingface.co/meituan-longcat/LongCat-2.0"
+      "https://huggingface.co/meituan-longcat/LongCat-2.0",
+      "https://opencode.ai/docs/en/zen/"
     ],
     "evidence": "Official LongCat docs list LongCat-2.5-Preview and LongCat-2.0, 1M context and OpenAI/Anthropic-compatible APIs. The official FAQ tells users to ensure the account has sufficient balance and states Token Resource Packs support both models; no durable free API quota is documented.",
     "status": "needs_review",
     "confidence": "high",
     "lastVerifiedAt": "2026-09-29",
     "checkedBy": "manual",
-    "notes": "Do not label the LongCat official API as free without a published free-quota rule. LongCat-2.0 weights are free to download, but compute is not.",
+    "notes": "Do not label the LongCat official API as free without a published free-quota rule. LongCat-2.0 weights are free to download, but compute is not. 2026-10-10：OpenCode Zen 官方文档列出 longcat-2.5-preview-free 限时免费（零留存、不用于训练）。这是 OpenCode Zen 平台的限时免费路由，不代表美团 LongCat 官方 API 免费。",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "NEEDS_KEY",
@@ -837,7 +850,8 @@
       "cnHost": "github.com",
       "cnMs": 1516,
       "intlMs": 39
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "glm-download",
@@ -936,7 +950,8 @@
       "cnHost": "github.com",
       "cnMs": 1328,
       "intlMs": 506
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "sensecore",
@@ -970,7 +985,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${SENSENOVA_API_KEY}",
       "examples": {
-        "curl": "curl https://token.sensenova.cn/v1/chat/completions --header 'Authorization: Bearer ${SENSENOVA_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"sensenova-6.8-flash-lite\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://token.sensenova.cn/v1/chat/completions --header \"Authorization: Bearer $SENSENOVA_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"sensenova-6.8-flash-lite\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://www.sensenova.cn/token-plan"
     },
@@ -1069,7 +1084,8 @@
       "quotaTier": "high",
       "reason": "实测 205ms · 免费额度 60,000 积分",
       "reasonEn": "205 ms measured · free quota 60,000 credits"
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "deepseek",
@@ -1102,7 +1118,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${DEEPSEEK_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.deepseek.com/chat/completions --header 'Authorization: Bearer ${DEEPSEEK_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"deepseek-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl --request POST https://api.deepseek.com/chat/completions --header \"Authorization: Bearer $DEEPSEEK_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"deepseek-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/"
     },
@@ -1176,7 +1192,8 @@
       "requestsPerMonth": null,
       "urlsPerMinute": null,
       "concurrency": 2500
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "opencode-zen-free",
@@ -1186,7 +1203,7 @@
     "providerMark": "OC",
     "provider": "OpenCode Zen",
     "providerMeta": "OpenCode · International",
-    "model": "MiMo-V2.6-Flash Free · Big Pickle · MiMo-V2.5 Free · Ling 3.0 Flash Fin Free · Nemotron · Muse Spark",
+    "model": "MiMo-V2.6-Flash Free · Big Pickle · Step 5 Preview Free · Ling 3.1 Flash Free · Ling 3.0 Flash Fin Free · LongCat 2.5 Preview Free · Exo Free · Nemotron · Muse Spark",
     "modelMeta": "Hosted coding models · MiMo-V2.6-Flash Free verified in live Zen catalog",
     "type": [
       "coding",
@@ -1210,7 +1227,7 @@
       "method": "POST",
       "authentication": "OpenCode Zen API key",
       "examples": {
-        "curl": "curl --request POST https://opencode.ai/zen/v1/chat/completions --header 'Authorization: Bearer ${OPENCODE_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"mimo-v2.6-flash-free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl --request POST https://opencode.ai/zen/v1/chat/completions --header \"Authorization: Bearer $OPENCODE_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"mimo-v2.6-flash-free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://opencode.ai/docs/en/zen/"
     },
@@ -1223,7 +1240,7 @@
     "freeSummary": "MiMo-V2.6-Flash Free and other selected Zen models · input, output and cache listed as Free",
     "validitySummary": "Limited time / free model pool can change",
     "accessSummary": "Global / OpenCode account",
-    "checkedSummary": "2026-09-24 / official OpenCode Zen docs + live model catalog + real OpenCode CLI generation",
+    "checkedSummary": "2026-10-10 / OpenCode Zen /zen/v1/models + 官方定价表：mimo-v2.5-free 已不在实时模型列表（文档页仍列出，待复核，已从本条移除）；新增 step-5-preview-free、ling-3.1-flash-free、longcat-2.5-preview-free（定价表均标 Free，限时）",
     "title": "OpenCode Zen · free model pool",
     "why": "OpenCode Zen's official documentation lists MiMo-V2.6-Flash Free at Free input, output and cached-read pricing and explicitly says the model is available free for a limited time. This is a hosted free route from OpenCode, separate from Xiaomi's paid official API.",
     "mechanism": "Selected Zen models, including MiMo-V2.6-Flash Free, free for a limited time",
@@ -1261,9 +1278,9 @@
     "evidence": "2026-09-23 核验：OpenCode Zen 官方模型表列出 MiMo-V2.6-Flash Free，模型 ID 为 mimo-v2.6-flash-free，endpoint 为 /zen/v1/chat/completions；官方定价表将 input、output、cached read 均标为 Free，并明确说明该模型为 limited-time free。公开 /zen/v1/models 端点同日返回该模型 ID。",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-24",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
-    "notes": "不要把 OpenCode 的限时免费误写成 Xiaomi 官方 API 免费。OpenCode 说明免费期交互数据可能用于改进模型，不应提交个人、机密或敏感数据。2026-09-24 已通过官方 OpenCode CLI 对 opencode/mimo-v2.6-flash-free 完成一次真实生成并返回 MiMo OK；Zen 直连 HTTP chat completions 仍需 Zen API Key。",
+    "notes": "不要把 OpenCode 的限时免费误写成 Xiaomi 官方 API 免费。OpenCode 说明免费期交互数据可能用于改进模型，不应提交个人、机密或敏感数据。2026-09-24 已通过官方 OpenCode CLI 对 opencode/mimo-v2.6-flash-free 完成一次真实生成并返回 MiMo OK；Zen 直连 HTTP chat completions 仍需 Zen API Key。 不要把 OpenCode 的限时免费误写成 Xiaomi 官方 API 免费。OpenCode 说明免费期交互数据可能用于改进模型，不应提交个人、机密或敏感数据。2026-09-24 已通过官方 OpenCode CLI 对 opencode/mimo-v2.6-flash-free 完成一次真实生成并返回 MiMo OK；Zen 直连 HTTP chat completions 仍需 Zen API Key。 2026-10-09 复核：Fledge Alpha Free 已从官方免费列表移除；新增 Step 5 Preview Free（阶跃星辰官方宣布的一周免费活动之一）。 2026-10-10 复核：官方 Zen 文档（Last updated 2026-10-08）新增 Exo Free（免费期数据可能用于改进模型）与 LongCat 2.5 Preview Free（零留存），均为限时免费。",
     "endpointCheck": {
       "checkedAt": "2026-09-23",
       "verdict": "OK",
@@ -1314,7 +1331,24 @@
           "note": "核验 1M context、128K max output、100 RPM / 10M TPM 与 Xiaomi 官方付费 API 价格"
         }
       ]
-    }
+    },
+    "lastObservedAt": "2026-10-15",
+    "freeModels": [
+      {
+        "model": "exo-free",
+        "label": "Exo Free",
+        "quota": "输入 / 输出 / 缓存读取均为 Free（限时）",
+        "note": "限时免费；免费期请求数据可能被用于改进模型（官方 Privacy 段）",
+        "sourceUrl": "https://opencode.ai/docs/en/zen/"
+      },
+      {
+        "model": "longcat-2.5-preview-free",
+        "label": "LongCat 2.5 Preview Free",
+        "quota": "输入 / 输出 / 缓存读取均为 Free（限时）",
+        "note": "限时免费；提供方零留存，不用于训练",
+        "sourceUrl": "https://opencode.ai/docs/en/zen/"
+      }
+    ]
   },
   {
     "id": "github-copilot-free",
@@ -1413,7 +1447,8 @@
       "cnHost": "github.com",
       "cnMs": 1864,
       "intlMs": 394
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "cursor-hobby",
@@ -1521,7 +1556,8 @@
       "cnHost": "cursor.com",
       "cnMs": 536,
       "intlMs": 79
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "amazon-q-free",
@@ -1617,7 +1653,8 @@
       "cnHost": "aws.amazon.com",
       "cnMs": 1046,
       "intlMs": 218
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "google-antigravity-free",
@@ -1714,7 +1751,8 @@
       "cnHost": null,
       "cnMs": null,
       "intlMs": 89
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "aliyun-qwen-free-quota",
@@ -1750,7 +1788,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${DASHSCOPE_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions --header 'Authorization: Bearer ${DASHSCOPE_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl --request POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions --header \"Authorization: Bearer $DASHSCOPE_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://help.aliyun.com/zh/model-studio/new-free-quota"
     },
@@ -1853,7 +1891,8 @@
       "overageBehavior": "metered",
       "prices": []
     },
-    "edition": "cn"
+    "edition": "cn",
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "keenable-search-free",
@@ -1997,7 +2036,8 @@
       "cnHost": "api.keenable.ai",
       "cnMs": 1646,
       "intlMs": 117
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "tinyfish-search-fetch-free",
@@ -2099,7 +2139,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${TINYFISH_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.tinyfish.io/search --header 'Authorization: Bearer ${TINYFISH_API_KEY}' --header 'Content-Type: application/json' --data '{\"query\":\"latest AI news\"}'"
+        "curl": "curl --request POST https://api.tinyfish.io/search --header \"Authorization: Bearer $TINYFISH_API_KEY\" --header 'Content-Type: application/json' --data '{\"query\":\"latest AI news\"}'"
       },
       "quotaGuard": [
         "Search 控制在 30 requests/minute 和 500/hour",
@@ -2122,7 +2162,8 @@
       "deadTargets": [
         "https://api.tinyfish.io/search"
       ]
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "tinyfish-agent-browser-metered",
@@ -2227,7 +2268,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${TINYFISH_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.tinyfish.io/agent --header 'Authorization: Bearer ${TINYFISH_API_KEY}' --header 'Content-Type: application/json' --data '{\"task\":\"Open the official homepage\"}'"
+        "curl": "curl --request POST https://api.tinyfish.io/agent --header \"Authorization: Bearer $TINYFISH_API_KEY\" --header 'Content-Type: application/json' --data '{\"task\":\"Open the official homepage\"}'"
       },
       "quotaGuard": [
         "Agent 按 step 计费",
@@ -2250,7 +2291,8 @@
       "deadTargets": [
         "https://api.tinyfish.io/agent"
       ]
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "tavily-web-free-credits",
@@ -2365,7 +2407,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${TAVILY_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.tavily.com/search --header 'Content-Type: application/json' --header 'Authorization: Bearer ${TAVILY_API_KEY}' --data '{\"query\":\"latest AI news\",\"search_depth\":\"basic\",\"max_results\":5}'"
+        "curl": "curl --request POST https://api.tavily.com/search --header 'Content-Type: application/json' --header \"Authorization: Bearer $TAVILY_API_KEY\" --data '{\"query\":\"latest AI news\",\"search_depth\":\"basic\",\"max_results\":5}'"
       },
       "quotaGuard": [
         "basic Search 每次 1 credit",
@@ -2391,7 +2433,8 @@
       "cnHost": "api.tavily.com",
       "cnMs": 1858,
       "intlMs": 419
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "exa-web-free-credits",
@@ -2503,7 +2546,7 @@
       "method": "POST",
       "authentication": "x-api-key: ${EXA_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.exa.ai/search --header 'x-api-key: ${EXA_API_KEY}' --header 'Content-Type: application/json' --data '{\"query\":\"latest AI news\",\"type\":\"auto\",\"numResults\":5}'"
+        "curl": "curl --request POST https://api.exa.ai/search --header \"x-api-key: $EXA_API_KEY\" --header 'Content-Type: application/json' --data '{\"query\":\"latest AI news\",\"type\":\"auto\",\"numResults\":5}'"
       },
       "quotaGuard": [
         "按美元 credits 而不是请求次数扣减",
@@ -2529,7 +2572,8 @@
       "cnHost": "api.exa.ai",
       "cnMs": 1062,
       "intlMs": 154
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "you-web-free-tier",
@@ -2644,7 +2688,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${YOU_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.you.com/v1/search --header 'Authorization: Bearer ${YOU_API_KEY}' --header 'Content-Type: application/json' --data '{\"query\":\"latest AI news\"}'"
+        "curl": "curl --request POST https://api.you.com/v1/search --header \"Authorization: Bearer $YOU_API_KEY\" --header 'Content-Type: application/json' --data '{\"query\":\"latest AI news\"}'"
       },
       "quotaGuard": [
         "keyless Search 控制在 100 queries/day",
@@ -2669,7 +2713,8 @@
       "cnHost": null,
       "cnMs": null,
       "intlMs": 2491
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "firecrawl-web-free-credits",
@@ -2784,7 +2829,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${FIRECRAWL_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.firecrawl.dev/v2/search --header 'Authorization: Bearer ${FIRECRAWL_API_KEY}' --header 'Content-Type: application/json' --data '{\"query\":\"latest AI news\",\"limit\":5}'"
+        "curl": "curl --request POST https://api.firecrawl.dev/v2/search --header \"Authorization: Bearer $FIRECRAWL_API_KEY\" --header 'Content-Type: application/json' --data '{\"query\":\"latest AI news\",\"limit\":5}'"
       },
       "quotaGuard": [
         "Search 每 10 个结果消耗 2 credits",
@@ -2810,7 +2855,8 @@
       "cnHost": "api.firecrawl.dev",
       "cnMs": 2517,
       "intlMs": 271
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "brave-search-free-credits",
@@ -2913,7 +2959,7 @@
       "method": "GET",
       "authentication": "X-Subscription-Token: ${BRAVE_API_KEY}",
       "examples": {
-        "curl": "curl --request GET 'https://api.search.brave.com/res/v1/web/search?q=latest%20AI%20news' --header 'Accept: application/json' --header 'X-Subscription-Token: ${BRAVE_API_KEY}'"
+        "curl": "curl --request GET 'https://api.search.brave.com/res/v1/web/search?q=latest%20AI%20news' --header 'Accept: application/json' --header \"X-Subscription-Token: $BRAVE_API_KEY\""
       },
       "quotaGuard": [
         "按 50 QPS 以内调用",
@@ -2938,7 +2984,8 @@
       "cnHost": "brave.com",
       "cnMs": 4311,
       "intlMs": 27
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "browserbase-free-tier",
@@ -3045,7 +3092,7 @@
       "method": "POST",
       "authentication": "x-bb-api-key: ${BROWSERBASE_API_KEY}",
       "examples": {
-        "curl": "curl --request POST https://api.browserbase.com/v1/sessions --header 'x-bb-api-key: ${BROWSERBASE_API_KEY}' --header 'Content-Type: application/json' --data '{\"projectId\":\"${BROWSERBASE_PROJECT_ID}\"}'"
+        "curl": "curl --request POST https://api.browserbase.com/v1/sessions --header \"x-bb-api-key: $BROWSERBASE_API_KEY\" --header 'Content-Type: application/json' --data \"{\\\"projectId\\\":\\\"$BROWSERBASE_PROJECT_ID\\\"}\""
       },
       "quotaGuard": [
         "免费层只有 1 browser hour 和 15-minute session cap",
@@ -3071,7 +3118,8 @@
       "cnHost": "api.browserbase.com",
       "cnMs": 1211,
       "intlMs": 449
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "date": "2026-09-07",
@@ -3111,7 +3159,7 @@
       "method": "POST",
       "authentication": "API key via x-goog-api-key header",
       "examples": {
-        "curl": "curl https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent --header 'x-goog-api-key: ${GEMINI_API_KEY}' --header 'Content-Type: application/json' -X POST --data '{\"contents\":[{\"parts\":[{\"text\":\"Hello\"}]}]}'"
+        "curl": "curl https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent --header \"x-goog-api-key: $GEMINI_API_KEY\" --header 'Content-Type: application/json' -X POST --data '{\"contents\":[{\"parts\":[{\"text\":\"Hello\"}]}]}'"
       },
       "docsUrl": "https://ai.google.dev/gemini-api/docs/quickstart"
     },
@@ -3129,7 +3177,7 @@
     "mechanism": "Rate-limited free tier on the Gemini API",
     "validity": "Ongoing, but limits and model coverage can change; recheck the official pricing page",
     "access": "Google account and API key from AI Studio; free tier availability may vary by region",
-    "command": "curl https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent --header 'x-goog-api-key: ${GEMINI_API_KEY}' --header 'Content-Type: application/json' -X POST --data '{\"contents\":[{\"parts\":[{\"text\":\"Hello\"}]}]}'",
+    "command": "curl https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent --header \"x-goog-api-key: $GEMINI_API_KEY\" --header 'Content-Type: application/json' -X POST --data '{\"contents\":[{\"parts\":[{\"text\":\"Hello\"}]}]}'",
     "register": "https://aistudio.google.com/",
     "registerLabel": "Google AI Studio",
     "links": [
@@ -3140,6 +3188,10 @@
       [
         "Quickstart",
         "https://ai.google.dev/gemini-api/docs/quickstart"
+      ],
+      [
+        "AI Studio 每模型每日用量上限公告（2026-09-29）",
+        "https://discuss.ai.google.dev/t/daily-usage-limits-for-models-in-ai-studio/185935"
       ]
     ],
     "originCountry": "International",
@@ -3156,11 +3208,12 @@
     "renewal": "No renewal; the free tier is the default no-cost tier of the API",
     "sourceUrls": [
       "https://ai.google.dev/gemini-api/docs/pricing",
-      "https://ai.google.dev/gemini-api/docs/quickstart"
+      "https://ai.google.dev/gemini-api/docs/quickstart",
+      "https://discuss.ai.google.dev/t/daily-usage-limits-for-models-in-ai-studio/185935"
     ],
     "evidence": "Official pricing page: 'Gemini 3.8 Flash ... Free Tier ... Input price Free of charge ... Output price (including thinking tokens) Free of charge ... Context caching price Free of charge', and free tier 'Used to improve our products: Yes'.",
     "confidence": "high",
-    "notes": "International option included in the China-first global directory. Free-tier terms (including training-data usage) differ from the paid tier.",
+    "notes": "International option included in the China-first global directory. Free-tier terms (including training-data usage) differ from the paid tier. 2026-09-29 Google 官方论坛公告：AI Studio Playground 起对每个模型设每日用量上限，Google AI Pro / Ultra 订阅上限更高；官方建议大量或持续使用改用 Gemini API + 自有 API Key。此变更针对网页 Playground，不是 Gemini API 免费档的速率表（API 免费档请以 rate-limits 页为准）。",
     "endpointCheck": {
       "checkedAt": "2026-09-18",
       "verdict": "NEEDS_KEY",
@@ -3294,7 +3347,7 @@
       "method": "POST",
       "authentication": "API key via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://api.groq.com/openai/v1/chat/completions --header 'Authorization: Bearer ${GROQ_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-20b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://api.groq.com/openai/v1/chat/completions --header \"Authorization: Bearer $GROQ_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-20b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://console.groq.com/docs/rate-limits"
     },
@@ -3312,7 +3365,7 @@
     "mechanism": "Free plan with per-model rate limits on the OpenAI-compatible API",
     "validity": "Ongoing free plan; the published limits table can change at any time",
     "access": "Groq account; limits apply per organization, not per user",
-    "command": "curl https://api.groq.com/openai/v1/chat/completions --header 'Authorization: Bearer ${GROQ_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-20b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api.groq.com/openai/v1/chat/completions --header \"Authorization: Bearer $GROQ_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-20b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://console.groq.com/",
     "registerLabel": "Groq Console",
     "links": [
@@ -3370,11 +3423,11 @@
   },
   {
     "date": "2026-09-07",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "status": "verified",
     "phoneRequired": "unknown",
-    "cardRequired": "unknown",
+    "cardRequired": "yes",
     "commercialUse": "Check the provider's official terms",
     "productType": "api",
     "capabilities": [
@@ -3393,37 +3446,40 @@
       "free"
     ],
     "usageGuide": {
-      "summary": "Use the free credits granted after creating a Cerebras account",
+      "summary": "Add a payment method in the Cerebras console to activate the one-time $5 promotional credit (expires 30 days after activation)",
       "prerequisites": [
         "Cerebras account",
+        "Valid payment method on file (not charged automatically)",
         "API key generated in the Cerebras console"
       ],
       "steps": [
-        "Create a Cerebras account to receive the free credits",
-        "Generate an API key and send an OpenAI-compatible chat completion request"
+        "Create a Cerebras account and add a valid payment method to receive the one-time $5 promotional credit",
+        "Generate an API key and send an OpenAI-compatible chat completion request; the credit expires 30 days after activation"
       ],
       "endpoint": "https://api.cerebras.ai/v1/chat/completions",
       "method": "POST",
       "authentication": "API key via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://api.cerebras.ai/v1/chat/completions --header 'Authorization: Bearer ${CEREBRAS_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"qwen-3.8-27b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://api.cerebras.ai/v1/chat/completions --header \"Authorization: Bearer $CEREBRAS_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"qwen-3.8-27b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://inference-docs.cerebras.ai/quickstart"
     },
     "kicker": "GLOBAL FREE MODELS",
     "badges": [
-      "FREE CREDITS"
+      "$5 PROMO CREDIT",
+      "需绑卡",
+      "30 天过期"
     ],
-    "freeSummary": "Free trial: $5 in free credits after account creation",
-    "validitySummary": "One-time credits; consumed by usage",
-    "accessSummary": "Cerebras account",
-    "checkedSummary": "Today / official Cerebras pricing page",
+    "freeSummary": "需绑卡：添加有效付款方式后发放一次性 $5 促销额度，激活后 30 天过期；用完或过期后 API 与 Playground 暂停（不会自动扣费）",
+    "validitySummary": "一次性 $5，激活后 30 天过期；不自动续发",
+    "accessSummary": "Cerebras 账号 + 有效付款方式（不会自动扣费）",
+    "checkedSummary": "2026-10-10 / Cerebras 官方定价页脚注",
     "title": "Cerebras · free inference credits",
-    "why": "The official Cerebras pricing page lists an 'Inference API access / Free Trial' tier: 'Get started with $5 in free credits after making an account. Access to all Cerebras powered models'. The docs also note free accounts have lower per-minute limits than paid accounts.",
-    "mechanism": "One-time $5 free credits granted after account creation",
-    "validity": "Credits are consumed by usage; check the official pricing page for current terms",
-    "access": "Cerebras account required",
-    "command": "curl https://api.cerebras.ai/v1/chat/completions --header 'Authorization: Bearer ${CEREBRAS_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"qwen-3.8-27b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "why": "Cerebras' official pricing page now states: 'Add a valid payment method to receive a one-time $5 promotional credit. The credit expires 30 days after activation. You will not be charged or automatically enrolled in paid usage. API and Playground access will pause when the credit expires or is exhausted unless you separately purchase PayGo credits.'",
+    "mechanism": "One-time $5 promotional credit granted after adding a valid payment method",
+    "validity": "Expires 30 days after activation, or earlier when exhausted; access pauses afterwards unless PayGo credits are purchased",
+    "access": "Cerebras account plus a valid payment method on file (no automatic charge)",
+    "command": "curl https://api.cerebras.ai/v1/chat/completions --header \"Authorization: Bearer $CEREBRAS_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"qwen-3.8-27b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://cloud.cerebras.ai/",
     "registerLabel": "Cerebras cloud console",
     "links": [
@@ -3444,17 +3500,18 @@
       "type": "one_time_credits",
       "amount": 5,
       "unit": "USD credits",
-      "period": null
+      "period": "30 days after activation",
+      "cardRequired": true
     },
-    "quota": "$5 in one-time free credits",
-    "renewal": "No automatic renewal of the free credits",
+    "quota": "$5 one-time promotional credit (card required, 30-day expiry)",
+    "renewal": "No automatic renewal; not charged or auto-enrolled in paid usage",
     "sourceUrls": [
       "https://www.cerebras.ai/pricing",
       "https://inference-docs.cerebras.ai/quickstart"
     ],
-    "evidence": "Official pricing page: 'Free Trial Get started with $5 in free credits after making an account Access to all Cerebras powered models'; docs: 'Free accounts have lower per-minute limits than paid accounts'.",
+    "evidence": "Official pricing page (checked 2026-10-10): 'Add a valid payment method to receive a one-time $5 promotional credit. The credit expires 30 days after activation. You will not be charged or automatically enrolled in paid usage. API and Playground access will pause when the credit expires or is exhausted unless you separately purchase PayGo credits.'",
     "confidence": "high",
-    "notes": "International option included in the China-first global directory. Credits are a one-time trial, not a permanent free tier.",
+    "notes": "International option included in the China-first global directory. Since the current pricing-page wording (change date not published), the $5 is a card-gated one-time promo that expires 30 days after activation; it is not a permanent free tier and not granted on signup alone.",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "NEEDS_KEY",
@@ -3507,7 +3564,7 @@
       "method": "POST",
       "authentication": "API key via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://openrouter.ai/api/v1/chat/completions --header 'Authorization: Bearer ${OPENROUTER_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"inclusionai/ling-3.0-flash-fin:free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://openrouter.ai/api/v1/chat/completions --header \"Authorization: Bearer $OPENROUTER_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"inclusionai/ling-3.0-flash-fin:free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://openrouter.ai/docs/api_reference/limits"
     },
@@ -3525,7 +3582,7 @@
     "mechanism": "Platform-level free usage limits applied to :free model variants",
     "validity": "Ongoing; the limits table is subject to change by OpenRouter",
     "access": "OpenRouter account and API key; free daily cap scales with lifetime credits purchased",
-    "command": "curl https://openrouter.ai/api/v1/chat/completions --header 'Authorization: Bearer ${OPENROUTER_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"inclusionai/ling-3.0-flash-fin:free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://openrouter.ai/api/v1/chat/completions --header \"Authorization: Bearer $OPENROUTER_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"inclusionai/ling-3.0-flash-fin:free\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://openrouter.ai/",
     "registerLabel": "OpenRouter",
     "links": [
@@ -3609,7 +3666,7 @@
       "method": "POST",
       "authentication": "API key via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://api.mistral.ai/v1/chat/completions --header 'Authorization: Bearer ${MISTRAL_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"mistral-small-latest\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://api.mistral.ai/v1/chat/completions --header \"Authorization: Bearer $MISTRAL_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"mistral-small-latest\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://help.mistral.ai/en/articles/698531-why-am-i-hitting-api-rate-limits-and-how-do-i-increase-them"
     },
@@ -3627,7 +3684,7 @@
     "mechanism": "Default free mode of the developer API with limited rate limits (RPS, tokens per minute, tokens per month)",
     "validity": "Ongoing default tier; Mistral can change the limits",
     "access": "Mistral account; per-organization limits",
-    "command": "curl https://api.mistral.ai/v1/chat/completions --header 'Authorization: Bearer ${MISTRAL_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"mistral-small-latest\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api.mistral.ai/v1/chat/completions --header \"Authorization: Bearer $MISTRAL_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"mistral-small-latest\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://console.mistral.ai/",
     "registerLabel": "Mistral console",
     "links": [
@@ -3710,7 +3767,7 @@
       "method": "POST",
       "authentication": "API key via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://api.cohere.com/v2/chat --header 'Authorization: Bearer ${COHERE_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"command-a-plus-05-2026\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://api.cohere.com/v2/chat --header \"Authorization: Bearer $COHERE_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"command-a-plus-05-2026\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://docs.cohere.com/reference/chat"
     },
@@ -3728,7 +3785,7 @@
     "mechanism": "Free rate-limited Trial API key for evaluation",
     "validity": "Ongoing while the trial program exists; non-production only",
     "access": "Cohere personal account; production keys require an application",
-    "command": "curl https://api.cohere.com/v2/chat --header 'Authorization: Bearer ${COHERE_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"command-a-plus-05-2026\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api.cohere.com/v2/chat --header \"Authorization: Bearer $COHERE_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"command-a-plus-05-2026\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://dashboard.cohere.com/",
     "registerLabel": "Cohere dashboard",
     "links": [
@@ -3813,7 +3870,7 @@
       "method": "POST",
       "authentication": "Hugging Face token via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://router.huggingface.co/v1/chat/completions --header 'Authorization: Bearer ${HF_TOKEN}' --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-120b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://router.huggingface.co/v1/chat/completions --header \"Authorization: Bearer $HF_TOKEN\" --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-120b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://huggingface.co/docs/inference-providers/index"
     },
@@ -3831,7 +3888,7 @@
     "mechanism": "Platform free tier with included credits on a single OpenAI-compatible router API across providers",
     "validity": "Ongoing free tier; credit amounts can change",
     "access": "Hugging Face account and access token",
-    "command": "curl https://router.huggingface.co/v1/chat/completions --header 'Authorization: Bearer ${HF_TOKEN}' --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-120b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://router.huggingface.co/v1/chat/completions --header \"Authorization: Bearer $HF_TOKEN\" --header 'Content-Type: application/json' --data '{\"model\":\"openai/gpt-oss-120b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://huggingface.co/",
     "registerLabel": "Hugging Face",
     "links": [
@@ -3916,7 +3973,7 @@
       "method": "POST",
       "authentication": "API key via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://api.siliconflow.cn/v1/chat/completions --header 'Authorization: Bearer ${SILICONFLOW_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"tencent/Hunyuan-MT-7B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://api.siliconflow.cn/v1/chat/completions --header \"Authorization: Bearer $SILICONFLOW_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"tencent/Hunyuan-MT-7B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://docs.siliconflow.cn/cn/userguide/quickstart"
     },
@@ -3934,7 +3991,7 @@
     "mechanism": "Selected models permanently listed at ¥0 on the official price list",
     "validity": "Ongoing while listed; the ¥0 list can change at any time",
     "access": "SiliconFlow account; registration via the China platform",
-    "command": "curl https://api.siliconflow.cn/v1/chat/completions --header 'Authorization: Bearer ${SILICONFLOW_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"tencent/Hunyuan-MT-7B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api.siliconflow.cn/v1/chat/completions --header \"Authorization: Bearer $SILICONFLOW_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"tencent/Hunyuan-MT-7B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://cloud.siliconflow.cn/",
     "registerLabel": "SiliconFlow 云平台",
     "links": [
@@ -4075,7 +4132,7 @@
       "method": "POST",
       "authentication": "ModelScope access token via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://api-inference.modelscope.cn/v1/chat/completions --header 'Authorization: Bearer ${MODELSCOPE_TOKEN}' --header 'Content-Type: application/json' --data '{\"model\":\"Qwen/Qwen3.5-35B-A3B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://api-inference.modelscope.cn/v1/chat/completions --header \"Authorization: Bearer $MODELSCOPE_TOKEN\" --header 'Content-Type: application/json' --data '{\"model\":\"Qwen/Qwen3.5-35B-A3B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://modelscope.cn/docs/model-service/API-Inference/intro"
     },
@@ -4096,7 +4153,7 @@
     "mechanismEn": "Free OpenAI-compatible inference endpoint for registered users, funded by Alibaba Cloud, with dynamic rate limits and MoLi point deduction",
     "validity": "Ongoing service; individual models may be delisted as newer models release",
     "access": "Requires ModelScope account bound to a real-name verified Aliyun (China) account; non-commercial use",
-    "command": "curl https://api-inference.modelscope.cn/v1/chat/completions --header 'Authorization: Bearer ${MODELSCOPE_TOKEN}' --header 'Content-Type: application/json' --data '{\"model\":\"Qwen/Qwen3.5-35B-A3B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api-inference.modelscope.cn/v1/chat/completions --header \"Authorization: Bearer $MODELSCOPE_TOKEN\" --header 'Content-Type: application/json' --data '{\"model\":\"Qwen/Qwen3.5-35B-A3B\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://modelscope.cn/my/myaccesstoken",
     "registerLabel": "ModelScope 访问令牌",
     "registerLabelEn": "Open ModelScope access token",
@@ -4153,7 +4210,7 @@
   },
   {
     "date": "2026-09-08",
-    "lastVerifiedAt": "2026-09-19",
+    "lastVerifiedAt": "2026-10-12",
     "checkedBy": "manual",
     "status": "verified",
     "phoneRequired": "unknown",
@@ -4170,7 +4227,7 @@
     "provider": "Agnes AI",
     "providerMeta": "Agnes AI · 国内 / 国际双入口",
     "providerMetaEn": "Agnes AI · Mainland-CN and global endpoints",
-    "model": "agnes-3.0-flash · agnes-2.5-flash · agnes-image-2.5-flash · agnes-image-2.1-flash · agnes-image-2.0-flash · agnes-video-v2.0 · agnes-video-2.5-flash",
+    "model": "agnes-3.0-flash · agnes-2.5-flash · agnes-image-2.5-flash · agnes-image-2.1-flash · agnes-image-2.0-flash · agnes-video-2.5-flash",
     "modelMeta": "Free/default tier: text, image and video via OpenAI-compatible API",
     "type": [
       "api",
@@ -4230,7 +4287,7 @@
       "method": "POST",
       "authentication": "API key via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://api.agnes-ai.cn/v1/chat/completions --header 'Authorization: Bearer ${AGNES_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"agnes-2.5-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://api.agnes-ai.cn/v1/chat/completions --header \"Authorization: Bearer $AGNES_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"agnes-2.5-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://agnes-ai.cn/zh-Hans/docs/overview"
     },
@@ -4246,16 +4303,16 @@
     "validitySummary": "Ongoing while the official free/default program is available; limits can change",
     "accessSummary": "Agnes AI 账号 + API Key；国内站与国际站任一注册即可，两站 Key 通用",
     "accessSummaryEn": "Agnes AI account and API key; register on either the CN or the global console - the same key works on both",
-    "checkedSummary": "2026-09-19 / 国内站与国际站官方文档、官方模型目录",
+    "checkedSummary": "2026-10-12 / 国内站与国际站官方文档、官方定价页",
     "title": "Agnes AI · Free/default multimodal API",
     "titleZh": "Agnes AI · 免费/默认多模态 API",
-    "why": "Agnes AI 官方文档提供 OpenAI 兼容 API，官方定价页逐项列出中国站模型的刊例价与现价，其中 agnes-3.0-flash、agnes-2.5-flash、agnes-image-2.0/2.1/2.5-flash、agnes-video-v2.0 与 agnes-video-2.5-flash 现价均为 ¥0；官方同时运营国内站（api.agnes-ai.cn）与国际站（apihub.agnes-ai.com）两套入口，国内站可在大陆直连。适合作为可直接试用的多模态 API 入口，但不是无限免费承诺：限速、优惠期与模型可用性都可能调整。",
-    "whyEn": "Agnes AI documents an OpenAI-compatible API, and its official pricing page lists every China-site model with list and current prices: agnes-3.0-flash, agnes-2.5-flash, the agnes-image-2.0/2.1/2.5-flash line, agnes-video-v2.0 and agnes-video-2.5-flash all currently price at zero. It runs two official entry points - a mainland-CN host (api.agnes-ai.cn) and a global host (apihub.agnes-ai.com). A practical multimodal API entry point, not an unlimited-free promise.",
+    "why": "Agnes AI 官方文档提供 OpenAI 兼容 API，官方定价页逐项列出中国站模型的刊例价与现价，其中 agnes-3.0-flash、agnes-2.5-flash、agnes-image-2.0/2.1/2.5-flash与 agnes-video-2.5-flash 现价均为 ¥0（agnes-video-v2.0 已于 2026-09-25 下线）；官方同时运营国内站（api.agnes-ai.cn）与国际站（apihub.agnes-ai.com）两套入口，国内站可在大陆直连。适合作为可直接试用的多模态 API 入口，但不是无限免费承诺：限速、优惠期与模型可用性都可能调整。",
+    "whyEn": "Agnes AI documents an OpenAI-compatible API, and its official pricing page lists every China-site model with list and current prices: agnes-3.0-flash, agnes-2.5-flash, the agnes-image-2.0/2.1/2.5-flash line, and agnes-video-2.5-flash all currently price at zero (agnes-video-v2.0 was retired on 2026-09-25). It runs two official entry points - a mainland-CN host (api.agnes-ai.cn) and a global host (apihub.agnes-ai.com). A practical multimodal API entry point, not an unlimited-free promise.",
     "mechanism": "Free/default access with endpoint- and model-specific rate limits",
     "mechanismEn": "Free/default access with endpoint- and model-specific rate limits",
     "validity": "Ongoing while the official program remains available; current limits and model availability may change",
     "access": "Agnes AI 账号 + API Key；中国大陆建议用国内站入口（platform.agnes-ai.cn / api.agnes-ai.cn），其他地区用国际站（platform.agnes-ai.com / apihub.agnes-ai.com）；官方称两站 Key 通用，原国际站用户无需重新注册",
-    "command": "curl https://api.agnes-ai.cn/v1/chat/completions --header 'Authorization: Bearer ${AGNES_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"agnes-2.5-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api.agnes-ai.cn/v1/chat/completions --header \"Authorization: Bearer $AGNES_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"agnes-2.5-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://platform.agnes-ai.cn",
     "registerLabel": "Agnes AI 国内控制台",
     "registerLabelEn": "Agnes AI console (CN)",
@@ -4300,10 +4357,10 @@
       "https://agnes-ai.com/en/docs/overview",
       "https://github.com/AgnesAI-Labs/AgnesAI-Models/blob/main/MODEL_CATALOG.md"
     ],
-    "evidence": "Agnes 国内站官方中文文档（agnes-ai.cn/zh-Hans/docs/overview）把 Base URL 写作 https://api.agnes-ai.cn/v1；国际站官方英文文档（agnes-ai.com/en/docs/overview）写作 https://apihub.agnes-ai.com/v1。两个域名在 2026-09-19 无 Key 探测均返回 401「未提供令牌 / Token not provided」，说明端点存活且鉴权正常；国内站解析到大陆 IP，国际站走 Cloudflare。官方定价页（agnes-ai.cn/zh-Hans/docs/pricing）逐项给出中国站模型的人民币刊例价与现价，明确 agnes-2.5-flash 与 agnes-3.0-flash 的输入缓存命中、输入 Token、输出 Token 当前均免费，agnes-image-2.0/2.1/2.5-flash 所有输出分辨率档位与输入参考图片免费，agnes-video-v2.0 当前免费、agnes-video-2.5-flash 限时免费；agnes-2.5-pro、agnes-2.5-pro-beta 与 agnes-video-2.5 为付费。国内站 Token Plan FAQ 给出免费 / 默认用户的文本、图片、视频 RPM 公开参考值，并注明可能调整。",
+    "evidence": "Agnes 国内站官方中文文档（agnes-ai.cn/zh-Hans/docs/overview）把 Base URL 写作 https://api.agnes-ai.cn/v1；国际站官方英文文档（agnes-ai.com/en/docs/overview）写作 https://apihub.agnes-ai.com/v1。两个域名在 2026-09-19 无 Key 探测均返回 401「未提供令牌 / Token not provided」，说明端点存活且鉴权正常；国内站解析到大陆 IP，国际站走 Cloudflare。官方定价页（agnes-ai.cn/zh-Hans/docs/pricing）逐项给出中国站模型的人民币刊例价与现价，明确 agnes-2.5-flash 与 agnes-3.0-flash 的输入缓存命中、输入 Token、输出 Token 当前均免费，agnes-image-2.0/2.1/2.5-flash 所有输出分辨率档位与输入参考图片免费，agnes-video-2.5-flash 限时免费；agnes-2.5-pro 与 agnes-video-2.5 为付费；agnes-video-v2.0 已于 2026-09-25 下线、agnes-2.5-pro-beta 文档已下线（2026-10-12 复核）。国内站 Token Plan FAQ 给出免费 / 默认用户的文本、图片、视频 RPM 公开参考值，并注明可能调整。",
     "confidence": "medium",
     "confidenceReason": "Both official docs and both live endpoints were re-verified on 2026-09-19, but rate limits and model availability are explicitly changeable.",
-    "notes": "免费 / 付费口径（2026-09-19 核对官方定价页）：现价 ¥0 的有 agnes-3.0-flash、agnes-2.5-flash、agnes-image-2.0-flash、agnes-image-2.1-flash、agnes-image-2.5-flash、agnes-video-v2.0，agnes-video-2.5-flash 为限时免费；agnes-2.5-pro（¥3 / ¥6 每 M Token）、agnes-2.5-pro-beta（¥0.70 / ¥2.10 每 M Token）与 agnes-video-2.5（¥0.15–0.35 每秒）为付费模型，不在本条目宣称的免费范围内。agnes-1.5-flash 与 agnes-2.0-flash 只出现在国际站官方模型目录（GitHub）里，国内站定价页未列出，因此未列入免费模型表，待核实。另：官方 agnes-25-flash 文档的规格表把「模型名称」写成 agnes-2.0-flash，与页面标题和请求示例里的 agnes-2.5-flash 不一致，属官方文档笔误，不影响调用。国内站还有一个旧公告地址 https://apihub.agnes-ai.cn/v1（2026-07-29 国内节点上线时公布），与 api.agnes-ai.cn 解析到同一 IP 且同样返回 401，当前官方中文文档已改用 api.agnes-ai.cn。API Key 只放在环境变量 AGNES_API_KEY 中，绝不提交真实 Key。",
+    "notes": "免费 / 付费口径（2026-10-12 核对官方定价页）：现价 ¥0 的有 agnes-3.0-flash、agnes-2.5-flash、agnes-image-2.0-flash、agnes-image-2.1-flash、agnes-image-2.5-flash，agnes-video-2.5-flash 为限时免费（未公布截止日期）；agnes-video-v2.0 已于 2026-09-25 下线、agnes-2.5-pro-beta 文档已下线；agnes-2.5-pro（¥3 / ¥6 每 M Token）、agnes-2.5-pro-beta（¥0.70 / ¥2.10 每 M Token）与 agnes-video-2.5（¥0.15–0.35 每秒）为付费模型，不在本条目宣称的免费范围内。agnes-1.5-flash 与 agnes-2.0-flash 只出现在国际站官方模型目录（GitHub）里，国内站定价页未列出，因此未列入免费模型表，待核实。另：官方 agnes-25-flash 文档的规格表把「模型名称」写成 agnes-2.0-flash，与页面标题和请求示例里的 agnes-2.5-flash 不一致，属官方文档笔误，不影响调用。国内站还有一个旧公告地址 https://apihub.agnes-ai.cn/v1（2026-07-29 国内节点上线时公布），与 api.agnes-ai.cn 解析到同一 IP 且同样返回 401，当前官方中文文档已改用 api.agnes-ai.cn。API Key 只放在环境变量 AGNES_API_KEY 中，绝不提交真实 Key。",
     "endpointCheck": {
       "checkedAt": "2026-09-19",
       "verdict": "NEEDS_KEY",
@@ -4364,13 +4421,6 @@
         "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/pricing"
       },
       {
-        "model": "agnes-video-v2.0",
-        "label": "视频模型（异步任务 API）",
-        "quota": "视频 1 RPM",
-        "note": "官方定价页标注当前免费；需先创建任务再用 video_id / task_id 取结果",
-        "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/pricing"
-      },
-      {
         "model": "agnes-video-2.5-flash",
         "label": "视频模型（OpenAI Videos 兼容）",
         "quota": "视频 1 RPM",
@@ -4381,7 +4431,7 @@
   },
   {
     "date": "2026-09-08",
-    "lastVerifiedAt": "2026-09-17",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "status": "verified",
     "phoneRequired": "unknown",
@@ -4398,8 +4448,8 @@
     "provider": "StepFun",
     "providerMeta": "StepFun 阶跃星辰 · China",
     "providerMetaEn": "StepFun · China",
-    "model": "step-audio-r1.1 · step-1x-edit · step-2x-large",
-    "modelMeta": "Official API models marked limited free",
+    "model": "stepaudio-3-realtime-preview · stepaudio-3-chat-preview · stepaudio-3-gen-preview · stepaudio-3-music-preview",
+    "modelMeta": "Official StepAudio 3 preview models marked 限时免费",
     "type": [
       "api",
       "free"
@@ -4414,13 +4464,14 @@
       "steps": [
         "Create a StepFun Open Platform account and API key",
         "Use the OpenAI-compatible chat endpoint with a currently limited-free model ID",
-        "Recheck the official pricing page before use because the limited-free label may change"
+        "Recheck the official pricing page before use because the limited-free label may change",
+        "The curl example uses stepaudio-3-chat-preview and has not been tested by FreeLLM (未实测); realtime / gen / music preview models may need their own endpoints — follow the official model docs"
       ],
       "endpoint": "https://api.stepfun.com/v1/chat/completions",
       "method": "POST",
       "authentication": "API key via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://api.stepfun.com/v1/chat/completions --header 'Authorization: Bearer ${STEP_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"step-audio-r1.1\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://api.stepfun.com/v1/chat/completions --header \"Authorization: Bearer $STEP_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"stepaudio-3-chat-preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://platform.stepfun.com/docs/zh/quickstart/overview"
     },
@@ -4431,19 +4482,19 @@
       "RECHECK PRICING"
     ],
     "freeSummary": "StepFun 官方定价页当前将 stepaudio-3-realtime-preview、stepaudio-3-chat-preview、stepaudio-3-gen-preview、stepaudio-3-music-preview 标注为限免中",
-    "freeSummaryEn": "StepFun's official pricing page currently marks step-audio-r1.1, step-1x-edit and step-2x-large as limited free",
+    "freeSummaryEn": "StepFun's official pricing page currently marks stepaudio-3-realtime-preview, stepaudio-3-chat-preview, stepaudio-3-gen-preview and stepaudio-3-music-preview as limited-time free",
     "validitySummary": "Limited-time offer; model availability and free status can change",
     "accessSummary": "StepFun Open Platform account and API key",
-    "checkedSummary": "2026-09-08 / official StepFun pricing and API docs",
+    "checkedSummary": "2026-10-10 / 阶跃星辰官方价格页：4 个 stepaudio-3 预览模型为限时免费",
     "title": "StepFun · Limited-time free API models",
     "titleZh": "StepFun · 限时免费 API 模型",
-    "why": "StepFun 官方定价页将 step-audio-r1.1、step-1x-edit 和 step-2x-large 标注为“限免中”，同时官方 API 文档提供 OpenAI 兼容的聊天接口。这个条目只记录限免模型，不把 Step Plan 订阅或其他付费模型算作免费。",
-    "whyEn": "StepFun's official pricing page marks step-audio-r1.1, step-1x-edit and step-2x-large as limited free, while its API docs provide an OpenAI-compatible chat endpoint. This entry covers only those limited-free models, not Step Plan subscriptions or other paid models.",
+    "why": "StepFun 官方定价与限速页当前将 stepaudio-3-realtime-preview、stepaudio-3-chat-preview（按 Token 计费表）和 stepaudio-3-gen-preview、stepaudio-3-music-preview（音频/音乐生成表）标注为“限时免费”。step-audio-r1.1 已不在价目表（现为按量计费的 step-audio-r1.5），step-2x-large 官方公告 2026-10-10 下线。这个条目只记录限免模型，不把 Step Plan 订阅或其他付费模型算作免费。",
+    "whyEn": "StepFun's official pricing page currently marks stepaudio-3-realtime-preview, stepaudio-3-chat-preview, stepaudio-3-gen-preview and stepaudio-3-music-preview as limited-time free. step-audio-r1.1 is no longer listed (step-audio-r1.5 is pay-as-you-go) and step-2x-large is announced offline on 2026-10-10. This entry covers only the limited-free models, not Step Plan subscriptions or other paid models.",
     "mechanism": "Selected models temporarily marked limited free on the official API pricing page",
     "mechanismEn": "Selected models temporarily marked limited free on the official API pricing page",
     "validity": "Limited-time status; recheck the official pricing page before relying on it",
     "access": "StepFun Open Platform account and API key; China and international platform availability may differ",
-    "command": "curl https://api.stepfun.com/v1/chat/completions --header 'Authorization: Bearer ${STEP_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"step-audio-r1.1\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api.stepfun.com/v1/chat/completions --header \"Authorization: Bearer $STEP_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"stepaudio-3-chat-preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://platform.stepfun.com/",
     "registerLabel": "StepFun 开放平台",
     "registerLabelEn": "Open StepFun Platform",
@@ -4478,27 +4529,33 @@
       "https://platform.stepfun.com/docs/zh/quickstart/overview",
       "https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create"
     ],
-    "evidence": "StepFun 官方定价与限速页面将 step-audio-r1.1 的输入、缓存命中和输出价格标为“限免中”，并将 step-1x-edit、step-2x-large 标为“限时免费”；官方快速开始与对话补全文档给出 https://api.stepfun.com/v1/chat/completions 的 OpenAI 兼容调用方式。",
+    "evidence": "StepFun 官方定价与限速页面（2026-10-10 核对）将 stepaudio-3-realtime-preview、stepaudio-3-chat-preview、stepaudio-3-gen-preview、stepaudio-3-music-preview 标为“限时免费”；step-audio-r1.1 已不在价目表，step-2x-large 官方公告 2026-10-10 下线。官方快速开始与对话补全文档给出 https://api.stepfun.com/v1/chat/completions 的 OpenAI 兼容调用方式。",
     "confidence": "high",
     "confidenceReason": "The limited-free labels and API endpoint are present in current official StepFun documentation; the offer is time-sensitive and must be rechecked.",
-    "notes": "2026-09-17 复验：原先记录的 step-audio-r1.1、step-1x-edit、step-2x-large 已不是当前限免模型。官方页面显示 step-2x-large 已于 2026-06-12 结束限免、改为 0.1 元/张计费，step-1x-edit 未在页面列出。当前限免为 stepaudio-3-* 系列四个模型，已更正。",
+    "notes": "2026-10-10 复验（官方定价页）：限免仅剩 stepaudio-3-realtime-preview、stepaudio-3-chat-preview、stepaudio-3-gen-preview、stepaudio-3-music-preview；已删除 step-audio-r1.1（不在价目表）、step-1x-edit（未列出）、step-2x-large（2026-10-10 下线）。",
     "freeModels": [
       {
-        "model": "step-audio-r1.1",
-        "quota": "限免中（官方定价页标注）",
-        "note": "以官方定价页为准",
+        "model": "stepaudio-3-realtime-preview",
+        "quota": "限时免费（官方定价页标注）",
+        "note": "以官方定价页为准；FreeLLM 未实测",
         "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
       },
       {
-        "model": "step-1x-edit",
-        "quota": "限免中（官方定价页标注）",
-        "note": "以官方定价页为准",
+        "model": "stepaudio-3-chat-preview",
+        "quota": "限时免费（官方定价页标注）",
+        "note": "以官方定价页为准；FreeLLM 未实测",
         "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
       },
       {
-        "model": "step-2x-large",
-        "quota": "限免中（官方定价页标注）",
-        "note": "以官方定价页为准",
+        "model": "stepaudio-3-gen-preview",
+        "quota": "限时免费（官方定价页标注）",
+        "note": "以官方定价页为准；FreeLLM 未实测",
+        "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
+      },
+      {
+        "model": "stepaudio-3-music-preview",
+        "quota": "限时免费（官方定价页标注）",
+        "note": "以官方定价页为准；FreeLLM 未实测",
         "sourceUrl": "https://platform.stepfun.com/docs/zh/guides/pricing/details"
       }
     ],
@@ -4514,7 +4571,8 @@
       "cnHost": "api.stepfun.com",
       "cnMs": 214,
       "intlMs": 993
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "date": "2026-09-10",
@@ -4556,7 +4614,7 @@
       "method": "POST",
       "authentication": "API key according to the official Dots documentation",
       "examples": {
-        "curl": "curl https://note3-prev-api.askdiandian.com/v1/chat/completions --header 'Authorization: Bearer ${DOTS_API_KEY}' --header 'Content-Type: application/json'"
+        "curl": "curl https://note3-prev-api.askdiandian.com/v1/chat/completions --header \"Authorization: Bearer $DOTS_API_KEY\" --header 'Content-Type: application/json'"
       },
       "docsUrl": "https://dots.ai/platform/docs"
     },
@@ -4576,7 +4634,7 @@
     "mechanism": "限时免费模型 API，按官方 RPM/TPM 限制使用",
     "validity": "限时免费；使用前重新核对官方平台状态",
     "access": "国内 Dots 平台；小红书账号或手机号登录后创建 API Key",
-    "command": "curl https://note3-prev-api.askdiandian.com/v1/chat/completions --header 'Authorization: Bearer ${DOTS_API_KEY}' --header 'Content-Type: application/json'",
+    "command": "curl https://note3-prev-api.askdiandian.com/v1/chat/completions --header \"Authorization: Bearer $DOTS_API_KEY\" --header 'Content-Type: application/json'",
     "register": "https://dots.ai/platform",
     "registerLabel": "Dots 国内平台",
     "links": [
@@ -5015,7 +5073,8 @@
       "cnHost": "cnb.cool",
       "cnMs": 310,
       "intlMs": 858
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "astudio",
@@ -5144,7 +5203,8 @@
       "cnHost": "agent.xfyun.cn",
       "cnMs": 135,
       "intlMs": 573
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "id": "workbuddy",
@@ -5454,7 +5514,7 @@
       "method": "POST",
       "authentication": "API key via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://discovery.intern-ai.org.cn/v1/chat/completions --header 'Authorization: Bearer ${ATRIA_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"Atria-Dawn-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+        "curl": "curl https://discovery.intern-ai.org.cn/v1/chat/completions --header \"Authorization: Bearer $ATRIA_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"Atria-Dawn-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
       },
       "docsUrl": "https://api.atria-asi.ai/docs"
     },
@@ -5473,7 +5533,7 @@
     "mechanism": "新用户注册赠送 100,000,000 Token；当前控制台档位 Atria-Dawn-Preview 按 $0/M tokens 计价（限时免费档位）",
     "validity": "额度条款以控制台 Token Plan 页为准，官方未公示到期日；Preview 阶段定价未发布，额度用完后计费规则未定",
     "access": "api.atria-asi.ai/console 注册（Google 账号）；国内入口 discovery.intern-ai.org.cn；无需信用卡",
-    "command": "curl https://discovery.intern-ai.org.cn/v1/chat/completions --header 'Authorization: Bearer ${ATRIA_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"Atria-Dawn-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+    "command": "curl https://discovery.intern-ai.org.cn/v1/chat/completions --header \"Authorization: Bearer $ATRIA_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"Atria-Dawn-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
     "register": "https://api.atria-asi.ai/console",
     "registerLabel": "Atria 控制台（国际）",
     "links": [
@@ -5790,7 +5850,7 @@
       "method": "POST",
       "authentication": "Radeon Cloud API key via Authorization: Bearer; Anthropic Messages also accepts x-api-key",
       "examples": {
-        "curl": "curl https://developer.amd.com.cn/radeon/api/v1/chat/completions --header 'Authorization: Bearer ${RADEON_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"DeepSeek-V4-Flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+        "curl": "curl https://developer.amd.com.cn/radeon/api/v1/chat/completions --header \"Authorization: Bearer $RADEON_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"DeepSeek-V4-Flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
       },
       "docsUrl": "https://amd-aim.github.io/radeon-cloud-docs/guides/model-apis/"
     },
@@ -5811,7 +5871,7 @@
     "mechanism": "Always-on shared public model endpoints at zero cost; AMD controls the live catalog and applies rate-limit plus rolling spend-cap gates",
     "validity": "Ongoing shared free tier; model availability and limits can change, so GET /v1/models remains the runtime source of truth",
     "access": "China-facing Radeon Cloud developer console; platform account verification and rc- API key required; no dedicated instance required",
-    "command": "curl https://developer.amd.com.cn/radeon/api/v1/chat/completions --header 'Authorization: Bearer ${RADEON_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"DeepSeek-V4-Flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+    "command": "curl https://developer.amd.com.cn/radeon/api/v1/chat/completions --header \"Authorization: Bearer $RADEON_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"DeepSeek-V4-Flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
     "register": "https://developer.amd.com.cn/radeon/tokenfactory",
     "registerLabel": "AMD Radeon Cloud Token Factory",
     "registerLabelEn": "Open AMD Radeon Cloud Token Factory",
@@ -5902,13 +5962,14 @@
           "url": "https://amd-aim.github.io/radeon-cloud-docs/api/authentication/"
         }
       ]
-    }
+    },
+    "lastObservedAt": "2026-10-15"
   },
   {
     "date": "2026-09-20",
-    "lastVerifiedAt": "2026-09-22",
+    "lastVerifiedAt": "2026-10-08",
     "checkedBy": "manual",
-    "status": "verified",
+    "status": "expired",
     "phoneRequired": "unknown",
     "cardRequired": "unknown",
     "commercialUse": "Check StepFun Step Plan terms and each model's official terms",
@@ -5918,7 +5979,7 @@
     ],
     "id": "stepfun-step-plan-promo",
     "order": 49,
-    "name": "StepFun Step Plan free experience",
+    "name": "StepFun Step Plan free experience (ended)",
     "providerMark": "ST",
     "provider": "StepFun",
     "providerMeta": "StepFun 阶跃星辰 · China",
@@ -5949,30 +6010,29 @@
       "method": "POST",
       "authentication": "API key via Authorization: Bearer header",
       "examples": {
-        "curl": "curl https://api.stepfun.com/step_plan/v1/chat/completions --header 'Authorization: Bearer ${STEP_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"step-5-preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://api.stepfun.com/step_plan/v1/chat/completions --header \"Authorization: Bearer $STEP_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"step-5-preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://platform.stepfun.com/docs/zh/step-plan/quick-start"
     },
-    "kicker": "STEP PLAN FREE EXPERIENCE",
+    "kicker": "FREE TRIAL CLOSED",
     "badges": [
-      "UP TO 75 DAYS",
-      "FLAGSHIP MODELS",
-      "1M CONTEXT"
+      "FREE TRIAL CLOSED",
+      "PAID PLAN"
     ],
-    "freeSummary": "Step Plan 当前免费体验活动最高可叠加至 75 天；登录、首次 API 调用和邀请奖励按活动页实时规则发放",
-    "freeSummaryEn": "Current Step Plan promotion can stack up to 75 days; login, first-call and referral rewards follow the live campaign rules",
-    "validitySummary": "Limited-time promotion; entitlement and invitation rules can change",
+    "freeSummary": "已结束：Step Plan 官网已挂出“关于免费体验及 Plan 购买名额调整的通知”，新增免费体验领取通道已关闭；“最高 75 天”攻略不再适用。",
+    "freeSummaryEn": "Ended: the official Step Plan page posted a notice adjusting the free experience and plan quotas; new free-experience claims are closed (no later than 2026-09-22) and the \"up to 75 days\" guide no longer applies. Step Plan is now a paid subscription.",
+    "validitySummary": "新增免费体验通道已关闭（不晚于 2026-09-22）· 现为付费月池套餐",
     "accessSummary": "StepFun account + Step API Key; Step Plan entitlement required",
-    "checkedSummary": "2026-09-22 / official Step Plan and API docs + current promotion cross-check",
-    "title": "StepFun · Step Plan 最高 75 天免费体验",
-    "titleZh": "阶跃星辰 Step Plan · 最高 75 天免费体验",
-    "why": "StepFun 官方 Step Plan 页面确认该订阅覆盖旗舰模型，官方快速开始给出 Step Plan 专用 OpenAI/Anthropic 兼容接口并推荐 step-5-preview。当前活动信息显示免费体验可通过登录、首次 API 调用和邀请奖励叠加，最高达到 75 天；具体邀请名额、体验档位和到期时间以登录后的活动页为准。",
-    "whyEn": "StepFun's official Step Plan page confirms flagship-model access, while the official quick start documents dedicated OpenAI- and Anthropic-compatible endpoints and recommends step-5-preview. Current promotion reports show the free experience can stack through login, first API call and referral rewards up to 75 days; exact referral limits, trial tier and expiry should be confirmed in the logged-in campaign page.",
-    "mechanism": "Limited-time Step Plan subscription trial; login / first-call / referral rewards can extend the entitlement",
-    "mechanismEn": "Limited-time Step Plan subscription trial with login, first-call and referral extensions",
-    "validity": "Promotion is time-sensitive; current account entitlement and campaign terms control",
+    "checkedSummary": "2026-10-08 / official Step Plan page + Step Plan overview",
+    "title": "StepFun · Step Plan 免费体验（已结束）",
+    "titleZh": "阶跃星辰 Step Plan · 免费体验已结束",
+    "why": "StepFun 官方 Step Plan 页面常见问题已列出“关于免费体验及 Plan 购买名额调整的通知”，同期多家报道记录该通知关闭了新增免费体验领取通道。官方 Step Plan 概述当前只列 Flash Mini ¥49/月、Flash Plus ¥99/月、Flash Pro ¥199/月、Flash Max ¥699/月四档付费套餐，没有免费档。已领取用户的剩余权益以账户页为准。",
+    "whyEn": "Historical entry. StepFun's Step Plan free experience is closed to new claims (no later than 2026-09-22); the official Step Plan page now sells it as a paid subscription. The earlier \"stack up to 75 days\" promotion no longer applies. The endpoints below are kept for reference only.",
+    "mechanism": "Former Step Plan free-trial promotion (login / first call / referral stacking). New claims are closed; Step Plan is a paid Credit monthly pool (1M Credit = ¥1).",
+    "mechanismEn": "Former Step Plan free-trial promotion (login / first call / referral stacking). New claims are closed; Step Plan is now a paid Credit monthly-pool subscription.",
+    "validity": "New free-trial claims closed no later than 2026-09-22; Step Plan is now a paid Credit monthly-pool subscription (Flash Mini ¥49/month and up)",
     "access": "StepFun Open Platform account and API key; Step Plan must be active",
-    "command": "curl https://api.stepfun.com/step_plan/v1/chat/completions --header 'Authorization: Bearer ${STEP_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"step-5-preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+    "command": "curl https://api.stepfun.com/step_plan/v1/chat/completions --header \"Authorization: Bearer $STEP_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"step-5-preview\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
     "register": "https://platform.stepfun.com/step-plan",
     "registerLabel": "打开 Step Plan 官方页面",
     "registerLabelEn": "Open official Step Plan page",
@@ -6004,13 +6064,13 @@
     "renewal": "Free-experience entitlement expires; paid renewal and plan pricing follow the current Step Plan page",
     "sourceUrls": [
       "https://platform.stepfun.com/step-plan",
-      "https://platform.stepfun.com/docs/zh/step-plan/quick-start",
-      "https://platform.stepfun.com/docs/zh/guides/models/step-5-preview"
+      "https://platform.stepfun.com/docs/zh/step-plan/overview",
+      "https://www.aipromonow.com/promos/stepfun-step-plan-15d-login-firstcall-invite-sep2026"
     ],
-    "evidence": "Official Step Plan materials confirm flagship-model access; official quick-start docs list https://api.stepfun.com/step_plan/v1 for OpenAI-compatible Chat Completions and https://api.stepfun.com/step_plan for Anthropic-compatible Messages, recommending step-5-preview. Official Step 5 Preview docs specify a 1M-token context window. The live campaign's 75-day stacking mechanics are time-sensitive and were cross-checked against multiple contemporaneous reports; the logged-in Step Plan campaign page remains authoritative for exact reward/tier details.",
+    "evidence": "2026-10-08 复核：官方 Step Plan 页面 FAQ 第 09 项为“关于免费体验及 Plan 购买名额调整的通知”；官方 Step Plan 概述只列四档付费套餐（¥49/¥99/¥199/¥699 月付）。第三方活动追踪页记录 9 月 22 日官网弹窗写明“关闭新增免费体验领取通道”。",
     "confidence": "medium",
     "confidenceReason": "Official docs verify the product, flagship-model access, Step Plan endpoints and 1M context. The 75-day promotion is corroborated by multiple current reports, but the public crawler does not expose the expanded official referral-rule text and sources disagree on the exact free-experience tier.",
-    "notes": "2026-09-22 新增。与 stepfun-limited-time-free 分开：旧条目记录单个 API 模型的限免状态，本条目记录 Step Plan 订阅体验活动。未写死 ¥99 / Flash Plus，因为当前可访问的官方页面未公开显示体验档位，第三方来源存在 Flash Mini / Flash Plus 冲突。",
+    "notes": "2026-10-08 标记为 expired：新用户已无法领取免费体验。已领取用户的剩余天数以账户页为准，本条不再作为免费入口展示。",
     "freeModels": [
       {
         "model": "step-5-preview",
@@ -6063,7 +6123,10 @@
           "note": "确认 1M tokens 上下文窗口、最大输入和模型规格"
         }
       ]
-    }
+    },
+    "expires_at": "2026-09-22",
+    "titleEn": "StepFun Step Plan · Free experience ended",
+    "validitySummaryEn": "New free-experience claims closed (no later than 2026-09-22) · now a paid monthly plan"
   },
   {
     "id": "puter-mimo-v2-6-flash-free",
@@ -6102,7 +6165,7 @@
       "authentication": "Browser Puter.js handles user auth automatically; OpenAI-compatible server/CLI uses Authorization: Bearer ${PUTER_AUTH_TOKEN} and currently requires a paid Puter plan",
       "examples": {
         "javascript": "puter.ai.chat('Reply with exactly: MiMo OK', { model: 'xiaomi/mimo-v2.6-flash' })",
-        "curl": "curl https://api.puter.com/puterai/openai/v1/chat/completions --header 'Authorization: Bearer ${PUTER_AUTH_TOKEN}' --header 'Content-Type: application/json' --data '{\"model\":\"xiaomi/mimo-v2.6-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Reply with exactly: MiMo OK\"}]}'  # paid Puter plan required"
+        "curl": "curl https://api.puter.com/puterai/openai/v1/chat/completions --header \"Authorization: Bearer $PUTER_AUTH_TOKEN\" --header 'Content-Type: application/json' --data '{\"model\":\"xiaomi/mimo-v2.6-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"Reply with exactly: MiMo OK\"}]}'  # paid Puter plan required"
       },
       "docsUrl": "https://developer.puter.com/ai/xiaomi/mimo-v2.6-flash/"
     },
@@ -6259,7 +6322,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${TOKENHUB_API_KEY}",
       "examples": {
-        "curl": "curl -X POST https://tokenhub.tencentmaas.com/v1/chat/completions -H 'Authorization: Bearer ${TOKENHUB_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"deepseek/deepseek-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+        "curl": "curl -X POST https://tokenhub.tencentmaas.com/v1/chat/completions -H \"Authorization: Bearer $TOKENHUB_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"deepseek/deepseek-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
       },
       "docsUrl": "https://cloud.tencent.com/document/product/1823/130058"
     },
@@ -6402,7 +6465,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${QIANFAN_API_KEY}",
       "examples": {
-        "curl": "curl https://qianfan.baidubce.com/v2/chat/completions --header 'Authorization: Bearer ${QIANFAN_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"ernie-x1-turbo-32k\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+        "curl": "curl https://qianfan.baidubce.com/v2/chat/completions --header \"Authorization: Bearer $QIANFAN_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"ernie-x1-turbo-32k\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
       },
       "docsUrl": "https://cloud.baidu.com/doc/qianfan-docs/s/Fm9l6ocai"
     },
@@ -6539,7 +6602,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${WQ_API_KEY}",
       "examples": {
-        "curl": "curl https://wanqing.streamlakeapi.com/api/gateway/v1/endpoints/chat/completions --header 'Authorization: Bearer ${WQ_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"KAT-Coder-Air-V1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'"
+        "curl": "curl https://wanqing.streamlakeapi.com/api/gateway/v1/endpoints/chat/completions --header \"Authorization: Bearer $WQ_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"KAT-Coder-Air-V1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'"
       },
       "docsUrl": "https://www.streamlake.com/document/WANQING/me6yi4shauyxx5fhdtv"
     },
@@ -6693,7 +6756,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${CTYUN_APP_KEY}",
       "examples": {
-        "curl": "curl https://ai.ctaigw.cn/v1/chat/completions --header 'Authorization: Bearer ${CTYUN_APP_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"GLM-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+        "curl": "curl https://ai.ctaigw.cn/v1/chat/completions --header \"Authorization: Bearer $CTYUN_APP_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"GLM-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
       },
       "docsUrl": "https://www.ctyun.cn/document/11061839/11062271"
     },
@@ -6838,7 +6901,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${ZHIPU_API_KEY}",
       "examples": {
-        "curl": "curl https://open.bigmodel.cn/api/paas/v4/chat/completions --header 'Authorization: Bearer ${ZHIPU_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"glm-5.2\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+        "curl": "curl https://open.bigmodel.cn/api/paas/v4/chat/completions --header \"Authorization: Bearer $ZHIPU_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"glm-5.2\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
       },
       "docsUrl": "https://docs.bigmodel.cn/"
     },
@@ -6937,7 +7000,8 @@
           "url": "https://bigmodel.cn/activity/trial-card/GBG6IX0OID"
         }
       ]
-    }
+    },
+    "freeModels": null
   },
   {
     "id": "xiaomi-mimo-v2-5-tts-free",
@@ -6973,7 +7037,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${MIMO_API_KEY}",
       "examples": {
-        "curl": "curl https://api.xiaomimimo.com/v1/chat/completions --header 'Authorization: Bearer ${MIMO_API_KEY}' --header 'Content-Type: application/json' --data '{\"model\":\"mimo-v2.5-tts\",\"messages\":[{\"role\":\"user\",\"content\":\"请用自然温和的语气朗读：你好，欢迎使用 MiMo。\"}],\"audio\":{\"format\":\"wav\"}}'"
+        "curl": "curl https://api.xiaomimimo.com/v1/chat/completions --header \"Authorization: Bearer $MIMO_API_KEY\" --header 'Content-Type: application/json' --data '{\"model\":\"mimo-v2.5-tts\",\"messages\":[{\"role\":\"user\",\"content\":\"请用自然温和的语气朗读：你好，欢迎使用 MiMo。\"}],\"audio\":{\"format\":\"wav\"}}'"
       },
       "docsUrl": "https://mimo.mi.com/docs/zh-CN/news/latest/v2.5-tts-release"
     },
@@ -6986,7 +7050,7 @@
     "freeSummary": "MiMo 官方定价与模型页当前将 V2.5-TTS、VoiceDesign、VoiceClone 三款 API 标为限时免费。",
     "validitySummary": "限时免费 · 官方未公布统一结束日期",
     "accessSummary": "MiMo account + API Key · China / overseas pricing pages both mark TTS free",
-    "checkedSummary": "2026-09-29 / official Xiaomi MiMo release + pricing + model pages",
+    "checkedSummary": "2026-10-10 / Xiaomi MiMo 官方价格页：TTS 系列仍限时免费",
     "title": "Xiaomi MiMo · V2.5 TTS 三款 API 当前限时免费",
     "why": "Xiaomi MiMo 官方 V2.5-TTS 发布公告、按量定价页和模型详情页都明确写明三款 TTS API 当前“限时免费”。官方模型页同时给出 OpenAI 兼容接入、Base URL、RPM 100 与 TPM 10M。免费没有公布固定结束时间，因此必须按限时活动处理，不能标为永久免费。",
     "mechanism": "Three MiMo V2.5 TTS APIs are temporarily priced at zero on the official Open Platform",
@@ -7052,7 +7116,7 @@
     "evidence": "Xiaomi MiMo 官方 V2.5-TTS 发布页明确三款 TTS 模型均在开放平台限时免费；官方按量定价页在国内与海外价格表中均将三款 TTS 标为“限时免费”；官方模型页给出 API Key、OpenAI 兼容 Base URL、RPM 100 和 TPM 10M。",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-29",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "notes": "VoiceClone 涉及声音权利与授权风险，使用前需确认自己拥有相应声音素材的合法授权。免费结束时间未公开，必须在调用前重新核官方价格页。",
     "freeModels": [
@@ -7456,7 +7520,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${ARK_API_KEY}",
       "examples": {
-        "curl": "curl https://ark.cn-beijing.volces.com/api/v3/chat/completions -H 'Authorization: Bearer ${ARK_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"doubao-1-5-pro-32k-250115\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+        "curl": "curl https://ark.cn-beijing.volces.com/api/v3/chat/completions -H \"Authorization: Bearer $ARK_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"doubao-1-5-pro-32k-250115\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
       },
       "docsUrl": "https://docs.volcengine.com/docs/ark/free-tokens-only-mode?lang=zh"
     },
@@ -7469,7 +7533,7 @@
     "freeSummary": "火山方舟官方安心体验模式：新用户可使用平台赠送的 500,000 Tokens 免费推理额度；额度接近/耗尽后服务自动暂停，避免继续产生模型推理费用。",
     "validitySummary": "新用户体验额度；安心体验模式关闭后无法重新开启",
     "accessSummary": "Ark account + API Key · Beijing v3 OpenAI-compatible API",
-    "checkedSummary": "2026-09-29 / official Ark safe-experience + API docs",
+    "checkedSummary": "2026-10-10 / 火山方舟安心体验模式文档：50w token 免费额度",
     "title": "火山方舟 · 新用户 50 万 Tokens + 安心体验模式",
     "why": "火山方舟官方安心体验模式文档明确：平台为新用户提供 50 万 Tokens 免费推理额度，安心体验模式开启时只消耗这部分免费额度，达到边界后服务自动暂停；关闭安心体验模式后无法重新开启。免费额度仅抵扣模型推理 Token，不抵扣联网插件、知识库等附加费用。",
     "mechanism": "New-user platform gift of 500,000 inference tokens with optional Safe Experience Mode that pauses model service at the free-quota boundary",
@@ -7534,7 +7598,7 @@
     "evidence": "火山方舟官方安心体验文档（最近更新 2026-08-13）明确平台赠送 50 万 Token 免费推理额度，并在安心体验模式下于额度耗尽时自动暂停服务；API Key 文档与 v3 文档确认 Bearer API Key 和 https://ark.cn-beijing.volces.com/api/v3/chat/completions OpenAI 兼容调用。",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-29",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "notes": "安心体验只保护模型推理 Token 费用，联网插件、知识库等附加能力仍可能产生费用。安心体验模式关闭后无法重新开启。实际可用模型以控制台开通管理页为准。",
     "freeLLMTest": {
@@ -7603,7 +7667,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${DASHSCOPE_API_KEY}",
       "examples": {
-        "curl": "curl https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions -H 'Authorization: Bearer ${DASHSCOPE_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
+        "curl": "curl https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions -H \"Authorization: Bearer $DASHSCOPE_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"qwen-plus\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'"
       },
       "docsUrl": "https://www.alibabacloud.com/help/zh/model-studio/new-free-quota"
     },
@@ -7616,7 +7680,7 @@
     "freeSummary": "国际站：首次开通 Model Studio 新加坡地域后，平台自动发放各模型新人免费额度；仅新加坡地域享该免费额度，其他国际地域无此新人额度。",
     "validitySummary": "Singapore region · 90 days",
     "accessSummary": "Alibaba Cloud International account + required account information + Singapore API Key",
-    "checkedSummary": "2026-09-29 / official Alibaba Cloud International free-quota docs",
+    "checkedSummary": "2026-10-10 / 阿里云国际站新人免费额度文档：新加坡地域，90 天有效",
     "title": "Alibaba Cloud Model Studio 国际站 · 新加坡新人免费额度",
     "why": "Alibaba Cloud 国际站官方文档 2026-09-22 更新明确：首次开通 Model Studio 新加坡地域时，平台自动发放各模型新人免费额度；仅新加坡地域模型享免费额度；自 9 月 8 日起新开通用户额度有效期为 90 天。9 月 15 日起需先完善账户信息，且 Free Quota Only 默认关闭，若不手动开启，额度耗尽后会自动转 PAYG。",
     "mechanism": "Singapore-region new-user per-model free quota on Alibaba Cloud International",
@@ -7671,7 +7735,7 @@
     "evidence": "Alibaba Cloud International official docs updated Sep 2026 state that only Singapore-region models receive the new-user free quota, valid for 90 days for newly activated users; Free Quota Only is disabled by default and can be enabled to prevent automatic PAYG after exhaustion.",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-09-29",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "notes": "Do not merge this policy with the China-site Beijing quota. They are different editions/accounts/regions. Exact per-model quota amounts must be read from the international pricing/console.",
     "freeLLMTest": {
@@ -7734,7 +7798,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${SPARK_API_PASSWORD}",
       "examples": {
-        "curl": "curl https://spark-api-open.xf-yun.com/v1/chat/completions -H 'Authorization: Bearer ${SPARK_API_PASSWORD}' -H 'Content-Type: application/json' -d '{\"model\":\"lite\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'"
+        "curl": "curl https://spark-api-open.xf-yun.com/v1/chat/completions -H \"Authorization: Bearer $SPARK_API_PASSWORD\" -H 'Content-Type: application/json' -d '{\"model\":\"lite\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'"
       },
       "docsUrl": "https://www.xfyun.cn/doc/spark/HTTP调用文档.html"
     },
@@ -7861,7 +7925,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${AISTUDIO_ACCESS_TOKEN}",
       "examples": {
-        "curl": "curl https://aistudio.baidu.com/llm/lmapi/v3/chat/completions -H 'Authorization: Bearer ${AISTUDIO_ACCESS_TOKEN}' -H 'Content-Type: application/json' -d '{\"model\":\"ernie-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+        "curl": "curl https://aistudio.baidu.com/llm/lmapi/v3/chat/completions -H \"Authorization: Bearer $AISTUDIO_ACCESS_TOKEN\" -H 'Content-Type: application/json' -d '{\"model\":\"ernie-5.1\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
       },
       "docsUrl": "https://ai.baidu.com/ai-doc/AISTUDIO/rm344erns"
     },
@@ -7990,7 +8054,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${MAAS_API_KEY}",
       "examples": {
-        "curl": "curl https://api.modelarts-maas.com/v1/chat/completions -H 'Authorization: Bearer ${MAAS_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"qwen3-30b-a3b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+        "curl": "curl https://api.modelarts-maas.com/v1/chat/completions -H \"Authorization: Bearer $MAAS_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"qwen3-30b-a3b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
       },
       "docsUrl": "https://support.huaweicloud.com/model-call-maas/model-call-020.html"
     },
@@ -8124,7 +8188,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${TELEAI_API_KEY}",
       "examples": {
-        "curl": "curl https://openapi.teleagi.cn/aipaas/telechat3-438b-a24b/v1/responses -H 'Authorization: Bearer ${TELEAI_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"TeleChat3-438B-A24B\",\"input\":\"你好，一句话介绍一下你自己\",\"stream\":false}'"
+        "curl": "curl https://openapi.teleagi.cn/aipaas/telechat3-438b-a24b/v1/responses -H \"Authorization: Bearer $TELEAI_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"TeleChat3-438B-A24B\",\"input\":\"你好，一句话介绍一下你自己\",\"stream\":false}'"
       },
       "docsUrl": "https://www.teleai.com.cn/doc/Z0NYbElFeHijOtnPenj6/jBs54Z3VaFXvQ5jr2oXh"
     },
@@ -8259,7 +8323,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${SCNET_API_KEY}",
       "examples": {
-        "curl": "curl https://api.scnet.cn/api/llm/v1/ocrdoc/submit -H 'Authorization: Bearer ${SCNET_API_KEY}' -F 'file_url=https://example.com/sample.pdf' -F 'ocr_type=DOC_PARING'"
+        "curl": "curl https://api.scnet.cn/api/llm/v1/ocrdoc/submit -H \"Authorization: Bearer $SCNET_API_KEY\" -F 'file_url=https://example.com/sample.pdf' -F 'ocr_type=DOC_PARING'"
       },
       "docsUrl": "https://www.scnet.cn/ac/openapi/doc/2.0/moduleapi/api/ocrdoc.html"
     },
@@ -8405,7 +8469,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${ACCESS_TOKEN}",
       "examples": {
-        "curl": "curl https://maas-api.ai-yuanjing.com/openapi/compatible-mode/v1/chat/completions -H 'Authorization: Bearer ${ACCESS_TOKEN}' -H 'Content-Type: application/json' -d '{\"model\":\"qwen35-397b-a17b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'"
+        "curl": "curl https://maas-api.ai-yuanjing.com/openapi/compatible-mode/v1/chat/completions -H \"Authorization: Bearer $ACCESS_TOKEN\" -H 'Content-Type: application/json' -d '{\"model\":\"qwen35-397b-a17b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}],\"stream\":false}'"
       },
       "docsUrl": "https://maas.ai-yuanjing.com/doc/pages/216556925/"
     },
@@ -8581,7 +8645,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${BAICHUAN_API_KEY}",
       "examples": {
-        "curl": "curl https://api.baichuan-ai.com/v1/chat/completions -H 'Authorization: Bearer ${BAICHUAN_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"Baichuan-M3-Plus\",\"messages\":[{\"role\":\"user\",\"content\":\"请总结以下临床教育材料的关键点\"}]}'"
+        "curl": "curl https://api.baichuan-ai.com/v1/chat/completions -H \"Authorization: Bearer $BAICHUAN_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"Baichuan-M3-Plus\",\"messages\":[{\"role\":\"user\",\"content\":\"请总结以下临床教育材料的关键点\"}]}'"
       },
       "docsUrl": "https://platform.baichuan-ai.com/docs-v2/api"
     },
@@ -8722,7 +8786,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${PPIO_API_KEY}",
       "examples": {
-        "curl": "curl https://api.ppio.com/openai/v1/chat/completions -H 'Authorization: Bearer ${PPIO_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"ppio-4b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+        "curl": "curl https://api.ppio.com/openai/v1/chat/completions -H \"Authorization: Bearer $PPIO_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"ppio-4b\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
       },
       "docsUrl": "https://ppio.com/ai-computing/llm-api"
     },
@@ -8868,7 +8932,7 @@
       "method": "POST",
       "authentication": "Authorization: Bearer ${INFINIAI_API_KEY}",
       "examples": {
-        "curl": "curl https://cloud.infini-ai.com/maas/v1/embeddings -H 'Authorization: Bearer ${INFINIAI_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"bge-m3\",\"input\":[\"hello world\"]}'"
+        "curl": "curl https://cloud.infini-ai.com/maas/v1/embeddings -H \"Authorization: Bearer $INFINIAI_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"bge-m3\",\"input\":[\"hello world\"]}'"
       },
       "docsUrl": "https://docs.infini-ai.com/gen-studio/api/retrieval/tutorial-embeddings.html"
     },
@@ -8998,7 +9062,7 @@
     "id": "ant-ling-3-1-flash-free",
     "order": 70,
     "date": "2026-10-02",
-    "lastVerifiedAt": "2026-10-02",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "status": "verified",
     "phoneRequired": "unknown",
@@ -9052,7 +9116,7 @@
       "262K 上下文",
       "API"
     ],
-    "checkedSummary": "2026-10-02 / Vercel AI Gateway official sources",
+    "checkedSummary": "2026-10-10 / Vercel AI Gateway + OpenRouter official model pages",
     "why": "FreeLLM 评估：这条 Vercel 路由适合在免费窗口内验证中文摘要、代码修复和多步工具任务。560B 总参数、25B 激活参数说明了模型规模，但不能单独证明速度或输出质量；当前可核对的服务上下文是 262K，不能把 1M 写成这条免费 API 的能力。免费入口有明确截止日期，适合试用和原型验证，不建议直接依赖在生产服务中。",
     "whyEn": "FreeLLM assessment: this Vercel route is worth testing for Chinese summarization, code repair, and multi-step tool tasks during the free window. Its 560B total and 25B active parameter counts describe model scale, not speed or output quality. The verifiable context for this route is 262K, so do not treat 1M as the free API limit. The dated promotion suits evaluation and prototypes, not production dependency.",
     "mechanism": "Vercel AI Gateway lists a promotional free route for Ling-3.1-flash. Use the distinct -free model ID to avoid the standard model ID that may become billable after the promotion.",
@@ -9078,12 +9142,17 @@
       [
         "蚂蚁百灵模型文档",
         "https://developer.ant-ling.com/zh-CN/docs/models/ling/"
+      ],
+      [
+        "OpenRouter 免费模型页",
+        "https://openrouter.ai/inclusionai/ling-3.1-flash:free"
       ]
     ],
     "sourceUrls": [
       "https://vercel.com/changelog/ling-3-1-flash-is-now-available-on-ai-gateway",
       "https://vercel.com/ai-gateway/models/ling-3.1-flash-free",
-      "https://developer.ant-ling.com/zh-CN/docs/models/ling/"
+      "https://developer.ant-ling.com/zh-CN/docs/models/ling/",
+      "https://openrouter.ai/inclusionai/ling-3.1-flash:free"
     ],
     "usageGuide": {
       "summary": "在 Vercel AI Gateway 创建 API Key，使用限时免费模型 ID 调用 Ling-3.1-flash。",
@@ -9116,7 +9185,7 @@
     "freeModelsSource": "Vercel AI Gateway",
     "freeMechanismSource": "Vercel limited-time promotion",
     "confidence": "high",
-    "notes": "本条目只记录 Vercel AI Gateway 的免费路由，不代表蚂蚁百灵自有平台的限免政策。Vercel 模型页将当前路由列为 262K 上下文，并注明活动结束后免费 ID 停止服务。",
+    "notes": "本条目只记录 Vercel AI Gateway 的免费路由，不代表蚂蚁百灵自有平台的限免政策。Vercel 模型页将当前路由列为 262K 上下文，并注明活动结束后免费 ID 停止服务。 2026-10-10 复核：Vercel 模型页仍写明 Promotional pricing ends on October 13, 2026；OpenRouter 也上线 inclusionai/ling-3.1-flash:free（页面标 Free、262K 上下文，免费端点受 OpenRouter 免费限流约束）。已写入 expires_at=2026-10-13，到期后自动下架。",
     "evidence": "Vercel 官方发布说明列出 560B 总参数、25B 激活参数、262K 上下文及免费至 2026-10-13；Vercel 免费模型页说明 -free ID 在促销结束后停止服务。蚂蚁百灵开发者文档目前主要列出 Ling-3.0 系列，因此 1M 上下文不在本条目的已核验能力中。",
     "freeLLMTest": {
       "testLevel": "preflight",
@@ -9147,13 +9216,14 @@
       ]
     },
     "freeLLMTestNotes": "评测状态透明披露：三次 API 调用都因 401 未获得模型结果，暂时只有资料评估，没有可报告的模型输出成绩。",
-    "titleZh": "蚂蚁百灵 Ling-3.1-flash · 限时免费 API"
+    "titleZh": "蚂蚁百灵 Ling-3.1-flash · 限时免费 API",
+    "expires_at": "2026-10-13"
   },
   {
     "id": "vercel-laya-free",
     "order": 71,
     "date": "2026-10-03",
-    "lastVerifiedAt": "2026-10-03",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "status": "verified",
     "phoneRequired": "unknown",
@@ -9207,7 +9277,7 @@
       "结构化判定",
       "8K 上下文"
     ],
-    "checkedSummary": "2026-10-03 / Vercel AI Gateway official model page and changelog",
+    "checkedSummary": "2026-10-10 / Vercel AI Gateway model page + changelog",
     "why": "Laya 是面向分类、路由、守护规则与评分的结构化判定模型，可对一次输入回答多个选择题、评分题或是非题。它不生成自由文本，适合验证工作流中的判断步骤。Vercel AI Gateway 目前将其标为免费，促销截至 2026-10-31；未公开的请求额度不作推测。",
     "whyEn": "Laya is a structured evaluation model for classification, routing, guardrails, and scoring. It answers choice, score, or boolean questions about shared state rather than generating free-form text. Vercel AI Gateway lists it as free through 2026-10-31; unpublished request limits are not inferred.",
     "mechanism": "Vercel AI Gateway lists the Laya free route with promotional pricing through 2026-10-31. Call it with the AI SDK experimental_evaluate interface; standard chat-completion clients are not the documented integration.",
@@ -9257,43 +9327,454 @@
     "freeModelsSource": "Vercel AI Gateway",
     "freeMechanismSource": "Vercel limited-time promotion",
     "confidence": "high",
-    "notes": "本条目只记录 Vercel AI Gateway 的免费路由，不代表蚂蚁百灵自有平台的限免政策。Vercel 模型页将当前路由列为 262K 上下文，并注明活动结束后免费 ID 停止服务。",
-    "evidence": "Vercel 官方发布说明列出 560B 总参数、25B 激活参数、262K 上下文及免费至 2026-10-13；Vercel 免费模型页说明 -free ID 在促销结束后停止服务。蚂蚁百灵开发者文档目前主要列出 Ling-3.0 系列，因此 1M 上下文不在本条目的已核验能力中。",
+    "notes": "本条目只记录 Vercel AI Gateway 上 Boundless 提供的免费路由。Laya 返回结构化判定，不生成自由文本；8K 上下文。2026-10-08 修正：此前 evidence/notes/titleZh/实测记录误抄了 Ling-3.1-flash 条目的内容，已删除误挂的 Ling 实测记录。 2026-10-10 复核：Vercel 官方 changelog 仍写明 free through October 31, 2026；已写入 expires_at=2026-10-31，到期后自动下架。 2026-10-10 修正：titleZh 与 evidence 曾误写为蚂蚁百灵 Ling-3.1-flash，误挂的 Ling 实测记录已移除。",
+    "evidence": "Vercel AI Gateway 模型页 https://vercel.com/ai-gateway/models/laya-free 将 convaiinnovations/laya-free 标为 Free，上下文 8,192 tokens；Vercel changelog 写明免费至 2026-10-31。Laya 返回结构化判定（布尔 / 评分 / 选择题），通过 AI SDK experimental_evaluate 调用，不生成自由文本。",
+    "titleZh": "Laya 结构化判定模型 · 限时免费 API",
     "freeLLMTest": {
       "testLevel": "preflight",
       "status": "blocked",
-      "testedAt": "2026-10-02",
+      "testedAt": "2026-10-10",
       "actualUsageVerified": false,
-      "task": "检查免费模型 ID，并尝试中文事实摘要、Python 修错、多步规划三个固定任务；记录输出质量和请求耗时。",
+      "task": "核对 convaiinnovations/laya-free 在 Vercel AI Gateway 的免费状态、上下文与促销截止日。",
       "method": [
-        "核对 Vercel AI Gateway 官方公告与当前免费模型页。",
-        "使用 inclusionai/ling-3.1-flash-free 向官方 OpenAI 兼容接口发送三条固定提示。",
-        "三次请求均在鉴权阶段返回 HTTP 401，没有模型输出；因此未给输出质量或延迟打分。"
+        "打开 Vercel AI Gateway 官方模型页 /ai-gateway/models/laya-free，核对价格（Free）、上下文（8K）、提供方（Boundless）与促销截止说明。",
+        "本次没有 Vercel AI Gateway API Key，未发起调用，没有模型输出。"
       ],
-      "result": "FreeLLM 已核实免费路由、当前上下文和促销截止日；本次运行环境未通过网关鉴权，不能据此评价模型本身。实际回答质量、代码任务成功率和首 Token 延迟仍待有效账号下复测。",
-      "limitations": "HTTP 401 是本次调用环境的鉴权失败，不是模型推理失败。未验证生成质量、真实额度、并发上限或稳定性；活动期与路由规则可能变化。",
+      "result": "官方模型页标注 Price: Free、8K 上下文，并写明 Promotional pricing ends on October 31, 2026。未做真实调用，判定质量与延迟未测。",
+      "limitations": "仅为页面核对（preflight），未验证真实额度、限流或稳定性；官方示例代码目前使用 AI SDK 的 experimental_decide。",
       "evidence": [
         {
-          "label": "Vercel 发布说明",
-          "url": "https://vercel.com/changelog/ling-3-1-flash-is-now-available-on-ai-gateway"
-        },
-        {
-          "label": "Vercel 免费模型页",
-          "url": "https://vercel.com/ai-gateway/models/ling-3.1-flash-free"
-        },
-        {
-          "label": "Vercel Chat Completions API 文档",
-          "url": "https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions"
+          "label": "Vercel Laya (Free) 模型页",
+          "url": "https://vercel.com/ai-gateway/models/laya-free"
         }
       ]
     },
     "freeLLMTestNotes": "评测状态透明披露：三次 API 调用都因 401 未获得模型结果，暂时只有资料评估，没有可报告的模型输出成绩。",
-    "titleZh": "蚂蚁百灵 Ling-3.1-flash · 限时免费 API"
+    "expires_at": "2026-10-31"
+  },
+  {
+    "id": "unisound-u2-flash-free-month",
+    "order": 72,
+    "date": "2026-10-08",
+    "name": "Unisound U2 Flash free month",
+    "providerMark": "云",
+    "provider": "Unisound MaaS",
+    "providerMeta": "云知声 MaaS 平台 · China",
+    "model": "U2 Flash (u2-flash)",
+    "modelMeta": "Agent / Coding LLM · OpenAI & Anthropic compatible",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "在云知声 MaaS 创建 API Key，活动期内以 0 元调用 u2-flash（OpenAI 兼容 Chat Completions）",
+      "prerequisites": [
+        "云知声 MaaS 账号",
+        "API Key（按量计费&资源包 > API Key 管理）"
+      ],
+      "steps": [
+        "登录 https://maas.unisound.com/ ，在“按量计费&资源包 > API Key 管理”创建 API Key。",
+        "使用 https://maas-api.unisound.com/v1 作为 OpenAI 兼容 base_url，模型 ID 填 u2-flash。",
+        "活动期 2026-09-30 至 2026-10-31 内输入、缓存命中、输出均为 0 元；活动结束后按官方价格表计费，长期使用前复核。"
+      ],
+      "endpoint": "https://maas-api.unisound.com/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${UNISOUND_API_KEY}",
+      "examples": {
+        "curl": "curl https://maas-api.unisound.com/v1/chat/completions -H \"Authorization: Bearer $UNISOUND_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"u2-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+      },
+      "docsUrl": "https://maas.unisound.com/docs/api/text/openai-compatible"
+    },
+    "kicker": "FREE UNTIL OCT 31",
+    "badges": [
+      "限时免费",
+      "不限 Token",
+      "OPENAI 兼容"
+    ],
+    "freeSummary": "云知声官方价格页：U2 Flash 活动时间 2026-09-30 至 2026-10-31，输入、缓存命中、输出价格均为 0 元/百万 Tokens；官网横幅写明“限时免费无限量调用”。",
+    "validitySummary": "限时免费至 2026-10-31",
+    "accessSummary": "云知声 MaaS 账号 + API Key",
+    "checkedSummary": "2026-10-10 / 云知声官方价格页：U2 Flash 限时免费 2026.09.30-2026.10.31",
+    "title": "云知声 U2 Flash · 国庆免费月 API",
+    "why": "云知声 MaaS 官方价格页在 U2 Flash 下标注“限时免费，活动时间：2026.09.30-2026.10.31。活动期间输入、缓存命中、输出价格均为 0 元/百万 tokens”，官网顶部横幅写明“限时免费无限量调用”。U2 Flash 面向 Agent 与 Coding 场景，官方文档给出 OpenAI 兼容 base_url https://maas-api.unisound.com/v1 与模型 ID u2-flash。官方未公布活动期内的具体速率限制，FreeLLM 不作推测。",
+    "mechanism": "Limited-time ¥0 pricing for U2 Flash input, cached input and output on the official Unisound MaaS API",
+    "validity": "Free from 2026-09-30 through 2026-10-31 per the official pricing page; standard pricing applies afterwards",
+    "access": "Register on Unisound MaaS, create an API key, call model u2-flash",
+    "command": "curl https://maas-api.unisound.com/v1/chat/completions -H \"Authorization: Bearer $UNISOUND_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"u2-flash\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+    "register": "https://maas.unisound.com/",
+    "registerLabel": "打开云知声 MaaS",
+    "links": [
+      [
+        "官方价格页",
+        "https://maas.unisound.com/docs/price/overview"
+      ],
+      [
+        "U2 Flash 模型页",
+        "https://maas.unisound.com/models/u2-flash"
+      ],
+      [
+        "OpenAI 兼容接口",
+        "https://maas.unisound.com/docs/api/text/openai-compatible"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "中国大陆云知声 MaaS 平台；账号与网络可用性以官方为准",
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "limited_time_free",
+    "freePolicy": {
+      "type": "limited_time_free",
+      "startDate": "2026-09-30",
+      "endDate": "2026-10-31",
+      "unit": "promotion"
+    },
+    "expires_at": "2026-10-31",
+    "quota": "Input, cached input and output priced at ¥0 during the promotion; official banner says unlimited calls; rate limits not published for the promotion",
+    "renewal": "One-off promotion; standard U2 Flash pricing after 2026-10-31",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check Unisound MaaS user agreement",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "unknown",
+      "autoReload": "unknown",
+      "overageBehavior": "unknown",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://maas.unisound.com/docs/price/overview",
+      "https://maas.unisound.com/models/u2-flash",
+      "https://maas.unisound.com/docs/api/text/openai-compatible"
+    ],
+    "evidence": "2026-10-08 读取云知声 MaaS 官方价格页：U2 Flash “限时免费，活动时间：2026.09.30-2026.10.31。活动期间输入、缓存命中、输出价格均为 0 元/百万 tokens”；官网横幅“U2 Flash 全新上线！限时免费无限量调用（2026.09.30-2026.10.31）”；官方平台介绍给出 base_url https://maas-api.unisound.com/v1 与 model=u2-flash 示例。",
+    "status": "verified",
+    "confidence": "high",
+    "lastVerifiedAt": "2026-10-10",
+    "checkedBy": "manual",
+    "notes": "限时活动，10 月 31 日后按官方价格表计费；未实测调用，未验证速率限制。U2 Decision 在价格页也标为限时免费，但未标注结束日期，本条不纳入。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-10-08",
+      "actualUsageVerified": false,
+      "task": "核验 U2 Flash 限时免费期、价格与 OpenAI 兼容接入参数。",
+      "method": [
+        "读取云知声 MaaS 官方价格页，确认 U2 Flash 活动期 2026-09-30 至 2026-10-31 输入/缓存命中/输出均为 0 元。",
+        "读取官方平台介绍与 OpenAI 兼容 Chat 文档，确认 base_url https://maas-api.unisound.com/v1 与 model=u2-flash。",
+        "当前没有云知声 API Key，未发起真实调用。"
+      ],
+      "result": "官方公开预检通过：免费期、价格与接口参数均有官方页面支持。",
+      "limitations": "未实测调用，未验证注册门槛、速率限制、“无限量”在实际账号中的表现与输出质量。",
+      "evidence": [
+        {
+          "label": "云知声 MaaS 价格页",
+          "url": "https://maas.unisound.com/docs/price/overview"
+        },
+        {
+          "label": "OpenAI 兼容接口",
+          "url": "https://maas.unisound.com/docs/api/text/openai-compatible"
+        }
+      ]
+    }
+  },
+  {
+    "id": "intern-inkstone-token-plan-free",
+    "order": 73,
+    "date": "2026-10-08",
+    "name": "Intern InkStone Token Plan monthly free quota",
+    "providerMark": "书",
+    "provider": "Intern InkStone",
+    "providerMeta": "上海人工智能实验室 · 书生·端砚 · China",
+    "model": "书生 Intern-S2 / Atria-Dawn-Preview / Agents-A1 + 第三方模型（按墨点计费）",
+    "modelMeta": "Research model API · OpenAI & Anthropic compatible",
+    "type": [
+      "api",
+      "free"
+    ],
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "usageGuide": {
+      "summary": "登录书生·端砚，进入“科研模型（Token Plan）”查看测试期免费墨点并创建 API Key",
+      "prerequisites": [
+        "书生·端砚账号",
+        "Token Plan 页 API Key"
+      ],
+      "steps": [
+        "打开 https://discovery.intern-ai.org.cn/token-plan/home?tabIndex=0 并登录，查看墨点余额与使用限额。",
+        "在 API Key 页创建密钥；OpenAI 协议 base_url 为 https://discovery-api.intern-ai.org.cn/v1，Anthropic 协议为 https://discovery-api.intern-ai.org.cn。",
+        "先调用 /v1/models 查看当前账号可用模型 ID，再按模型列表与计费页选择模型；不同模型按不同单价扣墨点。"
+      ],
+      "endpoint": "https://discovery-api.intern-ai.org.cn/v1/models",
+      "method": "GET",
+      "authentication": "Authorization: Bearer ${INTERN_API_KEY}",
+      "examples": {
+        "curl": "curl https://discovery-api.intern-ai.org.cn/v1/models -H \"Authorization: Bearer $INTERN_API_KEY\""
+      },
+      "docsUrl": "https://discovery.intern-ai.org.cn/token-plan/home?tabIndex=0"
+    },
+    "kicker": "MONTHLY FREE TOKENS (BETA)",
+    "badges": [
+      "测试期每月免费",
+      "OPENAI / ANTHROPIC 兼容",
+      "科研模型"
+    ],
+    "freeSummary": "上海 AI 实验室官方公告：书生·端砚“墨点计划”（Token Plan）测试期间，每位用户每月可获免费 Token，用于调用多元模型与科研服务。",
+    "validitySummary": "测试期按月发放 · 结束时间未公布",
+    "accessSummary": "书生·端砚账号 + Token Plan API Key",
+    "checkedSummary": "2026-10-08 / 上海 AI 实验室官方公告 + Token Plan 控制台页",
+    "title": "书生·端砚 墨点计划 · 测试期每月免费 Token",
+    "why": "上海人工智能实验室 2026-09-13 官方新闻写明：书生·端砚推出科研模型“墨点计划”（Token Plan），测试期间每位用户每月可获免费 Token。官方 Token Plan 控制台页给出 OpenAI 协议 base_url https://discovery-api.intern-ai.org.cn/v1 与 Anthropic 协议地址，并注明 1 墨点最多可抵扣 5,000 万 tokens（以 DeepSeek-V4-Flash 为例）。社区普遍反馈注册后每月约 10 墨点，但官方公开页面未写明具体数量，FreeLLM 不把它写成承诺额度。",
+    "mechanism": "Beta-period monthly free 墨点 (credits) on the Intern InkStone Token Plan; different models deduct credits at different rates",
+    "validity": "Monthly free allocation during the beta test period; no public end date",
+    "access": "Sign in to Intern InkStone, open 科研模型 / Token Plan, create an API key",
+    "command": "curl https://discovery-api.intern-ai.org.cn/v1/models -H \"Authorization: Bearer $INTERN_API_KEY\"",
+    "register": "https://discovery.intern-ai.org.cn/token-plan/home?tabIndex=0",
+    "registerLabel": "打开书生·端砚 Token Plan",
+    "links": [
+      [
+        "官方公告",
+        "https://www.shlab.org.cn/news/5444294"
+      ],
+      [
+        "Token Plan 控制台",
+        "https://discovery.intern-ai.org.cn/token-plan/home?tabIndex=0"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "中国大陆书生·端砚平台；账号与测试期规则以控制台为准",
+    "freeMechanism": "monthly_quota",
+    "pricingModel": "monthly_quota",
+    "freePolicy": {
+      "type": "beta_monthly_credits",
+      "amount": null,
+      "unit": "墨点",
+      "period": "month"
+    },
+    "quota": "Monthly free 墨点 during beta (exact amount shown in the account; 1 墨点 deducts up to 50M tokens for DeepSeek-V4-Flash per the console); shared RPM/TPM limits across API keys",
+    "renewal": "Monthly allocation during the beta test period",
+    "phoneRequired": "unknown",
+    "cardRequired": "no",
+    "commercialUse": "Check Intern InkStone terms; positioned for research use",
+    "limits": {
+      "requestsPerMinute": null,
+      "requestsPerHour": null,
+      "requestsPerMonth": null,
+      "urlsPerMinute": null,
+      "concurrency": null
+    },
+    "billing": {
+      "walletRequired": false,
+      "cardRequired": "no",
+      "autoReload": "no",
+      "overageBehavior": "stop",
+      "prices": []
+    },
+    "sourceUrls": [
+      "https://www.shlab.org.cn/news/5444294",
+      "https://discovery.intern-ai.org.cn/token-plan/home?tabIndex=0"
+    ],
+    "evidence": "上海人工智能实验室官方新闻（2026-09-13）：“书生·端砚现已推出本地客户端及科研模型‘墨点计划’（Token Plan）。测试期间，每位用户每月可获免费Token”。官方 Token Plan 页显示 OpenAI 协议 https://discovery-api.intern-ai.org.cn/v1、Anthropic 协议 https://discovery-api.intern-ai.org.cn，以及“1 墨点最多可抵扣 5000,0000 tokens，以 DeepSeek-V4-Flash 为例”。",
+    "status": "verified",
+    "confidence": "medium",
+    "lastVerifiedAt": "2026-10-08",
+    "checkedBy": "manual",
+    "notes": "具体每月墨点数量（社区称 10 墨点）、哪些自有模型限时不扣墨点，均来自社区与登录后页面，官方公开公告未写明，FreeLLM 未登录核验。测试期结束时间未公布。与 atria-dawn-preview 条目（api.atria-asi.ai）是不同入口。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-10-08",
+      "actualUsageVerified": false,
+      "task": "核验书生·端砚墨点计划测试期免费 Token 与 API 接入地址。",
+      "method": [
+        "读取上海人工智能实验室 2026-09-13 官方新闻，确认测试期间每位用户每月可获免费 Token。",
+        "读取 Token Plan 控制台公开页，确认 OpenAI / Anthropic 协议 base_url 与“1 墨点最多可抵扣 5000 万 tokens（以 DeepSeek-V4-Flash 为例）”。",
+        "未登录账号，未核验每月实际墨点数量，也未发起真实调用。"
+      ],
+      "result": "官方公开预检通过：测试期按月免费与接口地址有官方来源。",
+      "limitations": "每月具体墨点数、自有模型是否限时不扣墨点、RPM/TPM 数值与测试期结束时间均未经 FreeLLM 登录核验。",
+      "evidence": [
+        {
+          "label": "上海 AI 实验室官方新闻",
+          "url": "https://www.shlab.org.cn/news/5444294"
+        },
+        {
+          "label": "Token Plan 控制台",
+          "url": "https://discovery.intern-ai.org.cn/token-plan/home?tabIndex=0"
+        }
+      ]
+    }
+  },
+  {
+    "id": "stepfun-step-5-preview-free-week",
+    "order": 74,
+    "date": "2026-10-09",
+    "lastVerifiedAt": "2026-10-10",
+    "checkedBy": "manual",
+    "status": "verified",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "Check OpenCode Zen / partner tool terms and StepFun model terms before commercial use.",
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "name": "StepFun Step 5 Preview · one-week free access (OpenCode Zen and partner tools)",
+    "title": "阶跃星辰 Step 5 Preview · 一周限免（OpenCode Zen 等）",
+    "titleZh": "阶跃星辰 Step 5 Preview · 一周限免（OpenCode Zen 等）",
+    "titleEn": "StepFun Step 5 Preview · One-week free access",
+    "providerMark": "阶跃",
+    "provider": "OpenCode Zen",
+    "providerMeta": "OpenCode Zen · 阶跃星辰 StepFun",
+    "providerMetaEn": "OpenCode Zen · StepFun",
+    "model": "Step 5 Preview · 600B 总参数 / 27B 激活 · 1M 上下文",
+    "modelMeta": "600B total / 27B active MoE · 1M context · vision input",
+    "freeModels": [
+      {
+        "model": "opencode/step-5-preview-free",
+        "label": "文本 + 图像输入 · Agent / 编程",
+        "contextWindow": "1M tokens（阶跃星辰官方模型页）",
+        "quota": "OpenCode Zen 定价表输入/输出/缓存读取均为 Free；限时免费",
+        "note": "阶跃星辰官方 X 账号 2026-10-08 宣布：从当天起在 OpenCode、Cline、Nous Research、Kilo Code 等工具提供一周免费访问。官方未给出精确结束时刻。",
+        "sourceUrl": "https://opencode.ai/docs/en/zen/"
+      }
+    ],
+    "type": [
+      "api",
+      "free"
+    ],
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "limited_time_free",
+    "freePolicy": {
+      "type": "limited_time_free",
+      "startDate": "2026-10-08",
+      "unit": "promotion",
+      "endDate": "2026-10-15",
+      "endDateEstimated": true
+    },
+    "freeSummary": "阶跃星辰旗舰 Step 5 Preview 自 2026-10-08 起在 OpenCode Zen（step-5-preview-free）等合作工具限时免费约一周",
+    "freeSummaryEn": "StepFun's flagship Step 5 Preview is free for about one week from 2026-10-08 via OpenCode Zen (step-5-preview-free) and partner tools",
+    "quota": "OpenCode Zen 免费模型，未公布固定额度；官方称免费期约一周",
+    "validitySummary": "官方公告：自 2026-10-08 起约一周 · 未公布精确结束时间；到期日 2026-10-15 为按“一周”推算",
+    "validitySummaryEn": "About one week from 2026-10-08 per StepFun; exact end time not published — 2026-10-15 is an estimate",
+    "accessSummary": "需要 OpenCode Zen 账号与 API Key（或在 Cline / Kilo Code / Nous Portal 等合作工具内选择免费模型）",
+    "accessSummaryEn": "OpenCode Zen account and API key, or select the free model inside partner tools such as Cline, Kilo Code or Nous Portal",
+    "kicker": "ONE-WEEK FREE FLAGSHIP",
+    "badges": [
+      "限时免费",
+      "1M 上下文",
+      "AGENT / CODING"
+    ],
+    "checkedSummary": "2026-10-10 / OpenCode Zen 定价表仍列 Step 5 Preview Free",
+    "why": "FreeLLM 评估：Step 5 Preview 是阶跃星辰 2026-10 发布的旗舰 Agent / 编程模型，官方称 600B 总参数、27B 激活、1M 上下文并支持图像输入，计划 10 月 15 日开放权重。一周免费窗口适合用来对比它在代码修复和长任务上的表现；窗口很短且无精确截止时间，不建议在生产中依赖免费 ID。",
+    "whyEn": "FreeLLM assessment: Step 5 Preview is StepFun's flagship agentic/coding model (600B total, 27B active, 1M context, vision input per StepFun; open weights planned for Oct 15). The one-week free window is good for side-by-side evaluation, not for production dependency.",
+    "mechanism": "StepFun announced a one-week free access window starting 2026-10-08 across OpenCode, Cline, Nous Research, Kilo Code and others. On OpenCode Zen the free variant uses the distinct model ID step-5-preview-free; the standard OpenRouter route is paid ($1.00 / $2.70 per 1M tokens).",
+    "validity": "About one week from 2026-10-08; the exact end time is not published.",
+    "access": "OpenCode Zen account and API key; network availability may vary.",
+    "command": "Call opencode/step-5-preview-free in OpenCode, or POST to the Zen chat completions endpoint with model step-5-preview-free.",
+    "register": "https://opencode.ai/auth",
+    "registerLabel": "OpenCode Zen 登录",
+    "registerLabelEn": "OpenCode Zen sign-in",
+    "links": [
+      [
+        "FreeLLM 二级详情页",
+        "https://freellm.top/offers/stepfun-step-5-preview-free-week/"
+      ],
+      [
+        "OpenCode Zen 官方文档（定价表）",
+        "https://opencode.ai/docs/en/zen/"
+      ],
+      [
+        "阶跃星辰官方公告（X）",
+        "https://x.com/StepFun_ai/status/2108182763002278158"
+      ],
+      [
+        "Step 5 Preview 官方介绍",
+        "https://www.stepfun.com/step-5-preview"
+      ]
+    ],
+    "sourceUrls": [
+      "https://opencode.ai/docs/en/zen/",
+      "https://x.com/StepFun_ai/status/2108182763002278158",
+      "https://www.stepfun.com/step-5-preview"
+    ],
+    "usageGuide": {
+      "summary": "登录 OpenCode Zen 获取 API Key，在 OpenCode 中选择 Step 5 Preview Free，或直接调用 Zen 的 OpenAI 兼容接口。",
+      "summaryEn": "Sign in to OpenCode Zen, get an API key, then select Step 5 Preview Free in OpenCode or call the Zen OpenAI-compatible endpoint.",
+      "prerequisites": [
+        "OpenCode Zen account",
+        "OpenCode Zen API key"
+      ],
+      "steps": [
+        "登录 OpenCode Zen 并复制 API Key。",
+        "在 OpenCode TUI 运行 /connect 选择 OpenCode Zen，然后用 /models 选择 Step 5 Preview Free（opencode/step-5-preview-free）。",
+        "或直接向 https://opencode.ai/zen/v1/chat/completions 发送 model=step-5-preview-free 的请求。",
+        "免费期约一周（自 2026-10-08 起）；继续使用前先确认官方定价表是否仍标为 Free。"
+      ],
+      "stepsEn": [
+        "Sign in to OpenCode Zen and copy your API key.",
+        "In the OpenCode TUI run /connect, choose OpenCode Zen, then pick Step 5 Preview Free (opencode/step-5-preview-free) via /models.",
+        "Or POST to https://opencode.ai/zen/v1/chat/completions with model step-5-preview-free.",
+        "The free window is about one week from 2026-10-08; recheck the official pricing table before continued use."
+      ],
+      "endpoint": "https://opencode.ai/zen/v1/chat/completions",
+      "method": "POST",
+      "authentication": "Authorization: Bearer ${OPENCODE_API_KEY}",
+      "examples": {
+        "curl": "curl https://opencode.ai/zen/v1/chat/completions --header \"Authorization: Bearer ${OPENCODE_API_KEY}\" --header \"Content-Type: application/json\" --data '{\"model\":\"step-5-preview-free\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'"
+      },
+      "docsUrl": "https://opencode.ai/docs/en/zen/"
+    },
+    "availability": "OpenCode Zen (models hosted in US/EU); partner tools per their own access rules.",
+    "freeModelsSource": "OpenCode Zen",
+    "freeMechanismSource": "StepFun one-week free access announcement",
+    "confidence": "medium",
+    "notes": "本条目记录的是阶跃星辰联合 OpenCode、Cline、Kilo Code、Nous Portal 等工具的一周限免，不代表阶跃星辰开放平台 API 免费；OpenRouter 上的 stepfun/step-5-preview 为付费路由。OpenCode 文档注明该模型提供商遵循零保留策略、不用于训练。结束时间仅公布为“一周”，到期后应标记过期。",
+    "evidence": "OpenCode Zen 官方文档（2026-10-08 更新）端点表列出 Step 5 Preview Free（step-5-preview-free，/zen/v1/chat/completions），定价表输入/输出/缓存读取均为 Free，并说明“free on OpenCode for a limited time”。阶跃星辰官方 X 账号 2026-10-08 发帖：Step 5 Preview 已上线 OpenRouter，并从当天起在 OpenCode、Cline、Nous Research、Kilo Code 等提供一周免费访问。官方模型页给出 600B 总参数、27B 激活、1M 上下文、图像输入，并称 10 月 15 日开放权重。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "blocked",
+      "testedAt": "2026-10-09",
+      "actualUsageVerified": false,
+      "task": "核验免费模型 ID、免费窗口与接入参数；待用有效 Zen Key 跑中文摘要、Python 修错、多步规划三个固定任务。",
+      "method": [
+        "读取 OpenCode Zen 官方文档端点表与定价表，确认 step-5-preview-free 标为 Free。",
+        "读取阶跃星辰官方 X 公告确认一周免费窗口起始日 2026-10-08。",
+        "当前没有 OpenCode Zen API Key，未发起真实调用。"
+      ],
+      "result": "官方公开预检通过：免费模型 ID、免费标注与起始日均有官方来源。实测待执行（pending）：当前无 OpenCode Zen API Key，模型输出质量未测试，不打分。",
+      "limitations": "未实测调用；未验证速率限制、真实额度与精确结束时间。",
+      "evidence": [
+        {
+          "label": "OpenCode Zen 官方文档",
+          "url": "https://opencode.ai/docs/en/zen/"
+        },
+        {
+          "label": "阶跃星辰官方公告（X）",
+          "url": "https://x.com/StepFun_ai/status/2108182763002278158"
+        }
+      ]
+    },
+    "freeLLMTestNotes": "评测状态透明披露：仅完成官方资料预检，未获得模型输出，暂无成绩。",
+    "expires_at": "2026-10-15",
+    "expires_at_estimated": true,
+    "expired_scope": "promotion"
   },
   {
     "id": "intern-s2-free-api",
     "order": 72,
-    "date": "2026-10-07",
+    "date": "2026-10-08",
     "name": "Intern-S2 official free API quota",
     "providerMark": "书",
     "provider": "Shanghai AI Laboratory · Intern AI",
@@ -9409,7 +9890,7 @@
   {
     "id": "autoclaw-glm-5-3-flash-oct-2026",
     "order": 73,
-    "date": "2026-10-07",
+    "date": "2026-10-08",
     "name": "AutoClaw GLM-5.3-Flash October free-token event",
     "providerMark": "A",
     "provider": "Z.ai · AutoClaw",
@@ -9422,7 +9903,9 @@
       "promo"
     ],
     "productType": "desktop_ai_app",
-    "capabilities": ["desktop_app"],
+    "capabilities": [
+      "desktop_app"
+    ],
     "usageGuide": {
       "summary": "注册并登录 AutoClaw，确认新用户赠送与每日 Credits 后用于真实 Agent 任务测试",
       "prerequisites": [
@@ -9446,7 +9929,7 @@
     "freeSummary": "AutoClaw 首页当前展示新用户注册登录送 200M Tokens；10 月 4–11 日 UTC 另有每日登录 Credits 活动。",
     "validitySummary": "Daily Credits event ends 2026-10-11 16:00 UTC (2026-10-12 00:00 UTC+8)",
     "accessSummary": "AutoClaw / Z.ai account",
-    "checkedSummary": "2026-10-08 / official AutoClaw",
+    "checkedSummary": "2026-10-10 / official AutoClaw event page: Oct 4 16:00 UTC – Oct 11 16:00 UTC",
     "title": "AutoClaw + GLM-5.3-Flash · 2 亿 Token + 每日 Credits",
     "why": "官方 AutoClaw 活动页给出 2026-10-04 16:00 UTC 至 2026-10-11 16:00 UTC 的每日 Credits 活动，并按 GLM-5.3-Flash 折算为 100M+ Tokens；AutoClaw 首页同时展示新用户注册登录送 200M Tokens。",
     "mechanism": "Limited-time daily Credits plus a separate new-user token grant; not a permanent free API.",
@@ -9487,7 +9970,7 @@
     "evidence": "AutoClaw 官方活动页明确活动窗口、每日 Credits 和 24 小时过期规则，并说明按 GLM-5.3-Flash 折算可达 100M+ Tokens；首页当前展示新用户 200M Tokens。",
     "status": "verified",
     "confidence": "high",
-    "lastVerifiedAt": "2026-10-08",
+    "lastVerifiedAt": "2026-10-10",
     "checkedBy": "manual",
     "notes": "限时 Credits / 新用户赠送，不标为永久免费 API。",
     "freeLLMTest": {
@@ -9513,12 +9996,14 @@
           "url": "https://autoclaw.z.ai/"
         }
       ]
-    }
+    },
+    "expires_at": "2026-10-11",
+    "expired_scope": "promotion"
   },
   {
     "id": "zhipu-glm-4-7-flash-free-api",
     "order": 74,
-    "date": "2026-10-07",
+    "date": "2026-10-08",
     "name": "Zhipu GLM-4.7-Flash free BigModel API",
     "providerMark": "GLM",
     "provider": "Zhipu BigModel",
@@ -9634,7 +10119,7 @@
   {
     "id": "xiaomi-mimo-new-user-10cny-credit",
     "order": 75,
-    "date": "2026-10-07",
+    "date": "2026-10-08",
     "name": "Xiaomi MiMo new-user ¥10 API credit",
     "providerMark": "米",
     "provider": "Xiaomi MiMo",
@@ -9766,6 +10251,324 @@
         {
           "label": "MiMo 平台更新记录",
           "url": "https://mimo.mi.com/docs/zh-CN/updates/feature"
+        }
+      ]
+    }
+  },
+  {
+    "id": "vibex-runninghub-daily",
+    "order": 76,
+    "date": "2026-10-09",
+    "name": "VibeX · RunningHub AI 应用生成",
+    "providerMark": "VX",
+    "provider": "RunningHub",
+    "providerMeta": "RunningHub · 中国 · Vibe Coding / AI 应用",
+    "model": "自然语言生成网页、AI 工具与交互式应用",
+    "modelMeta": "Browser-based AI app builder; not a free model API",
+    "type": [
+      "web",
+      "coding",
+      "free"
+    ],
+    "productType": "coding_plan",
+    "capabilities": [
+      "coding_plan"
+    ],
+    "usageGuide": {
+      "summary": "在 VibeX 网页中用自然语言创建并调整一个示例应用；仅网页创作权益，不等于对外免费 API",
+      "prerequisites": [
+        "可访问 VibeX 官方网站",
+        "按平台要求登录 RunningHub 账号",
+        "先使用不包含私人数据和生产密钥的测试需求"
+      ],
+      "steps": [
+        "打开 VibeX 官网，选择网站或 AI 应用方向",
+        "输入具体需求（功能、页面结构、移动端适配），生成首版应用",
+        "在预览中验证交互及布局，通过对话继续修改",
+        "发布前检查账号内可用 Token、模型使用规则、发布/运行可能产生的费用和项目权限"
+      ],
+      "examples": {
+        "action": "打开 https://vibex.runninghub.cn/ ，输入：创建一个支持新增、完成和筛选任务的响应式待办清单页面，使用演示数据。"
+      },
+      "docsUrl": "https://rhtv.runninghub.cn/blog/ai-applications/blogvibex-ai-app-builder-guide"
+    },
+    "kicker": "AI APP BUILDER · QUOTA TO VERIFY",
+    "badges": [
+      "自然语言建站",
+      "每天 100 亿 Token（宣传）",
+      "待实测"
+    ],
+    "freeSummary": "平台宣传每天补贴 100 亿 Token；每账号实际可用量、适用模型、扣费倍率及是否长期有效均待登录实测",
+    "validitySummary": "宣传为按日发放，刷新时间、有效期与适用账号条件尚未独立验证",
+    "accessSummary": "VibeX 网页端；RunningHub 登录条件与发布成本以控制台为准",
+    "checkedSummary": "2026-10-09 / 官方主页与团队教程；宣传额度未登录实测",
+    "title": "VibeX · AI 应用生成 / 每日 Token 补贴（待核验）",
+    "titleZh": "VibeX · 自然语言生成 AI 应用",
+    "why": "RunningHub 官方 VibeX 网站和教程展示了使用自然语言创建网站、看板、AI 工具与交互式应用的能力。署名 RunningHUB 的转载推广文宣称每天免费补贴 100 亿 Token，但公开首页未明确每账号额度、计费倍率或模型适用范围，尚不能认定为每个账号独享的免费模型 API。",
+    "mechanism": "浏览器内 AI 应用生成；每日 Token 补贴数额来自宣传，具体生效规则待核验",
+    "validity": "免费补贴政策随时可能变动，具体以登录后的 VibeX 账户配额和使用记录为准",
+    "access": "网页端注册/登录 RunningHub；无法据此认定外部 API 免费，发布和运行资源计费需单独核实",
+    "command": "Visit https://vibex.runninghub.cn/ and create a small demo web app without production secrets.",
+    "register": "https://vibex.runninghub.cn/",
+    "registerLabel": "打开 VibeX 官方网站",
+    "links": [
+      [
+        "VibeX 官方网站",
+        "https://vibex.runninghub.cn/"
+      ],
+      [
+        "RunningHub 官方使用教程",
+        "https://rhtv.runninghub.cn/blog/ai-applications/blogvibex-ai-app-builder-guide"
+      ],
+      [
+        "RunningHub 官方创作者收益规则",
+        "https://www.runninghub.cn/creator-reward"
+      ],
+      [
+        "百亿 Token 宣传原文转载（非额度实测）",
+        "https://www.cnblogs.com/haibing1992/p/22481650"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "中国大陆服务入口；具体注册和使用地区以平台当前规则为准",
+    "freeMechanism": "not_confirmed",
+    "pricingModel": "not_confirmed",
+    "quota": "宣传口径：每天 100 亿 Token；单个账号实际可用量、模型倍率与重置周期均 UNKNOWN",
+    "renewal": "宣传为每日刷新；尚未实测是否自动领取、当日余额是否结转",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "check official RunningHub / VibeX terms",
+    "providerId": "runninghub",
+    "productId": "vibex-app-builder",
+    "offerVariant": "daily-token-subsidy-unverified",
+    "sourceUrls": [
+      "https://vibex.runninghub.cn/",
+      "https://rhtv.runninghub.cn/blog/ai-applications/blogvibex-ai-app-builder-guide",
+      "https://www.runninghub.cn/creator-reward",
+      "https://www.cnblogs.com/haibing1992/p/22481650"
+    ],
+    "evidence": "VibeX 官方主页和 RunningHub Team 于 2026-07-21 发布的教程确认自然语言生成网站/交互式应用；一篇标注“作者：RunningHUB / 来源：微信公众号文章”的 2026-08-15 转载宣称每日 100 亿 Token。尚无登录账号、个人额度截图、真实 Token 消耗或外部 API 免费调用的核验依据。",
+    "status": "needs_review",
+    "confidence": "low",
+    "lastVerifiedAt": "2026-10-09",
+    "checkedBy": "public_sources",
+    "notes": "事实：官方支持网页端以自然语言创建项目。宣传/未实测：每天 100 亿 Token。UNKNOWN：每账号额度、模型倍率、刷新时间、可用地区、是否需付费、部署/运行收费。禁止将其标成 100 亿免费 API Token、无限免费或收益保证。VibeX 不支持导入已有项目的限制来自文章描述，尚需官方文档复核。"
+  },
+  {
+    "id": "claude-max-team-api-credits",
+    "order": 77,
+    "date": "2026-10-10",
+    "lastVerifiedAt": "2026-10-10",
+    "checkedBy": "manual",
+    "status": "verified",
+    "phoneRequired": "unknown",
+    "cardRequired": "yes",
+    "commercialUse": "Anthropic program terms apply (https://www.anthropic.com/legal/credit-terms)",
+    "productType": "api",
+    "capabilities": [
+      "model_api"
+    ],
+    "name": "Claude Max / Team subscriber API credits",
+    "title": "Claude 订阅附送 API 额度 · Max / Team 每月 $100–$500",
+    "titleEn": "Claude subscriber API credits · Max / Team $100–$500 per month",
+    "providerMark": "CL",
+    "provider": "Anthropic",
+    "providerMeta": "Anthropic · Claude Platform",
+    "model": "Claude API models on Claude Platform (Console)",
+    "modelMeta": "Subscriber bonus credits, not a free tier",
+    "type": [
+      "api"
+    ],
+    "usageGuide": {
+      "summary": "在 claude.ai 账单设置里把一个 Claude Console 组织关联到 Max / Team 订阅，额度每个账单周期进入该组织",
+      "summaryEn": "Link a Claude Console organization to your Max / Team plan in claude.ai billing settings; credits arrive there each billing cycle",
+      "prerequisites": [
+        "有效的 Claude Max 5x / Max 20x / Team 付费订阅（新订阅满 7 天）",
+        "Claude Console 组织的 Owner / Admin / Billing 角色"
+      ],
+      "steps": [
+        "claude.ai → Settings > Billing（Max）或 Organization settings > Billing（Team）→ API credits",
+        "选择要接收额度的 Console 组织并接受计划条款完成关联（关联后不能自行更换）",
+        "在 Console → Settings > Billing 的 Promotional credits 查看额度，创建 API Key 调用 Claude API"
+      ],
+      "endpoint": "https://api.anthropic.com/v1/messages",
+      "method": "POST",
+      "authentication": "x-api-key header (Claude Console API key)",
+      "docsUrl": "https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers",
+      "examples": {
+        "action": "打开 https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers 按步骤在 claude.ai 账单设置中关联 Console 组织"
+      }
+    },
+    "kicker": "SUBSCRIBER BONUS · NOT A FREE TIER",
+    "badges": [
+      "订阅附送",
+      "需付费 Max / Team",
+      "每月刷新 · 不结转"
+    ],
+    "freeMechanism": "monthly_quota",
+    "pricingModel": "monthly_quota",
+    "freePolicy": {
+      "type": "subscriber_monthly_credits",
+      "unit": "USD credits",
+      "period": "billing cycle"
+    },
+    "freeSummary": "付费 Claude Max / Team 订阅每月附送 Claude API 额度：Max 5x $100、Max 20x $200、Team 按席位汇总（Standard $20 / Premium $100 每席）上限 $500；不能用于 Claude Code，不结转",
+    "freeSummaryEn": "Paid Claude Max / Team plans include monthly Claude API credits: Max 5x $100, Max 20x $200, Team pooled per seat (Standard $20 / Premium $100) capped at $500; not usable for Claude Code, no rollover",
+    "validitySummary": "每个账单周期发放、周期末过期，不结转；新订阅满 7 天后可领取",
+    "accessSummary": "需要付费 Max 5x / Max 20x / Team 订阅，并把一个 Claude Console 组织关联到订阅（Platform 无需另绑付款方式）",
+    "checkedSummary": "2026-10-10 / Claude Platform 官方文档 API credits for subscribers",
+    "why": "Claude Platform docs: Claude Max and Team plans include monthly credits for the Claude API — $100 (Max 5x), $200 (Max 20x), up to $500 pooled for Team. Credits cover the Claude API, Managed Agents, the Agent SDK and the playground, but not Claude Code or extra usage in the Claude apps. They expire at the end of each billing cycle with no rollover. Free, Pro and Enterprise plans are not eligible. This is a bonus for paying subscribers, not a free tier.",
+    "mechanism": "Monthly API credits bundled with paid Claude Max / Team subscriptions, claimed by linking a Claude Console organization",
+    "validity": "Refreshes each billing cycle (monthly for annual plans); unused credits expire at cycle end, no rollover",
+    "access": "Active Max 5x, Max 20x or Team plan (incl. discounted Team plans); new subscribers can claim after 7 days; Free / Pro / Enterprise not eligible",
+    "quota": "Max 5x $100 / Max 20x $200 / Team $20 per Standard seat + $100 per Premium seat, pooled and capped at $500 per month",
+    "renewal": "Each billing cycle while the eligible plan is active",
+    "command": "claude.ai → Settings > Billing (Max) or Organization settings > Billing (Team) → API credits → link a Console organization",
+    "register": "https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers",
+    "registerLabel": "查看官方领取说明",
+    "links": [
+      [
+        "Claude Platform：API credits for Max and Team plans",
+        "https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers"
+      ]
+    ],
+    "sourceUrls": [
+      "https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers"
+    ],
+    "evidence": "Official docs (checked 2026-10-10): 'Monthly amount: $100 USD (Max 5x), $200 USD (Max 20x), up to $500 USD (Team, pooled)'; 'Doesn't cover: Claude Code, extra usage in the Claude apps'; 'Expiry: End of each billing cycle ... with no rollover'; 'Free, Pro, and Enterprise plans aren't eligible.'",
+    "confidence": "high",
+    "originCountry": "International",
+    "availability": "Claude Platform (Console) only; not usable on Bedrock, Vertex AI, Microsoft Foundry or Claude Platform on AWS",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "blocked",
+      "testedAt": "2026-10-10",
+      "actualUsageVerified": false,
+      "task": "核对 Claude Max / Team 订阅附送 API 额度的金额、适用范围、有效期与资格。",
+      "method": [
+        "打开 Claude Platform 官方文档 API credits for Max and Team plans，逐项核对金额表、覆盖范围、过期规则与资格条件。",
+        "FreeLLM 没有付费 Max / Team 订阅，无法实际领取额度或发起调用。"
+      ],
+      "result": "官方文档写明 Max 5x $100、Max 20x $200、Team 按席位汇总上限 $500；覆盖 Claude API / Managed Agents / Agent SDK / playground，不含 Claude Code；每个账单周期过期不结转。领取与调用未实测。",
+      "limitations": "未实测领取流程与调用；属于付费订阅附送额度，不是免费档。",
+      "evidence": [
+        {
+          "label": "Claude Platform：API credits for Max and Team plans",
+          "url": "https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers"
+        }
+      ]
+    },
+    "notes": "收录日期 2026-10-10。宣布日期 2026-10-07 来自 10-10 新闻缺口审核，官方文档页本身未写日期。这是付费订阅附送的 API 额度，不是免费档；FreeLLM 未实测领取流程。"
+  },
+  {
+    "id": "joycode",
+    "order": 80,
+    "date": "2026-10-11",
+    "name": "京东云 JoyCode AI 编程工具",
+    "providerMark": "JD",
+    "provider": "京东云 JoyCode",
+    "providerMeta": "JD Cloud · China",
+    "model": "团队版限时免费",
+    "modelMeta": "AI 编程 IDE / Agent",
+    "type": [
+      "ide",
+      "free"
+    ],
+    "productType": "free_ide",
+    "capabilities": [
+      "free_ide"
+    ],
+    "usageGuide": {
+      "summary": "注册或登录 JoyCode 账号并安装客户端，在编辑器中选择模型开始使用。",
+      "prerequisites": [
+        "JoyCode 账号",
+        "支持的桌面环境（以官网安装包为准）"
+      ],
+      "steps": [
+        "打开 JoyCode 官方网站，下载并安装客户端",
+        "注册或登录账号，按向导完成初始化",
+        "进入模型选择界面；如需固定模型，关闭 Auto 后手动选择",
+        "在账号或用量页面核对积分余额、有效期与当前计划"
+      ],
+      "examples": {
+        "action": "打开 https://joycode.jd.com/ 并下载 JoyCode 客户端"
+      },
+      "docsUrl": "https://joycode.jd.com/pricing/"
+    },
+    "kicker": "FREE AI CODING",
+    "badges": [
+      "限时免费",
+      "10,000 积分/席位"
+    ],
+    "freeSummary": "官方定价页显示团队版限时免费，10,000 积分/席位；积分刷新周期和具体消耗规则待核验。",
+    "validitySummary": "限时免费；活动结束时间待官方确认",
+    "accessSummary": "注册并登录 JoyCode；具体地区、账号及团队资格待核验",
+    "checkedSummary": "2026-10-11 / 京东 JoyCode 官方定价页",
+    "title": "京东云 JoyCode · 限时免费 AI 编程工具",
+    "titleZh": "京东云 JoyCode · 限时免费 AI 编程工具",
+    "titleEn": "JD Cloud JoyCode · Free AI Coding Tool",
+    "why": "JoyCode 是京东云推出的 AI 编程工具，提供 IDE 内的智能编码与智能体辅助开发能力。官方定价页显示团队版限时免费，席位额度为 10,000 积分；这属于编程工具权益，不是可直接调用的通用免费 API。",
+    "mechanism": "团队版限时免费；每个席位显示 10,000 积分，积分消耗与刷新周期需登录后核实",
+    "validity": "限时活动，结束日期未确认",
+    "access": "需要注册/登录 JoyCode 账号；账号、地区和企业团队资格等具体限制待核验",
+    "command": "打开 JoyCode 官网下载客户端，登录后选择模型并在账户页面查看积分额度。",
+    "register": "https://joycode.jd.com/",
+    "registerLabel": "访问 JoyCode 官网",
+    "links": [
+      [
+        "JoyCode 官方网站",
+        "https://joycode.jd.com/"
+      ],
+      [
+        "JoyCode 官方定价页",
+        "https://joycode.jd.com/pricing/"
+      ]
+    ],
+    "originCountry": "China",
+    "availability": "中国地区优先；具体地区及账号限制待核验",
+    "freeMechanism": "limited_time_free",
+    "pricingModel": "limited_time_free",
+    "freePolicy": {
+      "type": "limited_time_free",
+      "amount": 10000,
+      "unit": "credits per seat",
+      "period": "unknown"
+    },
+    "quota": "10,000 积分/席位（官方定价页显示）；刷新周期、有效期和各模型消耗规则待核验",
+    "renewal": "活动结束时间与续费机制待核验",
+    "phoneRequired": "unknown",
+    "cardRequired": "unknown",
+    "commercialUse": "check provider terms",
+    "sourceUrls": [
+      "https://joycode.jd.com/",
+      "https://joycode.jd.com/pricing/"
+    ],
+    "evidence": "京东 JoyCode 官方定价页显示团队版限时免费，10,000 积分/席位。积分刷新周期、有效期、适用账户范围和具体消耗规则尚待进一步核对。",
+    "status": "verified",
+    "confidence": "medium",
+    "lastVerifiedAt": "2026-10-11",
+    "checkedBy": "manual",
+    "notes": "按官方定价页记录团队版限时免费与10,000积分/席位；不把积分写成API token，也不推断为永久免费。用户文章中的联网搜索、数学推理与小游戏生成表现属于个人体验，FreeLLM 尚未独立复测。",
+    "freeLLMTest": {
+      "testLevel": "preflight",
+      "status": "partial",
+      "testedAt": "2026-10-11",
+      "actualUsageVerified": false,
+      "task": "核验京东云 JoyCode 团队版限时免费与每席位 10,000 积分的官方说明，并区分 IDE 权益和 API 服务。",
+      "method": [
+        "核对 JoyCode 官方产品页和官方定价页中的产品定位、团队版限时免费说明与席位积分额度。",
+        "记录客户端安装、登录和模型选择的投稿者体验；FreeLLM 未独立运行客户端或验证账号内积分扣减。"
+      ],
+      "result": "官方定价页记录显示团队版限时免费、10,000 积分/席位；作为 AI 编程工具收录，不作为免费 API。",
+      "limitations": "未使用新账号实际注册登录、未独立安装运行客户端、未验证积分到账/刷新/消耗、活动截止日期、团队资格或商用限制。",
+      "evidence": [
+        {
+          "label": "JoyCode 官方网站",
+          "url": "https://joycode.jd.com/"
+        },
+        {
+          "label": "JoyCode 官方定价页",
+          "url": "https://joycode.jd.com/pricing/"
         }
       ]
     }

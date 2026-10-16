@@ -183,24 +183,24 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-home~.catalog
 
 /* hero */
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero{
-  position:relative;height:clamp(190px,23vw,342px);display:flex;align-items:center;
+  position:relative;height:240px;display:flex;align-items:center;
   margin:0;border-radius:0;background:
     linear-gradient(90deg,#f9fcff 0 24%,rgba(247,251,255,.4) 40%,rgba(240,248,255,0) 60%);
 }
 /* the illustration is one 940x322 scene anchored to the page top-right:
    it starts behind the top bar and ends just above the stat cards */
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero::after{
-  content:"";position:absolute;right:-12px;top:-46px;width:min(840px,68vw);height:clamp(255px,29.7vw,442px);z-index:0;pointer-events:none;
+  content:"";position:absolute;right:-12px;top:-30px;width:min(840px,68vw);height:clamp(220px,23vw,300px);z-index:0;pointer-events:none;
   background:url("../assets/reference/home-hero.svg?v=20261001b") right top/100% 100% no-repeat;
 }
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero-copy{
-  position:relative;z-index:2;width:520px;margin-left:14px;padding-left:0;
+  position:relative;z-index:2;width:520px;margin-left:14px;padding-left:0;transform:translateY(6px);
 }
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-kicker{
-  display:block;color:#0968fa;font-size:16px;line-height:1;margin-bottom:9px;font-weight:600;
+  display:block;color:#0968fa;font-size:16px;line-height:1;margin-bottom:6px;font-weight:600;
 }
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero h1{
-  margin:0 0 14px;color:#08132b!important;font-size:56px!important;line-height:1.05!important;font-weight:900!important;
+  margin:0 0 10px;color:#08132b!important;font-size:50px!important;line-height:1.05!important;font-weight:900!important;
   letter-spacing:-.035em!important;text-shadow:0 1px 0 #fff;
 }
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero h1 em{
@@ -209,7 +209,7 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero h1 em{
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero p{
   margin:0;color:#223b63;font-size:15px;line-height:1.7;font-weight:520;
 }
-body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero-actions{display:flex;align-items:center;gap:13px;margin-top:12px}
+body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero-actions{display:flex;align-items:center;gap:13px;margin-top:8px}
 body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero-actions a{
   height:42px;display:inline-flex;align-items:center;justify-content:center;gap:12px;border-radius:10px;font-size:13px;font-weight:650;text-decoration:none!important;
 }
@@ -418,8 +418,8 @@ body[data-reference-style="v1"][data-fl-section="home"] .prototype-student-banne
   body[data-reference-style="v1"][data-fl-section="home"] .catalog-app{margin-left:0!important;width:100%!important}
   body[data-reference-style="v1"][data-fl-section="home"] .catalog-content{padding:0 14px 34px!important}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-home{padding-top:0!important}
-  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero{height:auto;min-height:430px;padding:26px 16px 195px}
-  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero::after{width:100%;height:230px;top:auto;bottom:0;opacity:.8}
+  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero{height:auto;min-height:0;padding:26px 16px 130px}
+  body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero::after{width:100%;height:175px;top:auto;bottom:0;opacity:.8}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero-copy{width:auto;margin:0}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-hero h1{font-size:42px!important}
   body[data-reference-style="v1"][data-fl-section="home"] .prototype-stats{grid-template-columns:1fr 1fr;height:auto}
