@@ -36,7 +36,7 @@
     }
   });
 
-  var englishLocalePaths = {"/":"/en/","/models/":"/en/models/","/models/all/":"/en/models/all/","/providers/":"/en/providers/","/skills/":"/en/skills/","/tools/":"/en/tools/","/workflow/":"/en/workflow/","/logs/":"/en/logs/","/about/":"/en/about/"};
+  var englishLocalePaths = {"/":"/en/","/models/":"/en/models/","/models/all/":"/en/models/all/","/providers/":"/en/providers/","/skills/":"/en/skills/","/prompts/":"/prompts/?lang=en","/tools/":"/en/tools/","/workflow/":"/en/workflow/","/logs/":"/en/logs/","/about/":"/en/about/"};
   function ensureEnglishEntryLink() {
     var actions = document.querySelector('.fl-site-ribbon-actions');
     if (!actions) return;
@@ -64,6 +64,10 @@
     event.preventDefault();
     event.stopImmediatePropagation();
     var path = window.location.pathname;
+    if (path === '/prompts/') {
+      window.location.assign(path + '?lang=' + encodeURIComponent(button.dataset.localeSwitch));
+      return;
+    }
     window.location.assign(button.dataset.localeSwitch === 'en'
       ? (englishLocalePaths[path] || '/en/') : path);
   }, true);
@@ -133,7 +137,18 @@
         else link.removeAttribute('aria-current');
       });
     }
+    var english = /^en(?:-|$)/i.test(document.documentElement.lang || '');
     if (rail.dataset.flSharedNavigation === 'true') {
+      var navList = rail.querySelector('.fl-site-nav');
+      if (navList && !navList.querySelector('[data-site-nav="public-api"]')) {
+        var publicLink = document.createElement('a');
+        publicLink.href = '/public-api/';
+        publicLink.dataset.siteNav = 'public-api';
+        publicLink.setAttribute('aria-label', '公益 AI API 导航 / Public AI APIs');
+        publicLink.innerHTML = '<span class="fl-site-nav-icon" aria-hidden="true">♡</span><span>' + (english ? 'Public APIs' : '公益站') + '</span>';
+        var promptLink = navList.querySelector('[data-site-nav="prompts"]');
+        navList.insertBefore(publicLink, promptLink ? promptLink.nextSibling : null);
+      }
       updateCurrentItem();
       refreshUpdateIndicator();
       return;
@@ -143,6 +158,8 @@
       ['home', '/', '⌂', english ? 'Home' : '首页'],
       ['models', '/models/', '▣', english ? 'Models' : '模型'],
       ['skills', '/skills/', '✦', english ? 'Skills' : '技能'],
+      ['prompts', '/prompts/', '✧', english ? 'Prompts' : '提示词'],
+      ['public-api', '/public-api/', '♡', english ? 'Public APIs' : '公益站'],
       ['tools', '/tools/', '⌘', english ? 'Tools' : '工具'],
       ['workflow', '/workflow/', '⌁', english ? 'Workflows' : '工作流'],
       ['logs', '/logs/', '◷', english ? 'Discoveries' : '每日发现'],
@@ -152,7 +169,9 @@
     if (active === 'health') active = 'models';
     var links = labels.map(function (item) {
       var current = item[0] === active ? ' aria-current="page"' : '';
-      return '<a href="' + item[1] + '" data-site-nav="' + item[0] + '"' + current + '><span class="fl-site-nav-icon" aria-hidden="true">' + item[2] + '</span><span>' + item[3] + '</span></a>';
+      var accessibleLabel = item[0] === 'prompts' ? ' aria-label="Prompt 模板库 / Prompt library"' :
+        item[0] === 'public-api' ? ' aria-label="公益 AI API 导航 / Public AI APIs"' : '';
+      return '<a href="' + item[1] + '" data-site-nav="' + item[0] + '"' + current + accessibleLabel + '><span class="fl-site-nav-icon" aria-hidden="true">' + item[2] + '</span><span>' + item[3] + '</span></a>';
     }).join('');
 
     rail.innerHTML =
@@ -628,6 +647,7 @@
 
   window.addEventListener('popstate', function (popEvent) {
     var url = new URL(window.location.href);
+    if (document.body.dataset.flSection === 'skills' && popEvent.state && popEvent.state.skillsView) return;
     if (!navigationPaths.has(url.pathname)) {
       window.location.assign(url.href);
       return;

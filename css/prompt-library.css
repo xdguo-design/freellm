@@ -1,0 +1,83 @@
+body[data-fl-section="prompts"] {
+  margin: 0;
+  min-height: 100vh;
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow-x: clip;
+  padding-left: var(--fl-menu-rail-width, clamp(116px, 13.5vw, 188px));
+  background: #f8f8f6;
+  color: #262a30;
+  font: 400 15px/1.65 Manrope, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+}
+
+.prompt-page {
+  box-sizing: border-box;
+  width: min(100%, 1180px);
+  margin: 0 auto;
+  padding: clamp(28px, 5vw, 64px) clamp(18px, 4vw, 56px) 76px;
+}
+
+.prompt-hero { max-width: 780px; margin: 0 0 34px; }
+.prompt-eyebrow { margin: 0 0 12px; color: #6c79a0; font: 600 11px/1.4 "JetBrains Mono", monospace; letter-spacing: .13em; }
+.prompt-hero h1 { margin: 0; color: #182743; font: 400 clamp(36px, 5vw, 58px)/1.12 "Instrument Serif", "Noto Serif SC", Georgia, serif; letter-spacing: -.035em; }
+.prompt-lead { max-width: 690px; margin: 16px 0 0; color: #586274; font-size: 16px; }
+.prompt-privacy { display: inline-flex; margin: 15px 0 0; padding: 7px 11px; border-radius: 999px; background: #eaf1ff; color: #315080; font-size: 12px; }
+.prompt-hero .static-locale-nav { margin-top: 14px; }
+
+.prompt-controls { margin: 28px 0 18px; padding: 20px; border: 1px solid #e5e8ee; border-radius: 14px; background: #fff; box-shadow: 0 8px 28px rgba(27, 44, 76, .035); }
+.prompt-search-label { display: block; margin: 0 0 8px; color: #313b50; font-weight: 700; }
+.prompt-search-row { display: flex; gap: 8px; }
+.prompt-search-row input { flex: 1; min-width: 0; min-height: 44px; padding: 9px 12px; border: 1px solid #d8deea; border-radius: 8px; outline: 0; background: #fbfcfe; color: #202b42; font: inherit; }
+.prompt-search-row input:focus { border-color: #4c77d2; box-shadow: 0 0 0 3px rgba(76, 119, 210, .15); }
+.prompt-search-row button, .prompt-actions button { padding: 8px 13px; border: 1px solid #d8deea; border-radius: 8px; background: #fff; color: #274b8c; font-family: inherit; font-size: 13px; font-weight: 600; line-height: 1.4; cursor: pointer; }
+.prompt-search-row button:hover, .prompt-actions button:hover { border-color: #4c77d2; background: #f3f6ff; }
+.prompt-filter-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.prompt-filter { padding: 7px 12px; border: 1px solid #e1e5ec; border-radius: 999px; background: #fff; color: #526074; font-family: inherit; font-size: 12px; font-weight: 600; line-height: 1.35; cursor: pointer; }
+.prompt-filter:hover { border-color: #9db4e7; color: #294d92; }
+.prompt-filter.is-active { border-color: #234c9d; background: #234c9d; color: #fff; }
+.prompt-filter span + span { margin-left: 4px; opacity: .78; }
+.prompt-result-count { margin: 14px 0 0; color: #788294; font-size: 12px; }
+.prompt-empty { padding: 26px; border: 1px dashed #cfd6e1; border-radius: 12px; color: #657086; text-align: center; }
+.prompt-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start; }
+.prompt-card { min-width: 0; border: 1px solid #e4e7ed; border-radius: 12px; background: #fff; box-shadow: 0 4px 16px rgba(23, 39, 67, .025); }
+.prompt-card[hidden] { display: none; }
+.prompt-card[open] { border-color: #b8c8e8; box-shadow: 0 10px 26px rgba(37, 67, 120, .08); }
+.prompt-card summary { position: relative; display: grid; gap: 6px; padding: 17px 48px 17px 18px; cursor: pointer; list-style: none; }
+.prompt-card summary::-webkit-details-marker { display: none; }
+.prompt-card-toggle { position: absolute; top: 17px; right: 17px; color: #617398; font-size: 19px; line-height: 1; transition: transform .15s; }
+.prompt-card[open] .prompt-card-toggle { transform: rotate(45deg); }
+.prompt-category { color: #61749b; font: 600 10px/1.4 "JetBrains Mono", monospace; letter-spacing: .04em; }
+.prompt-category span + span { margin-left: 6px; }
+.prompt-card-title { color: #22314c; font: 600 18px/1.35 "Noto Serif SC", "PingFang SC", serif; }
+.prompt-card-summary { color: #677185; font-size: 13px; }
+.prompt-card-detail { padding: 0 18px 20px; border-top: 1px solid #eef0f4; }
+.prompt-card-detail h3 { margin: 18px 0 8px; color: #384763; font-size: 13px; font-weight: 700; }
+.prompt-scenarios, .prompt-source { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; color: #778196; font-size: 11px; }
+.prompt-source { justify-content: space-between; align-items: center; padding-top: 11px; border-top: 1px solid #eef0f4; }
+.prompt-source a { color: #315aa5; text-decoration: none; }
+.prompt-source a:hover { text-decoration: underline; }
+.prompt-template-text { overflow: auto; margin: 0; padding: 14px; border: 1px solid #e8ebf1; border-radius: 8px; background: #f8f9fc; color: #2d3950; font: 12px/1.7 "JetBrains Mono", "Cascadia Code", monospace; white-space: pre-wrap; overflow-wrap: anywhere; user-select: text; }
+.prompt-variable-panel { margin-top: 16px; }
+.prompt-variable-grid { display: grid; gap: 10px; }
+.prompt-variable { display: grid; gap: 5px; color: #495873; font-size: 12px; font-weight: 600; }
+.prompt-variable textarea { box-sizing: border-box; width: 100%; min-height: 58px; resize: vertical; padding: 9px 10px; border: 1px solid #dfe4ec; border-radius: 7px; outline: 0; background: #fff; color: #26344d; font: 400 13px/1.55 Manrope, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif; }
+.prompt-variable textarea:focus { border-color: #4c77d2; box-shadow: 0 0 0 3px rgba(76, 119, 210, .12); }
+.prompt-preview-panel { margin-top: 15px; }
+.prompt-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
+.prompt-copy-status { min-height: 1.4em; color: #327052; font-size: 12px; }
+.prompt-noscript { margin: 20px 0; color: #697488; font-size: 12px; }
+.prompt-page :focus-visible { outline: 3px solid rgba(76, 119, 210, .45); outline-offset: 3px; }
+
+@media (max-width: 860px) {
+  .prompt-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  body[data-fl-section="prompts"] { padding-left: 0; padding-bottom: 22px; }
+  .prompt-page { padding: 26px 15px 56px; }
+  .prompt-hero h1 { font-size: 40px; }
+  .prompt-lead { font-size: 14px; }
+  .prompt-controls { padding: 15px; }
+  .prompt-filter-list { gap: 6px; }
+  .prompt-filter { padding: 7px 9px; }
+}

@@ -1,0 +1,36 @@
+name: requesty-public-catalog
+
+on:
+  push:
+    branches: [dev]
+    paths:
+      - "data/offers.json"
+      - "data/models.json"
+      - "data/daily-log/2026-10-17.json"
+      - "scripts/probe_requesty_public.py"
+      - "tests/test_requesty_catalog.py"
+      - ".github/workflows/requesty-public-catalog.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  requesty:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate local source and discovery contracts
+        run: python -m unittest tests.test_requesty_catalog -v
+      - name: Check anonymous live price catalog (not model inference)
+        run: python scripts/probe_requesty_public.py
+      - name: Upload public source verification
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: requesty-public-catalog-evidence
+          path: .tmp/requesty-public-catalog.json
+          if-no-files-found: ignore

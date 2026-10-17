@@ -421,7 +421,34 @@ if (section === 'home' || section === 'models') {
     let selectedId = deepLinkedSkill?.id || skills[0]?.id || '';
     let panelOpen = Boolean(deepLinkedSkill);
     let view = 'grid';
-    let showAllSkills = false;
+    const viewKeys = ['recommend', 'skillhub', 'suites'];
+    const activateView = (key, push = false) => {
+      const next = viewKeys.includes(key) ? key : 'recommend';
+      const current = document.querySelector('.skills-view-tab.is-active')?.dataset.skillsView || 'recommend';
+      if (push && current !== next) history.pushState({ ...(history.state || {}), skillsView: next }, '', `${location.pathname}${location.search}#${next}`);
+      document.querySelectorAll('.skills-view-tab').forEach(tab => {
+        const active = tab.dataset.skillsView === next;
+        tab.classList.toggle('is-active', active);
+        tab.setAttribute('aria-selected', String(active));
+        tab.tabIndex = active ? 0 : -1;
+      });
+      document.querySelectorAll('.skills-view-panel').forEach(panel => { panel.hidden = panel.id !== `skills-view-${next === 'recommend' ? 'recommended' : next === 'skillhub' ? 'hub' : 'suites'}`; });
+    };
+    const viewFromHash = () => activateView(location.hash.slice(1));
+    document.querySelectorAll('.skills-view-tab').forEach(tab => tab.addEventListener('click', () => activateView(tab.dataset.skillsView, true)));
+    document.querySelector('.skills-view-tabs')?.addEventListener('keydown', event => {
+      const tabs = [...document.querySelectorAll('.skills-view-tab')];
+      const index = tabs.indexOf(document.activeElement);
+      const next = event.key === 'ArrowRight' ? (index + 1) % tabs.length : event.key === 'ArrowLeft' ? (index - 1 + tabs.length) % tabs.length : event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : -1;
+      if (next < 0) return;
+      event.preventDefault();
+      tabs[next].focus();
+      activateView(tabs[next].dataset.skillsView, true);
+    });
+    window.addEventListener('popstate', viewFromHash);
+    window.addEventListener('hashchange', viewFromHash);
+    history.replaceState({ ...(history.state || {}), skillsView: viewKeys.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'recommend' }, '', location.href);
+    viewFromHash();
     const filtered = () => {
       const query = document.getElementById('skill-search').value.trim().toLowerCase();
       const status = document.getElementById('skill-status').value;
@@ -587,39 +614,11 @@ if (section === 'home' || section === 'models') {
     grid.addEventListener('click', event => {
       const more = event.target.closest('.skill-details');
       if (more) return;
-      const cardNode = event.target.closest('.skill-card');
-      if (!cardNode) return;
-      const skill = skills.find(item => item.id === cardNode.dataset.skillId);
-      panelOpen = true;
-      workspace?.classList.add('has-detail');
-      detailPanel?.classList.remove('is-collapsed');
-      updatePanel(skill);
-      grid.querySelectorAll('.skill-card').forEach(node => node.classList.toggle('is-selected', node === cardNode));
-    });
-    grid.addEventListener('keydown', event => {
-      if ((event.key === 'Enter' || event.key === ' ') && event.target.matches('.skill-card')) { event.preventDefault(); updatePanel(skills.find(item=>item.id===event.target.dataset.skillId)); }
+      if (event.target.closest('a')) return;
+      event.target.closest('.skill-card')?.querySelector('.skill-details')?.click();
     });
     document.getElementById('skill-clear').addEventListener('click', () => {
       document.getElementById('skill-search').value=''; document.getElementById('skill-status').value='all'; setTopic('development',true);
-    });
-    document.getElementById('detail-use').addEventListener('click', () => {
-      const skill = skills.find(item=>item.id===document.getElementById('detail-use').dataset.skillId);
-      const trigger = grid.querySelector(`.skill-details[data-skill-id="${CSS.escape(skill?.id || '')}"]`);
-      trigger?.click();
-    });
-    document.getElementById('detail-favorite').addEventListener('click', event => {
-      const button=event.currentTarget; const key='freellm-skill-favorites'; let ids=[];
-      try { ids=JSON.parse(localStorage.getItem(key)||'[]'); } catch {}
-      const id=button.dataset.skillId; ids=ids.includes(id)?ids.filter(value=>value!==id):[...ids,id];
-      try { localStorage.setItem(key,JSON.stringify(ids)); } catch {}
-      button.classList.toggle('is-favorite',ids.includes(id)); button.textContent=ids.includes(id)?'♥':'♡';
-    });
-    document.querySelector('.skills-detail-close')?.addEventListener('click',()=>{
-      panelOpen = false;
-      workspace?.classList.remove('has-detail');
-      detailPanel?.classList.add('is-collapsed');
-      grid.querySelectorAll('.skill-card').forEach(node => node.classList.remove('is-selected'));
-      grid.querySelectorAll('.skill-card-select').forEach(node => { node.textContent='＋'; node.setAttribute('aria-pressed','false'); });
     });
     document.querySelector('[data-skills-intro]')?.addEventListener('click',()=>{
       document.getElementById('skills-intro-notice')?.showModal();

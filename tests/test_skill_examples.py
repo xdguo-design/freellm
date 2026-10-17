@@ -97,7 +97,7 @@ class SkillExamplesRenderTests(unittest.TestCase):
 class SkillSectionTabsTests(unittest.TestCase):
     PAGES = {"skills/index.html": "Skill 目录", "skills/examples/index.html": "实测例子", "skills/learn/index.html": "学习文档"}
 
-    def test_generated_pages_have_secondary_tabs_and_seven_global_nav_items(self):
+    def test_generated_pages_have_secondary_tabs_and_nine_global_nav_items(self):
         for rel, current in self.PAGES.items():
             html = (ROOT / rel).read_text(encoding="utf-8")
             tabs = re.search(r'<nav class="model-section-tabs skill-section-tabs"[^>]*>(.*?)</nav>', html, re.S)
@@ -106,7 +106,7 @@ class SkillSectionTabsTests(unittest.TestCase):
             self.assertEqual(links, ["/skills/", "/skills/examples/", "/skills/learn/", "/evaluations/"], rel)
             self.assertIn(f'aria-current="page">{current}</a>', tabs.group(1), rel)
             rail = re.search(r'<aside class="fl-site-rail".*?</aside>', html, re.S).group(0)
-            self.assertEqual(len(re.findall(r'data-site-nav="', rail)), 7, rel)
+            self.assertEqual(len(re.findall(r'data-site-nav="', rail)), 9, rel)
             self.assertIn('data-site-nav="skills" aria-current="page"', rail, rel)
 
     def test_tabs_only_in_skills_section(self):

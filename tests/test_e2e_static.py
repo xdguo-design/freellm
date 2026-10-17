@@ -180,14 +180,16 @@ class StaticContractTests(unittest.TestCase):
             self.assertIn(needle, page)
 
     def test_mobile_navigation_keeps_core_directory_entries_visible(self):
-        """The static first paint exposes exactly one seven-item global rail."""
+        """The static first paint exposes exactly one nine-item global rail."""
         rail = re.search(r'<nav class="fl-site-nav">(.*?)</nav>', self.html, re.S)
         self.assertIsNotNone(rail)
-        self.assertEqual(rail.group(1).count("<a "), 7)
+        self.assertEqual(rail.group(1).count("<a "), 9)
         for key, href in (
             ("home", "/"),
             ("models", "/models/"),
             ("skills", "/skills/"),
+            ("prompts", "/prompts/"),
+            ("public-api", "/public-api/"),
             ("tools", "/tools/"),
             ("workflow", "/workflow/"),
             ("logs", "/logs/"),
@@ -714,7 +716,7 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
         self.assertTrue(page.locator('.fl-site-rail').is_visible())
-        self.assertEqual(page.locator('.fl-site-nav > a').count(), 7)
+        self.assertEqual(page.locator('.fl-site-nav > a').count(), 9)
         for key in ("home", "models", "skills", "tools", "workflow", "logs", "about"):
             link = page.locator(f'.fl-site-nav a[data-site-nav="{key}"]')
             self.assertEqual(link.count(), 1)
@@ -739,7 +741,7 @@ class BrowserPageTests(unittest.TestCase):
                     page.wait_for_selector(selector)
                     self.assertEqual(page.locator("body").get_attribute("data-visual-style"), "aurora")
                     self.assertTrue(page.locator(".fl-site-rail").is_visible(), route)
-                    self.assertEqual(page.locator(".fl-site-nav > a").count(), 7, route)
+                    self.assertEqual(page.locator(".fl-site-nav > a").count(), 9, route)
                     for toggle in page.locator(".fl-site-theme-toggle").all():
                         self.assertEqual(toggle.evaluate("el => getComputedStyle(el).display"), "none")
                     scroll_width = page.evaluate("document.documentElement.scrollWidth")
@@ -777,8 +779,16 @@ class BrowserPageTests(unittest.TestCase):
                     dimensions = page.evaluate(
                         """() => ({document: document.documentElement.scrollWidth, body: document.body.scrollWidth})"""
                     )
-                    self.assertLessEqual(dimensions["document"], width + 1, f"{path} at {width}px: {dimensions}")
-                    self.assertLessEqual(dimensions["body"], width + 1, f"{path} at {width}px: {dimensions}")
+                    if dimensions["document"] > width + 1 or dimensions["body"] > width + 1:
+                        offenders = page.evaluate("""() => [...document.querySelectorAll('*')]
+                            .map(el => ({tag: el.tagName.toLowerCase(),
+                                className: typeof el.className === 'string' ? el.className.slice(0, 100) : '',
+                                rect: el.getBoundingClientRect()}))
+                            .filter(item => item.rect.right > innerWidth + 1)
+                            .slice(0, 12)
+                            .map(item => ({tag: item.tag, cls: item.className, right: Math.round(item.rect.right)}))
+                        """)
+                        self.fail(f"{path} at {width}px: {dimensions}; overflowing elements: {offenders}")
 
 
     def test_model_directory_scenario_filters_intersect_clear_and_show_empty_state(self):
@@ -1028,6 +1038,39 @@ class BrowserPageTests(unittest.TestCase):
                     ))
         page.close()
 
+    def test_prompt_library_search_category_and_variable_preview(self):
+        """New indexed /prompts/ page must be interactive, not a blank sitemap target."""
+        page = self.new_page()
+        page.goto(f"{self.site.url}/prompts/", wait_until="domcontentloaded")
+        cards = page.locator('#prompt-grid [data-prompt-card]')
+        self.assertEqual(cards.count(), 24)
+        visible = page.locator('#prompt-grid [data-prompt-card]:not([hidden])')
+        self.assertEqual(visible.count(), 24)
+
+        search = page.locator('#prompt-search')
+        search.fill('this-template-never-exists-20261017')
+        self.assertEqual(visible.count(), 0)
+        self.assertTrue(page.locator('#prompt-empty').is_visible())
+        page.locator('#prompt-search-clear').click()
+        self.assertEqual(visible.count(), 24)
+
+        category = page.locator('button[data-prompt-category]:not([data-prompt-category="all"])').first
+        category.click()
+        self.assertEqual(visible.count(), 6)
+        self.assertEqual(category.get_attribute('aria-pressed'), 'true')
+        page.locator('button[data-prompt-category="all"]').click()
+        self.assertEqual(visible.count(), 24)
+
+        example = page.locator('#prompt-grid [data-prompt-card]:has(textarea[data-prompt-variable])').first
+        self.assertEqual(example.count(), 1)
+        example.locator('summary').click()
+        field = example.locator('textarea[data-prompt-variable]').first
+        field.fill('FreeLLM-20261017-预览测试')
+        preview = example.locator('[data-prompt-preview]').inner_text()
+        self.assertIn('FreeLLM-20261017-预览测试', preview)
+        self.assertFalse(example.locator('.prompt-preview-panel').is_hidden())
+        page.close()
+
     def test_skills_have_distinct_local_icons_and_matching_detail_icon(self):
         page = self.new_page()
         page.goto(f"{self.site.url}/skills/?category=development")
@@ -1045,25 +1088,26 @@ class BrowserPageTests(unittest.TestCase):
 
         page.goto(f"{self.site.url}/skills/?category=all")
         total = len(json.loads((ROOT / 'data/skills.json').read_text(encoding='utf-8')))
-        page.locator('#skills-browse-all').click()
+        # The complete directory now renders lightweight text-first cards,
+        # while the eight curated showcase cards keep distinct SVG icons.
+        # Test the new all-catalog contract instead of requiring deleted icons.
         page.wait_for_function(
-            'total => document.querySelectorAll("#skill-grid .skill-card-icon svg").length === total',
+            'total => document.querySelectorAll("#skill-grid .skill-card").length === total',
             arg=total,
         )
-        signatures = page.locator('#skill-grid .skill-card-icon').evaluate_all(
-            'items => items.map(item => item.querySelector("svg").innerHTML + getComputedStyle(item).color)'
+        ids = page.locator('#skill-grid [data-skill-id]').evaluate_all(
+            'items => items.map(item => item.dataset.skillId)'
         )
-        self.assertEqual(len(set(signatures)), total)
+        self.assertEqual(len(set(ids)), total)
         page.reload()
-        page.wait_for_selector('#skill-grid .skill-card-icon svg')
-        page.locator('#skills-browse-all').click()
         page.wait_for_function(
-            'total => document.querySelectorAll("#skill-grid .skill-card-icon svg").length === total',
+            'total => document.querySelectorAll("#skill-grid .skill-card").length === total',
             arg=total,
         )
-        self.assertEqual(page.locator('#skill-grid .skill-card-icon').evaluate_all(
-            'items => items.map(item => item.querySelector("svg").innerHTML + getComputedStyle(item).color)'
-        ), signatures)
+        reloaded_ids = page.locator('#skill-grid [data-skill-id]').evaluate_all(
+            'items => items.map(item => item.dataset.skillId)'
+        )
+        self.assertEqual(reloaded_ids, ids)
         page.close()
 
     def test_skill_detail_dialog_stays_inside_narrow_viewports(self):
@@ -1161,7 +1205,7 @@ class BrowserPageTests(unittest.TestCase):
         menu = page.locator(".fl-mobile-menu-button")
         self.assertTrue(menu.is_visible())
         self.assertEqual(menu.get_attribute("aria-expanded"), "false")
-        self.assertEqual(page.locator(".fl-site-nav > a").count(), 7)
+        self.assertEqual(page.locator(".fl-site-nav > a").count(), 9)
         menu = page.locator(".fl-mobile-menu-button")
         self.assertTrue(menu.is_visible())
         self.assertEqual(menu.get_attribute("aria-expanded"), "false")
