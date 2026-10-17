@@ -1104,9 +1104,10 @@ class BrowserPageTests(unittest.TestCase):
             'total => document.querySelectorAll("#skill-grid .skill-card").length === total',
             arg=total,
         )
-        self.assertEqual(page.locator('#skill-grid .skill-card-icon').evaluate_all(
-            'items => items.map(item => item.querySelector("svg").innerHTML + getComputedStyle(item).color)'
-        ), signatures)
+        reloaded_ids = page.locator('#skill-grid [data-skill-id]').evaluate_all(
+            'items => items.map(item => item.dataset.skillId)'
+        )
+        self.assertEqual(reloaded_ids, ids)
         page.close()
 
     def test_skill_detail_dialog_stays_inside_narrow_viewports(self):
