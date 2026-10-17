@@ -1,0 +1,34 @@
+name: fiimeopc-public-preflight
+
+on:
+  push:
+    branches: [dev]
+    paths:
+      - "data/review-queue.json"
+      - "scripts/probe_fiimeopc_public.py"
+      - "tests/test_fiimeopc_candidate.py"
+      - ".github/workflows/fiimeopc-preflight.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Verify FiimeOPC unverified-candidate contract
+        run: python -m unittest tests.test_fiimeopc_candidate -v
+      - name: Check only anonymous public endpoints
+        run: python scripts/probe_fiimeopc_public.py
+      - name: Upload anonymous status evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fiimeopc-anonymous-preflight
+          path: .tmp/fiimeopc-public-preflight.json
+          if-no-files-found: ignore
