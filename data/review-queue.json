@@ -155,5 +155,66 @@
       "https://code.phanthy.com/code/download"
     ],
     "reviewNote": "2026-10-09 今日发现与官方网页核对。非 10 月 9 日首次发布：最新稳定版 v2.34.0 日期为 2026-09-24；v2.35.0 为 2026-10-08 的 Coming Soon 预告，尚非正式发布。属于 AI 编程/Agent 客户端免费体验，不能视为免费大模型 API；账号实际到账、模型映射/倍率、独立 API Key、地域可用性和条款仍需实测。暂不发布为已实测资源，也不计入 API 免费额度统计。"
+  },
+  {
+    "id": "fiimeopc-community-api",
+    "providerId": "fiimeopc",
+    "provider": "FiimeOPC",
+    "model": "opc-txt-v1 / opc-image-v1 / opc-video-v1 (claimed aliases)",
+    "name": "FiimeOPC 社区模型服务：注册送 Token 及每日任务额度（待核验）",
+    "productType": "api",
+    "capabilities": [
+      "chat",
+      "image",
+      "video"
+    ],
+    "register": "https://opc.fiime.cn/register",
+    "docsUrl": null,
+    "apiEndpoint": "https://opc.fiime.cn/api/model-service/v1",
+    "freeSummary": "第三方投稿称：注册送红包单次最高 1 亿 Token（不是保底），完成 3 个当日有效社区任务最多另领 5,000 万；该数值及实际到账尚无独立官方核验。",
+    "catalogStatus": "draft",
+    "lastVerifiedAt": "2026-10-17",
+    "discoveredAt": "2026-10-17",
+    "sourceUrls": [
+      "https://opc.fiime.cn/",
+      "https://opc.fiime.cn/zh-cn/",
+      "https://opc.fiime.cn/register"
+    ],
+    "reviewNote": "2026-10-17 来源是转贴文章，作者声称有账户截图，但本轮聊天没有收到可供验证的原始截图/官网规则。独立确认：FiimeOPC 网站存在，官方搜索摘要显示“模型服务/领取算力”入口；未确认注册金额、每日任务有效性、个人最高/实际到账、邀新 1 亿、每日消耗 5 亿、5 把 Key、三个 API 别名或真正 SDK 兼容性。福利 Token 未见汇率/计费折算，不得宣传为通用 1 亿真实模型 token。原文的邀请码属于个人返利，使用官方无邀请码入口。只有实际账户/API 调用及清晰官方规则之后才能公开收录/加精。",
+    "sourceStatus": "platform_exist_claims_unverified",
+    "claimEvidence": [
+      {
+        "claim": "FiimeOPC 站点存在、与一人公司社区关联",
+        "status": "official_site_publicly_visible",
+        "url": "https://opc.fiime.cn/"
+      },
+      {
+        "claim": "模型服务及领取算力入口存在",
+        "status": "official_indexed_snippet_only",
+        "url": "https://opc.fiime.cn/zh-cn/"
+      },
+      {
+        "claim": "注册红包最高100000000平台Token",
+        "status": "unknown",
+        "url": "https://opc.fiime.cn/register"
+      },
+      {
+        "claim": "有效任务每日最多50000000平台Token",
+        "status": "unknown",
+        "url": "https://opc.fiime.cn/"
+      },
+      {
+        "claim": "opc-txt-v1、opc-image-v1、opc-video-v1 OpenAI 兼容",
+        "status": "unknown",
+        "url": "https://opc.fiime.cn/api/model-service/v1"
+      },
+      {
+        "claim": "每日消费上限500000000平台Token与最多5个Key",
+        "status": "unknown",
+        "url": "https://opc.fiime.cn/"
+      }
+    ],
+    "apiKeyTested": false,
+    "featured": false
   }
 ]
