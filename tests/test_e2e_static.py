@@ -779,8 +779,16 @@ class BrowserPageTests(unittest.TestCase):
                     dimensions = page.evaluate(
                         """() => ({document: document.documentElement.scrollWidth, body: document.body.scrollWidth})"""
                     )
-                    self.assertLessEqual(dimensions["document"], width + 1, f"{path} at {width}px: {dimensions}")
-                    self.assertLessEqual(dimensions["body"], width + 1, f"{path} at {width}px: {dimensions}")
+                    if dimensions["document"] > width + 1 or dimensions["body"] > width + 1:
+                        offenders = page.evaluate("""() => [...document.querySelectorAll('*')]
+                            .map(el => ({tag: el.tagName.toLowerCase(),
+                                className: typeof el.className === 'string' ? el.className.slice(0, 100) : '',
+                                rect: el.getBoundingClientRect()}))
+                            .filter(item => item.rect.right > innerWidth + 1)
+                            .slice(0, 12)
+                            .map(item => ({tag: item.tag, cls: item.className, right: Math.round(item.rect.right)}))
+                        """)
+                        self.fail(f"{path} at {width}px: {dimensions}; overflowing elements: {offenders}")
 
 
     def test_model_directory_scenario_filters_intersect_clear_and_show_empty_state(self):
@@ -1080,18 +1088,20 @@ class BrowserPageTests(unittest.TestCase):
 
         page.goto(f"{self.site.url}/skills/?category=all")
         total = len(json.loads((ROOT / 'data/skills.json').read_text(encoding='utf-8')))
+        # The complete directory now renders lightweight text-first cards,
+        # while the eight curated showcase cards keep distinct SVG icons.
+        # Test the new all-catalog contract instead of requiring deleted icons.
         page.wait_for_function(
-            'total => document.querySelectorAll("#skill-grid .skill-card-icon svg").length === total',
+            'total => document.querySelectorAll("#skill-grid .skill-card").length === total',
             arg=total,
         )
-        signatures = page.locator('#skill-grid .skill-card-icon').evaluate_all(
-            'items => items.map(item => item.querySelector("svg").innerHTML + getComputedStyle(item).color)'
+        ids = page.locator('#skill-grid [data-skill-id]').evaluate_all(
+            'items => items.map(item => item.dataset.skillId)'
         )
-        self.assertEqual(len(set(signatures)), total)
+        self.assertEqual(len(set(ids)), total)
         page.reload()
-        page.wait_for_selector('#skill-grid .skill-card-icon svg')
         page.wait_for_function(
-            'total => document.querySelectorAll("#skill-grid .skill-card-icon svg").length === total',
+            'total => document.querySelectorAll("#skill-grid .skill-card").length === total',
             arg=total,
         )
         self.assertEqual(page.locator('#skill-grid .skill-card-icon').evaluate_all(
