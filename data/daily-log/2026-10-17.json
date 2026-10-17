@@ -7484,7 +7484,7 @@
           "https://www.requesty.ai/pricing",
           "https://www.requesty.ai/terms"
         ],
-        "freeSummary": "官方列 13 个 $0 模型；新组织全模型共享 200 次/天、20 次/分钟；官网声明无需信用卡。仅完成官方资料/匿名目录预检，未实测模型生成质量和速度。",
+        "freeSummary": "官方免费 13 个模型共享 200 次/天、20 次/分钟；2026-10-17 公开 API 核验 13/13 个 $0 路由一致；9 个标记可用于训练、10 个留存数据。推理质量和响应速度仍待 Key 实测。",
         "validitySummary": "免费政策和模型列表可能随时调整",
         "accessSummary": "注册 Requesty 后创建 API Key；国内注册和年龄验证待测",
         "register": "https://app.requesty.ai/",
@@ -7502,7 +7502,7 @@
             "https://www.requesty.ai/models/free"
           ]
         ],
-        "notes": "隐私提示：部分免费模型可能允许输入/输出被训练使用，不应直接处理患者数据、个人隐私或商业机密。无 API Key，无推理/测速结果，暂不加精。",
+        "notes": "公开目录的训练/留存标记由平台返回，非独立隐私审计；严禁处理患者、个人隐私与商业秘密。本站未验证推理效果，未加精。",
         "freeLLMTest": {
           "testLevel": "preflight",
           "status": "partial",
@@ -7515,10 +7515,10 @@
             "检查公开 GET /v1/models 的零价格模型和模型数据政策字段。",
             "核查 2026-08-14 服务条款 Training Permitted Models 与免费用户数据使用规则。",
             "没有可用的真实 Requesty API Key，因此不调用 Chat Completions，也不虚构账号注册及中国大陆可用性结果。",
-            "2026-10-17 公开 GET https://router.requesty.ai/v1/models 可访问，未进行带 Key 推理请求。"
+            "2026-10-17 GitHub Actions 匿名调用 GET /v1/models（HTTP 200）：793 条模型，其中 13 条输入/输出价格均 0；模型 ID 全匹配；9 条允许训练、10 条标记留存。GitHub Actions #39006391458 公开证据已归档。"
           ],
-          "result": "已确认平台官网有免费套餐且官方清单列 13 个 $0 模型；尚未完成实际 API Key 授权调用及区域可达性验证。",
-          "limitations": "未验证邮箱/年龄认证是否有地区例外、Key 真实调用、每日重置时区、429 的实际响应、准确上下文限制和长时稳定性。官方价目与公开模型元数据可能变化。 无法仅凭公开模型目录判断生成质量、首 token 延迟或输出速度，不满足 FreeLLM 加精条件。",
+          "result": "已从 Requesty 公开 GET /v1/models 核对 13 个 $0 模型（公开总模型记录 793）；其中 9 个标记用于训练，10 个标记留存数据。 GitHub Actions 公开目录测试和 3 项本地契约测试已通过。真实推理输出、速度、账号限额与中国大陆可用性仍未测试；不具备加精资格。",
+          "limitations": "未验证邮箱/年龄认证是否有地区例外、Key 真实调用、每日重置时区、429 的实际响应、准确上下文限制和长时稳定性。官方价目与公开模型元数据可能变化。 公开 GET 目录只能确认售价/模型元数据；不能代表通过身份验证后同样可用，亦不能替代实际模型响应测试。",
           "evidence": [
             {
               "label": "官方 Free Models 与额度",

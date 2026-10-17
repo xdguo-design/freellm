@@ -5386,8 +5386,6 @@
     "accessRegion": "international",
     "accessEndpoint": "https://openrouter.ai/api/v1",
     "canonicalModelId": "dots3-note-preview",
-    "accessRegion": "international",
-    "accessEndpoint": "https://openrouter.ai/api/v1",
     "freshnessStatus": "current"
   },
   {
@@ -6170,10 +6168,17 @@
     "canonicalModelId": "nvidia/nemotron-3-ultra-550b-a55b",
     "accessRegion": "international",
     "accessEndpoint": "https://router.requesty.ai/v1",
-    "manualNote": "官方 $0 目录已核；未持 Requesty API Key 实测。部分免费模型允许训练/留存，处理敏感数据前务必核对 API 元数据。",
+    "manualNote": "官方公开 GET /v1/models 核验于 2026-10-17：输入/输出价格均 $0；公开接口标记：允许用于训练，保留 30 天。此为服务商公开标记，不是独立隐私审计。未持 Key 实测模型生成质量、限额扣减及速度。",
     "lastSeenAt": "2026-10-17",
     "lastVerifiedAt": "2026-10-17",
-    "freshnessStatus": "new"
+    "freshnessStatus": "new",
+    "privacyCheck": {
+      "checkedAt": "2026-10-17",
+      "sourceUrl": "https://router.requesty.ai/v1/models",
+      "dataUsedForTraining": true,
+      "dataRetention": true,
+      "dataRetentionDays": 30
+    }
   },
   {
     "id": "requesty/nvidia-nemotron-3-super-120b-a12b",
@@ -6195,10 +6200,17 @@
     "canonicalModelId": "nvidia/nemotron-3-super-120b-a12b",
     "accessRegion": "international",
     "accessEndpoint": "https://router.requesty.ai/v1",
-    "manualNote": "官方 $0 目录已核；未持 Requesty API Key 实测。部分免费模型允许训练/留存，处理敏感数据前务必核对 API 元数据。",
+    "manualNote": "官方公开 GET /v1/models 核验于 2026-10-17：输入/输出价格均 $0；公开接口标记：允许用于训练，保留 30 天。此为服务商公开标记，不是独立隐私审计。未持 Key 实测模型生成质量、限额扣减及速度。",
     "lastSeenAt": "2026-10-17",
     "lastVerifiedAt": "2026-10-17",
-    "freshnessStatus": "new"
+    "freshnessStatus": "new",
+    "privacyCheck": {
+      "checkedAt": "2026-10-17",
+      "sourceUrl": "https://router.requesty.ai/v1/models",
+      "dataUsedForTraining": true,
+      "dataRetention": true,
+      "dataRetentionDays": 30
+    }
   },
   {
     "id": "requesty/nvidia-nemotron-3-nano-30b-a3b",
@@ -6220,10 +6232,17 @@
     "canonicalModelId": "nvidia/nemotron-3-nano-30b-a3b",
     "accessRegion": "international",
     "accessEndpoint": "https://router.requesty.ai/v1",
-    "manualNote": "官方 $0 目录已核；未持 Requesty API Key 实测。部分免费模型允许训练/留存，处理敏感数据前务必核对 API 元数据。",
+    "manualNote": "官方公开 GET /v1/models 核验于 2026-10-17：输入/输出价格均 $0；公开接口标记：允许用于训练，保留 30 天。此为服务商公开标记，不是独立隐私审计。未持 Key 实测模型生成质量、限额扣减及速度。",
     "lastSeenAt": "2026-10-17",
     "lastVerifiedAt": "2026-10-17",
-    "freshnessStatus": "new"
+    "freshnessStatus": "new",
+    "privacyCheck": {
+      "checkedAt": "2026-10-17",
+      "sourceUrl": "https://router.requesty.ai/v1/models",
+      "dataUsedForTraining": true,
+      "dataRetention": true,
+      "dataRetentionDays": 30
+    }
   },
   {
     "id": "requesty/nvidia-nemotron-3-nano-omni-30b-a3b-reasoning",
@@ -6246,10 +6265,17 @@
     "canonicalModelId": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
     "accessRegion": "international",
     "accessEndpoint": "https://router.requesty.ai/v1",
-    "manualNote": "官方 $0 目录已核；未持 Requesty API Key 实测。部分免费模型允许训练/留存，处理敏感数据前务必核对 API 元数据。",
+    "manualNote": "官方公开 GET /v1/models 核验于 2026-10-17：输入/输出价格均 $0；公开接口标记：允许用于训练，保留 30 天。此为服务商公开标记，不是独立隐私审计。未持 Key 实测模型生成质量、限额扣减及速度。",
     "lastSeenAt": "2026-10-17",
     "lastVerifiedAt": "2026-10-17",
-    "freshnessStatus": "new"
+    "freshnessStatus": "new",
+    "privacyCheck": {
+      "checkedAt": "2026-10-17",
+      "sourceUrl": "https://router.requesty.ai/v1/models",
+      "dataUsedForTraining": true,
+      "dataRetention": true,
+      "dataRetentionDays": 30
+    }
   },
   {
     "id": "requesty/poolside-laguna-xs-2",
@@ -6271,10 +6297,17 @@
     "canonicalModelId": "poolside/laguna-xs.2",
     "accessRegion": "international",
     "accessEndpoint": "https://router.requesty.ai/v1",
-    "manualNote": "官方 $0 目录已核；未持 Requesty API Key 实测。部分免费模型允许训练/留存，处理敏感数据前务必核对 API 元数据。",
+    "manualNote": "官方公开 GET /v1/models 核验于 2026-10-17：输入/输出价格均 $0；公开接口标记：允许用于训练，保留 30 天。此为服务商公开标记，不是独立隐私审计。未持 Key 实测模型生成质量、限额扣减及速度。",
     "lastSeenAt": "2026-10-17",
     "lastVerifiedAt": "2026-10-17",
-    "freshnessStatus": "new"
+    "freshnessStatus": "new",
+    "privacyCheck": {
+      "checkedAt": "2026-10-17",
+      "sourceUrl": "https://router.requesty.ai/v1/models",
+      "dataUsedForTraining": true,
+      "dataRetention": true,
+      "dataRetentionDays": 30
+    }
   },
   {
     "id": "requesty/poolside-laguna-m-1",
@@ -6296,10 +6329,17 @@
     "canonicalModelId": "poolside/laguna-m.1",
     "accessRegion": "international",
     "accessEndpoint": "https://router.requesty.ai/v1",
-    "manualNote": "官方 $0 目录已核；未持 Requesty API Key 实测。部分免费模型允许训练/留存，处理敏感数据前务必核对 API 元数据。",
+    "manualNote": "官方公开 GET /v1/models 核验于 2026-10-17：输入/输出价格均 $0；公开接口标记：允许用于训练，保留 30 天。此为服务商公开标记，不是独立隐私审计。未持 Key 实测模型生成质量、限额扣减及速度。",
     "lastSeenAt": "2026-10-17",
     "lastVerifiedAt": "2026-10-17",
-    "freshnessStatus": "new"
+    "freshnessStatus": "new",
+    "privacyCheck": {
+      "checkedAt": "2026-10-17",
+      "sourceUrl": "https://router.requesty.ai/v1/models",
+      "dataUsedForTraining": true,
+      "dataRetention": true,
+      "dataRetentionDays": 30
+    }
   },
   {
     "id": "requesty/google-gemma-4-31b-it",
@@ -6322,10 +6362,17 @@
     "canonicalModelId": "google/gemma-4-31b-it",
     "accessRegion": "international",
     "accessEndpoint": "https://router.requesty.ai/v1",
-    "manualNote": "官方 $0 目录已核；未持 Requesty API Key 实测。部分免费模型允许训练/留存，处理敏感数据前务必核对 API 元数据。",
+    "manualNote": "官方公开 GET /v1/models 核验于 2026-10-17：输入/输出价格均 $0；公开接口标记：不用于训练，保留 30 天。此为服务商公开标记，不是独立隐私审计。未持 Key 实测模型生成质量、限额扣减及速度。",
     "lastSeenAt": "2026-10-17",
     "lastVerifiedAt": "2026-10-17",
-    "freshnessStatus": "new"
+    "freshnessStatus": "new",
+    "privacyCheck": {
+      "checkedAt": "2026-10-17",
+      "sourceUrl": "https://router.requesty.ai/v1/models",
+      "dataUsedForTraining": false,
+      "dataRetention": true,
+      "dataRetentionDays": 30
+    }
   },
   {
     "id": "requesty/mistral-leanstral-1-5",
@@ -6346,10 +6393,17 @@
     "canonicalModelId": "mistral/leanstral-1-5",
     "accessRegion": "international",
     "accessEndpoint": "https://router.requesty.ai/v1",
-    "manualNote": "官方 $0 目录已核；未持 Requesty API Key 实测。部分免费模型允许训练/留存，处理敏感数据前务必核对 API 元数据。",
+    "manualNote": "官方公开 GET /v1/models 核验于 2026-10-17：输入/输出价格均 $0；公开接口标记：不用于训练，未标记保留数据。此为服务商公开标记，不是独立隐私审计。未持 Key 实测模型生成质量、限额扣减及速度。",
     "lastSeenAt": "2026-10-17",
     "lastVerifiedAt": "2026-10-17",
-    "freshnessStatus": "new"
+    "freshnessStatus": "new",
+    "privacyCheck": {
+      "checkedAt": "2026-10-17",
+      "sourceUrl": "https://router.requesty.ai/v1/models",
+      "dataUsedForTraining": false,
+      "dataRetention": false,
+      "dataRetentionDays": 0
+    }
   },
   {
     "id": "requesty/nvidia-nemotron-3-5-content-safety",
@@ -6371,10 +6425,17 @@
     "canonicalModelId": "nvidia/nemotron-3.5-content-safety",
     "accessRegion": "international",
     "accessEndpoint": "https://router.requesty.ai/v1",
-    "manualNote": "官方 $0 目录已核；未持 Requesty API Key 实测。部分免费模型允许训练/留存，处理敏感数据前务必核对 API 元数据。",
+    "manualNote": "官方公开 GET /v1/models 核验于 2026-10-17：输入/输出价格均 $0；公开接口标记：允许用于训练，保留 30 天。此为服务商公开标记，不是独立隐私审计。未持 Key 实测模型生成质量、限额扣减及速度。",
     "lastSeenAt": "2026-10-17",
     "lastVerifiedAt": "2026-10-17",
-    "freshnessStatus": "new"
+    "freshnessStatus": "new",
+    "privacyCheck": {
+      "checkedAt": "2026-10-17",
+      "sourceUrl": "https://router.requesty.ai/v1/models",
+      "dataUsedForTraining": true,
+      "dataRetention": true,
+      "dataRetentionDays": 30
+    }
   },
   {
     "id": "requesty/nvidia-nemotron-3-5-lightning-30b-a3b",
@@ -6396,10 +6457,17 @@
     "canonicalModelId": "nvidia/nemotron-3.5-lightning-30b-a3b",
     "accessRegion": "international",
     "accessEndpoint": "https://router.requesty.ai/v1",
-    "manualNote": "官方 $0 目录已核；未持 Requesty API Key 实测。部分免费模型允许训练/留存，处理敏感数据前务必核对 API 元数据。",
+    "manualNote": "官方公开 GET /v1/models 核验于 2026-10-17：输入/输出价格均 $0；公开接口标记：允许用于训练，保留 30 天。此为服务商公开标记，不是独立隐私审计。未持 Key 实测模型生成质量、限额扣减及速度。",
     "lastSeenAt": "2026-10-17",
     "lastVerifiedAt": "2026-10-17",
-    "freshnessStatus": "new"
+    "freshnessStatus": "new",
+    "privacyCheck": {
+      "checkedAt": "2026-10-17",
+      "sourceUrl": "https://router.requesty.ai/v1/models",
+      "dataUsedForTraining": true,
+      "dataRetention": true,
+      "dataRetentionDays": 30
+    }
   },
   {
     "id": "requesty/nvidia-muse-glimmer-30b",
@@ -6422,10 +6490,17 @@
     "canonicalModelId": "nvidia/muse-glimmer-30b",
     "accessRegion": "international",
     "accessEndpoint": "https://router.requesty.ai/v1",
-    "manualNote": "官方 $0 目录已核；未持 Requesty API Key 实测。部分免费模型允许训练/留存，处理敏感数据前务必核对 API 元数据。",
+    "manualNote": "官方公开 GET /v1/models 核验于 2026-10-17：输入/输出价格均 $0；公开接口标记：允许用于训练，保留 30 天。此为服务商公开标记，不是独立隐私审计。未持 Key 实测模型生成质量、限额扣减及速度。",
     "lastSeenAt": "2026-10-17",
     "lastVerifiedAt": "2026-10-17",
-    "freshnessStatus": "new"
+    "freshnessStatus": "new",
+    "privacyCheck": {
+      "checkedAt": "2026-10-17",
+      "sourceUrl": "https://router.requesty.ai/v1/models",
+      "dataUsedForTraining": true,
+      "dataRetention": true,
+      "dataRetentionDays": 30
+    }
   },
   {
     "id": "requesty/novita-ling-3-1-flash",
@@ -6447,10 +6522,17 @@
     "canonicalModelId": "novita/ling-3.1-flash",
     "accessRegion": "international",
     "accessEndpoint": "https://router.requesty.ai/v1",
-    "manualNote": "官方 $0 目录已核；未持 Requesty API Key 实测。部分免费模型允许训练/留存，处理敏感数据前务必核对 API 元数据。",
+    "manualNote": "官方公开 GET /v1/models 核验于 2026-10-17：输入/输出价格均 $0；公开接口标记：不用于训练，未标记保留数据。此为服务商公开标记，不是独立隐私审计。未持 Key 实测模型生成质量、限额扣减及速度。",
     "lastSeenAt": "2026-10-17",
     "lastVerifiedAt": "2026-10-17",
-    "freshnessStatus": "new"
+    "freshnessStatus": "new",
+    "privacyCheck": {
+      "checkedAt": "2026-10-17",
+      "sourceUrl": "https://router.requesty.ai/v1/models",
+      "dataUsedForTraining": false,
+      "dataRetention": false,
+      "dataRetentionDays": 0
+    }
   },
   {
     "id": "requesty/novita-inclusionai-ling-3-0-tiny",
@@ -6472,9 +6554,16 @@
     "canonicalModelId": "novita/inclusionai/ling-3.0-tiny",
     "accessRegion": "international",
     "accessEndpoint": "https://router.requesty.ai/v1",
-    "manualNote": "官方 $0 目录已核；未持 Requesty API Key 实测。部分免费模型允许训练/留存，处理敏感数据前务必核对 API 元数据。",
+    "manualNote": "官方公开 GET /v1/models 核验于 2026-10-17：输入/输出价格均 $0；公开接口标记：不用于训练，未标记保留数据。此为服务商公开标记，不是独立隐私审计。未持 Key 实测模型生成质量、限额扣减及速度。",
     "lastSeenAt": "2026-10-17",
     "lastVerifiedAt": "2026-10-17",
-    "freshnessStatus": "new"
+    "freshnessStatus": "new",
+    "privacyCheck": {
+      "checkedAt": "2026-10-17",
+      "sourceUrl": "https://router.requesty.ai/v1/models",
+      "dataUsedForTraining": false,
+      "dataRetention": false,
+      "dataRetentionDays": 0
+    }
   }
 ]
