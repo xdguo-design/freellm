@@ -5762,6 +5762,9 @@ def render_prompt_library_page(templates: list[dict], site_url: str) -> str:
   <meta property="og:description" content="按场景浏览中文 Prompt 模板，填写变量后在本地预览和复制。">
   <meta property="og:url" content="{_esc(canonical)}">
   <link rel="stylesheet" href="/css/prompt-library.css?v=20261009a">
+  {ADSENSE_SCRIPT}
+  {VERCEL_ANALYTICS_SCRIPT}
+  {GA4_SCRIPT}
   {STATIC_LOCALE_STYLE}
   {STATIC_LOCALE_SCRIPT}
 </head>
@@ -6759,6 +6762,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         Path("skills") / "examples" / "index.html": render_skill_examples_page(skills or [], _load_skill_eval_results(data_dir), site_url),
         Path("skills") / "learn" / "index.html": render_skill_learn_page(skills or [], _load_skill_eval_results(data_dir), site_url),
         Path("workflow") / "index.html": render_skill_lab_page(skills or [], recipes or [], site_url),
+        Path("prompts") / "index.html": render_prompt_library_page(_load_prompt_templates(data_dir), site_url),
         Path(LEGACY_WORKFLOW_PAGE_PATH.strip("/")) / "index.html": render_legacy_workflow_redirect(site_url),
         Path("models") / "index.html": render_models_landing_page(offers, model_catalog, providers, site_url, _load_curated_models(data_dir), _load_featured_agents(data_dir, offers), data_dir=data_dir, reference_date=count_reference_date),
         Path("models") / "all" / "index.html": render_models_page(offers, site_url, models, page_num=1, total_pages=max(1, (len(model_catalog) + MODELS_PER_PAGE - 1) // MODELS_PER_PAGE) if models else 1, data_dir=data_dir),
@@ -7600,6 +7604,7 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         ("/models/", "▣", "模型", "models"),
         ("/skills/", "✦", "技能", "skills"),
         ("/prompts/", "✧", "提示词", "prompts"),
+        ("/public-api/", "♡", "公益站", "public-api"),
         ("/tools/", "⌘", "工具", "tools"),
         ("/workflow/", "⌁", "工作流", "workflow"),
         ("/logs/", "◷", "每日发现", "logs"),
@@ -7609,7 +7614,8 @@ def _ensure_static_site_chrome(content: str, path: Path) -> str:
         href, icon, label, key = item
         current = ' aria-current="page"' if key == section else ""
         label_markup = '<span lang="zh-CN">提示词</span><span lang="en">Prompts</span>' if key == "prompts" else _esc(label)
-        accessible_label = ' aria-label="Prompt 模板库 / Prompt library"' if key == "prompts" else ""
+        accessible_label = (' aria-label="Prompt 模板库 / Prompt library"' if key == "prompts"
+                            else ' aria-label="公益 AI API 导航 / Public AI APIs"' if key == "public-api" else "")
         return f'<a href="{href}" data-site-nav="{key}"{current}{accessible_label}><span class="fl-site-nav-icon" aria-hidden="true">{_esc(icon)}</span><span>{label_markup}</span></a>'
     links = "".join(render_link(item) for item in items)
     brand_mark = '<span class="fl-site-brand-mark" aria-hidden="true">AI</span>'

@@ -180,14 +180,16 @@ class StaticContractTests(unittest.TestCase):
             self.assertIn(needle, page)
 
     def test_mobile_navigation_keeps_core_directory_entries_visible(self):
-        """The static first paint exposes exactly one seven-item global rail."""
+        """The static first paint exposes exactly one nine-item global rail."""
         rail = re.search(r'<nav class="fl-site-nav">(.*?)</nav>', self.html, re.S)
         self.assertIsNotNone(rail)
-        self.assertEqual(rail.group(1).count("<a "), 7)
+        self.assertEqual(rail.group(1).count("<a "), 9)
         for key, href in (
             ("home", "/"),
             ("models", "/models/"),
             ("skills", "/skills/"),
+            ("prompts", "/prompts/"),
+            ("public-api", "/public-api/"),
             ("tools", "/tools/"),
             ("workflow", "/workflow/"),
             ("logs", "/logs/"),
@@ -714,7 +716,7 @@ class BrowserPageTests(unittest.TestCase):
         page.goto(HTML_PATH.as_uri())
         page.wait_for_function("document.body.dataset.dataSource === 'embedded'")
         self.assertTrue(page.locator('.fl-site-rail').is_visible())
-        self.assertEqual(page.locator('.fl-site-nav > a').count(), 7)
+        self.assertEqual(page.locator('.fl-site-nav > a').count(), 9)
         for key in ("home", "models", "skills", "tools", "workflow", "logs", "about"):
             link = page.locator(f'.fl-site-nav a[data-site-nav="{key}"]')
             self.assertEqual(link.count(), 1)
@@ -739,7 +741,7 @@ class BrowserPageTests(unittest.TestCase):
                     page.wait_for_selector(selector)
                     self.assertEqual(page.locator("body").get_attribute("data-visual-style"), "aurora")
                     self.assertTrue(page.locator(".fl-site-rail").is_visible(), route)
-                    self.assertEqual(page.locator(".fl-site-nav > a").count(), 7, route)
+                    self.assertEqual(page.locator(".fl-site-nav > a").count(), 9, route)
                     for toggle in page.locator(".fl-site-theme-toggle").all():
                         self.assertEqual(toggle.evaluate("el => getComputedStyle(el).display"), "none")
                     scroll_width = page.evaluate("document.documentElement.scrollWidth")
@@ -1161,7 +1163,7 @@ class BrowserPageTests(unittest.TestCase):
         menu = page.locator(".fl-mobile-menu-button")
         self.assertTrue(menu.is_visible())
         self.assertEqual(menu.get_attribute("aria-expanded"), "false")
-        self.assertEqual(page.locator(".fl-site-nav > a").count(), 7)
+        self.assertEqual(page.locator(".fl-site-nav > a").count(), 9)
         menu = page.locator(".fl-mobile-menu-button")
         self.assertTrue(menu.is_visible())
         self.assertEqual(menu.get_attribute("aria-expanded"), "false")

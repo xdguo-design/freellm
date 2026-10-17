@@ -192,16 +192,16 @@ class SearchConsoleRegressionTests(unittest.TestCase):
             if (loc.text or "").strip()
         ]
 
-        # 2026-10-15 reviewed expansion: eight authored /public-api/ URLs
-        # (the hub plus seven evidence-led reviews) have distinct content,
-        # self-canonicals and explicit indexing. No generated model/offer
-        # landing-page expansion is approved by this change.
-        # Approved sitemap counts: pages=58, offers=78, providers=50,
-        # models=35, english=9; total=230. Further growth requires review.
+        # 2026-10-17 reviewed expansion: Requesty adds one evidence-led
+        # offer, one provider and two indexable model aggregations; the
+        # 24-template /prompts/ page is now fully generated and indexable.
+        # Reviewed inventory: pages=60, offers=79, providers=51,
+        # models=37, english=9; total=236. A bounded 250-page ceiling
+        # leaves small headroom but prevents unreviewed SEO mass expansion.
         self.assertLessEqual(
             len(all_urls),
-            230,
-            f"sitemap crawl target budget exceeded ({len(all_urls)} > 230): {section_counts}; inspect generator output before release",
+            250,
+            f"sitemap crawl target budget exceeded ({len(all_urls)} > 250): {section_counts}; inspect generator output before release",
         )
         self.assertLessEqual(
             len(model_urls),

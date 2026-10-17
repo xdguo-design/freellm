@@ -285,13 +285,14 @@ class P0ConvergenceTests(unittest.TestCase):
         self.assertNotRegex(weekly, r"(?:↑|↓|环比\\s*[+\\-]?\\d+%|较上周\\s*[+\\-]?\\d+%)")
         self.assertNotIn('class="prototype-hot-card"', weekly)
 
-    def test_primary_navigation_has_exactly_seven_items(self):
+    def test_primary_navigation_has_exactly_nine_items(self):
         page = (ROOT / "models" / "index.html").read_text(encoding="utf-8")
         match = re.search(r'<nav class="fl-site-nav">(.*?)</nav>', page, re.S)
         self.assertIsNotNone(match)
-        self.assertEqual(match.group(1).count("<a "), 7)
-        for label in ("首页", "模型", "技能", "工具", "工作流", "每日发现", "关于"):
+        self.assertEqual(match.group(1).count("<a "), 9)
+        for label in ("首页", "模型", "技能", "公益站", "工具", "工作流", "每日发现", "关于"):
             self.assertIn(f"<span>{label}</span>", match.group(1))
+        self.assertIn('data-site-nav="prompts"', match.group(1))
 
     def test_no_duplicate_global_top_nav_on_key_pages(self):
         for relative in (
