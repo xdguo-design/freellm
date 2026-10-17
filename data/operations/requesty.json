@@ -1,0 +1,67 @@
+{
+  "providerId": "requesty",
+  "provider": "Requesty",
+  "lastVerifiedAt": "2026-10-17",
+  "offerIds": [
+    "requesty-free"
+  ],
+  "paths": [
+    {
+      "id": "free-model-api",
+      "label": "注册并调用免费模型",
+      "productType": "api",
+      "prerequisites": [
+        "Requesty 账号",
+        "在 API Keys 页创建的 API Key",
+        "仅使用当前官方标记 $0 的模型；了解免费档数据使用条款"
+      ],
+      "steps": [
+        {
+          "title": "注册免费账号",
+          "detail": "打开 https://app.requesty.ai/ 注册；官网价格页称无需信用卡。中国大陆/年龄验证要求尚未实测。",
+          "action": "https://app.requesty.ai/"
+        },
+        {
+          "title": "创建 API Key",
+          "detail": "登录后在 API Keys 页面新建 Key，只在本地环境变量 REQUESTY_API_KEY 保存，不要贴进网页或公开仓库。"
+        },
+        {
+          "title": "核对 13 个免费模型及数据政策",
+          "detail": "打开官方免费模型目录核对 $0 标记及模型 ID；需要先排查 Training Permitted Models 与数据留存标记，避免上传敏感数据。",
+          "action": "https://www.requesty.ai/models/free"
+        },
+        {
+          "title": "发起 OpenAI 兼容的聊天请求",
+          "detail": "先设置本地 REQUESTY_API_KEY 环境变量；模型 ID 应以最新官方清单为准。",
+          "command": "curl https://router.requesty.ai/v1/chat/completions -H \"Authorization: Bearer $REQUESTY_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"nvidia/nemotron-3-super-120b-a12b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+          "expected": "返回 choices[0].message.content；若 401 为 Key 问题，429 为额度/限流，禁止自动切换付费模型。"
+        }
+      ],
+      "endpoint": "https://router.requesty.ai/v1",
+      "auth": "Authorization: Bearer $REQUESTY_API_KEY",
+      "example": "curl https://router.requesty.ai/v1/chat/completions -H \"Authorization: Bearer $REQUESTY_API_KEY\" -H \"Content-Type: application/json\" -d '{\"model\":\"nvidia/nemotron-3-super-120b-a12b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'",
+      "validation": "API Key 实测未完成；公开 GET /v1/models 和官方文档仅支持免费模型目录及接入方式的预检结论。",
+      "sourceUrls": [
+        "https://docs.requesty.ai/features/free-models",
+        "https://www.requesty.ai/models/free",
+        "https://www.requesty.ai/pricing",
+        "https://www.requesty.ai/terms"
+      ],
+      "limits": "新组织所有免费模型合并 200 次/天、20 次/分钟；付费组织 1000 次/天、60 次/分钟。",
+      "commonIssues": [
+        "模型不在当前免费清单内时可能产生付费账单；务必核对单模型价格。",
+        "免费计划对标记 Training Permitted 的模型可能允许平台及上游留存/训练，不能上传医疗信息或机密。",
+        "未验证国内年龄验证、注册限制或连续可用性；遇到问题以官方控制台为准。"
+      ]
+    }
+  ],
+  "officialDocsReviewedAt": "2026-10-17",
+  "environmentVariable": "REQUESTY_API_KEY",
+  "tutorialRequirements": {
+    "network": "国际网站，中国大陆注册与 API 可达性未实测",
+    "account": "注册 Requesty 账号并创建 Key",
+    "phone": "官方未明确披露全球统一手机号要求",
+    "identity": "可能触发年龄验证，实际门槛待核验",
+    "creditCard": "官网免费套餐标注 No credit card required"
+  }
+}

@@ -9,17 +9,20 @@
   <link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20260920c">
   <link rel="stylesheet" href="/css/shared-navigation.css?v=20261001b">
   <link rel="stylesheet" href="/css/about-linked-pages.css?v=20261001a">
-  <script src="/js/site-navigation.js?v=20261016-public-api-menu"></script>
+  <script src="/js/site-navigation.js?v=20261013-overflow"></script>
+  <link rel="stylesheet" href="/css/aurora-core.css?v=20260924a">
+  <link rel="stylesheet" href="/css/aurora-secondary-hub.css?v=20261015a">
 </head>
-<body class="fl-ui-v2" data-fl-section="about">
+<body class="fl-ui-v2 community-page" data-fl-section="about" data-visual-style="aurora">
   <aside class="fl-site-rail" aria-label="FreeLLM 主导航"></aside>
   <div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / COMMUNITY</span><span class="fl-site-ribbon-actions"><a href="/about/">关于 FreeLLM</a><a href="/submit/">提交资源 ↗</a></span></div>
   <header class="info-page-header">
     <p class="info-eyebrow">FREELLM / COMMUNITY</p>
-    <h1>一起让 AI 资源更好找</h1>
-    <p class="info-lead">FreeLLM 由资源整理和社区反馈持续完善。你可以从推荐资源、指出问题或参与项目开始。</p>
+    <h1>一起让 AI 资源<br>更透明、更好找。</h1>
+    <p class="info-lead">FreeLLM 由资源整理和社区反馈持续完善。你可以推荐资源、指出过期额度、复核我们给出的证据和评分，或参与开源维护。</p>
   </header>
   <main class="info-page-main community-options">
+    <div class="hub-intro"><span>OPEN REVIEW / COMMUNITY</span><strong>每条结论，都应该允许被质疑、被修正。</strong><p>FreeLLM 公开编辑评分理由和依据，并把尚未经过实际 API 调用验证的项目标为 UNKNOWN。用户的真实体验能帮助我们发现问题，但不会自动替代官方证据。</p><a href="/public-api/">查看公益 API 独立评测 →</a></div>
     <section class="community-card">
       <span class="community-icon" aria-hidden="true">＋</span>
       <h2>推荐 AI 资源</h2>
@@ -38,7 +41,8 @@
       <p>查看项目代码、开发说明和贡献方式。提交代码前请先阅读仓库中的说明；也欢迎通过 Issue 讨论改进方向。</p>
       <a class="info-action" href="https://github.com/xdguo-design/freellm" target="_blank" rel="noopener noreferrer">访问 GitHub 仓库 <span aria-hidden="true">↗</span></a>
     </section>
+    <section class="hub-review-participation"><p class="info-eyebrow">VERIFY TOGETHER</p><h2>怎么参与一份评测？</h2><ol><li><b>提供来源</b>：官方文档、价格页或能复现的服务公告。</li><li><b>指出争议</b>：具体说清评分维度、落后条款、地区或计费差异。</li><li><b>提交证据</b>：附日期、匿名化错误码和请求条件，永远不要提交完整 Key 或私人提示词。</li></ol><a href="/submit/">提交证据与纠错 →</a></section>
   </main>
-  <footer class="info-page-footer"><a href="/about/">关于 FreeLLM</a><a href="/guide/">使用教程</a><a href="/privacy/">隐私政策</a><a href="/terms/">使用条款</a></footer>
-</body>
+  <footer class="info-page-footer"><a href="/about/">关于 FreeLLM</a><a href="/guides/getting-started/">使用教程</a><a href="/privacy/">隐私政策</a><a href="/terms/">使用条款</a></footer>
+<script src="/js/freellm-sync.js?v=20261012-daily-discovery"></script></body>
 </html>

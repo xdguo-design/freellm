@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 import unittest
 import xml.etree.ElementTree as ET
@@ -129,22 +130,60 @@ class SearchConsoleRegressionTests(unittest.TestCase):
             "sitemap contains pages explicitly marked noindex: " + "; ".join(noindex),
         )
 
+    def test_needs_review_offers_are_noindex_and_excluded_from_sitemap(self) -> None:
+        offers = json.loads((ROOT / "data" / "offers.json").read_text(encoding="utf-8"))
+        review_ids = [offer["id"] for offer in offers if offer.get("status") == "needs_review"]
+        sitemap_urls = {
+            (loc.text or "").strip()
+            for sitemap in ROOT.glob("sitemap-*.xml")
+            for loc in ET.parse(sitemap).getroot().findall("sm:url/sm:loc", SITEMAP_NS)
+        }
+
+        for offer_id in review_ids:
+            with self.subTest(offer_id=offer_id):
+                url = f"{SITE_URL}/offers/{offer_id}/"
+                page = ROOT / "offers" / offer_id / "index.html"
+                self.assertNotIn(url, sitemap_urls)
+                self.assertTrue(page.is_file(), f"missing generated offer page: {offer_id}")
+                robots = META_ROBOTS_RE.findall(page.read_text(encoding="utf-8"))
+                self.assertEqual(robots, ["noindex,follow"])
+
 
     def test_sitemap_crawl_budget_requires_review_before_large_expansion(self) -> None:
         """Keep a new-domain sitemap from silently ballooning back to hundreds of URLs.
 
-        These are review budgets, not Google limits. Crossing either number should
-        trigger an explicit SEO review before a catalog import publishes more
-        crawl targets.
+        Four verified offer pages and two skills indexes were reviewed as part
+        of the latest catalog refresh. Needs-review offers are excluded above;
+        future expansion beyond the adjusted budget needs review.
+        2026-10-10 (series 4): +2 reviewed — /offers/qoder/ is active again
+        (Qwen3.8-Flash promotion officially extended) and the new verified
+        /offers/claude-max-team-api-credits/ page.
         """
+        # The production sitemap index, not filesystem glob, is the canonical
+        # list of published sections. The unsubmitted Skill snapshot holds 99
+        # separate URLs and must not inflate this crawl budget.
+        sitemap_index = ET.parse(ROOT / "sitemap.xml").getroot()
+        published_sections = [
+            (loc.text or "").strip().rsplit("/", 1)[-1]
+            for loc in sitemap_index.findall("sm:sitemap/sm:loc", SITEMAP_NS)
+            if (loc.text or "").strip()
+        ]
+        self.assertEqual(
+            set(published_sections),
+            {"sitemap-pages.xml", "sitemap-offers.xml",
+             "sitemap-providers.xml", "sitemap-models.xml", "sitemap-english.xml"},
+        )
         all_urls: list[str] = []
-        for sitemap in sorted(ROOT.glob("sitemap-*.xml")):
-            root = ET.parse(sitemap).getroot()
-            all_urls.extend(
+        section_counts: dict[str, int] = {}
+        for section in published_sections:
+            root = ET.parse(ROOT / section).getroot()
+            section_urls = [
                 (loc.text or "").strip()
                 for loc in root.findall("sm:url/sm:loc", SITEMAP_NS)
                 if (loc.text or "").strip()
-            )
+            ]
+            section_counts[section] = len(section_urls)
+            all_urls.extend(section_urls)
 
         model_root = ET.parse(ROOT / "sitemap-models.xml").getroot()
         model_urls = [
@@ -153,10 +192,16 @@ class SearchConsoleRegressionTests(unittest.TestCase):
             if (loc.text or "").strip()
         ]
 
+        # 2026-10-15 reviewed expansion: eight authored /public-api/ URLs
+        # (the hub plus seven evidence-led reviews) have distinct content,
+        # self-canonicals and explicit indexing. No generated model/offer
+        # landing-page expansion is approved by this change.
+        # Approved sitemap counts: pages=58, offers=78, providers=50,
+        # models=35, english=9; total=230. Further growth requires review.
         self.assertLessEqual(
             len(all_urls),
-            200,
-            f"sitemap crawl target budget exceeded ({len(all_urls)} > 200); review SEO scope before publishing",
+            230,
+            f"sitemap crawl target budget exceeded ({len(all_urls)} > 230): {section_counts}; inspect generator output before release",
         )
         self.assertLessEqual(
             len(model_urls),

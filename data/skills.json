@@ -2941,5 +2941,987 @@
       "stars": 92377,
       "forks": 6272
     }
+  },
+  {
+    "id": "anthropics-claude-api",
+    "name": "claude-api",
+    "category": "development",
+    "description": "Reference for the Claude API / Anthropic SDK — model ids, pricing, params, streaming, tool use, MCP, agents, caching, token counting, model migration. TRIGGER — read BEFORE opening the target file; don't skip because it \"looks like a one-liner\" — whenever: the prompt names Claude/Anthropic in any form (Claude, Anthropic, Fable, Opus, Sonnet, Haiku, `anthropic`, `@anthropic-ai`, `claude-*`, `us.anthropic.*`, `[1m]`); the user asks about an LLM (pricing/model choice/limits/caching) — never answer from memory; OR the task is LLM-shaped with provider unstated (agent/MCP/tool-definition/multi-agent/RAG/LLM-judge/computer-use; generate/summarize/extract/classify/rewrite/converse over NL; debugging refusals/cutoffs/streaming/tool-calls/tokens). SKIP only when another provider is being worked on (overrides all triggers): OpenAI/GPT/Gemini/Llama/Mistral/Cohere/Ollama named in the query; OR `grep -rE 'openai|langchain_openai|google.generativeai|genai|mistralai|cohere|ollama'` over the project hits (run this grep FIRST if no provider named — don't Read the file).",
+    "githubUrl": "https://github.com/anthropics/skills/tree/main/skills/claude-api",
+    "cloneCommand": "git clone https://github.com/anthropics/skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-08",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 180114,
+      "forks": 21308,
+      "pushedAt": "Mon 2026-10-05 9:46 PM CST (UTC+08:00)"
+    },
+    "contentPath": "skill-content/anthropics-claude-api.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/anthropics/skills@main/skills/claude-api/SKILL.md",
+    "contentFetchedAt": "2026-10-08",
+    "contentBytes": 103457,
+    "reviews": []
+  },
+  {
+    "id": "obra-dispatching-parallel-agents",
+    "name": "dispatching-parallel-agents",
+    "category": "development",
+    "description": "Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies",
+    "githubUrl": "https://github.com/obra/superpowers/tree/main/skills/dispatching-parallel-agents",
+    "cloneCommand": "git clone https://github.com/obra/superpowers.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-08",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 296544,
+      "forks": 26465,
+      "pushedAt": "Thu 2026-10-08 12:15 PM CST (UTC+08:00)"
+    },
+    "contentPath": "skill-content/obra-dispatching-parallel-agents.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/obra/superpowers@main/skills/dispatching-parallel-agents/SKILL.md",
+    "contentFetchedAt": "2026-10-08",
+    "contentBytes": 6078,
+    "reviews": []
+  },
+  {
+    "id": "obra-using-git-worktrees",
+    "name": "using-git-worktrees",
+    "category": "development",
+    "description": "Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists via native tools or git worktree fallback",
+    "githubUrl": "https://github.com/obra/superpowers/tree/main/skills/using-git-worktrees",
+    "cloneCommand": "git clone https://github.com/obra/superpowers.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-08",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 296544,
+      "forks": 26465,
+      "pushedAt": "Thu 2026-10-08 12:15 PM CST (UTC+08:00)"
+    },
+    "contentPath": "skill-content/obra-using-git-worktrees.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/obra/superpowers@main/skills/using-git-worktrees/SKILL.md",
+    "contentFetchedAt": "2026-10-08",
+    "contentBytes": 6813,
+    "reviews": []
+  },
+  {
+    "id": "obra-finishing-a-development-branch",
+    "name": "finishing-a-development-branch",
+    "category": "development",
+    "description": "Use when implementation is complete, all tests pass, and you need to decide how to integrate the work",
+    "githubUrl": "https://github.com/obra/superpowers/tree/main/skills/finishing-a-development-branch",
+    "cloneCommand": "git clone https://github.com/obra/superpowers.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-08",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 296544,
+      "forks": 26465,
+      "pushedAt": "Thu 2026-10-08 12:15 PM CST (UTC+08:00)"
+    },
+    "contentPath": "skill-content/obra-finishing-a-development-branch.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/obra/superpowers@main/skills/finishing-a-development-branch/SKILL.md",
+    "contentFetchedAt": "2026-10-08",
+    "contentBytes": 7781,
+    "reviews": []
+  },
+  {
+    "id": "vercel-labs-react-view-transitions",
+    "name": "vercel-react-view-transitions",
+    "category": "development",
+    "description": "Guide for implementing smooth, native-feeling animations using React's View Transition API (`<ViewTransition>` component, `addTransitionType`, and CSS view transition pseudo-elements). Use this skill whenever the user wants to add page transitions, animate route changes, create shared element animations, animate enter/exit of components, animate list reorder, implement directional (forward/back) navigation animations, or integrate view transitions in Next.js. Also use when the user mentions view transitions, `startViewTransition`, `ViewTransition`, transition types, or asks about animating between UI states in React without third-party animation libraries.",
+    "githubUrl": "https://github.com/vercel-labs/agent-skills/tree/main/skills/react-view-transitions",
+    "cloneCommand": "git clone https://github.com/vercel-labs/agent-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "OpenCode",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-08",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 32073,
+      "forks": 2812,
+      "pushedAt": "Fri 2026-08-28 9:36 PM CST (UTC+08:00)"
+    },
+    "contentPath": "skill-content/vercel-labs-react-view-transitions.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/vercel-labs/agent-skills@main/skills/react-view-transitions/SKILL.md",
+    "contentFetchedAt": "2026-10-08",
+    "contentBytes": 14407,
+    "reviews": []
+  },
+  {
+    "id": "mattpocock-diagnosing-bugs",
+    "name": "diagnosing-bugs",
+    "category": "development",
+    "description": "Diagnosis loop for hard bugs and performance regressions. Use when the user says \"diagnose\"/\"debug this\", or reports something broken/throwing/failing/slow.",
+    "githubUrl": "https://github.com/mattpocock/skills/tree/main/skills/engineering/diagnosing-bugs",
+    "cloneCommand": "git clone https://github.com/mattpocock/skills.git",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "GitHub Copilot"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-09",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 281414,
+      "forks": 23584,
+      "pushedAt": "Thu 2026-10-08 4:49 PM CST (UTC+08:00)"
+    },
+    "contentPath": "skill-content/mattpocock-diagnosing-bugs.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/mattpocock/skills@main/skills/engineering/diagnosing-bugs/SKILL.md",
+    "contentFetchedAt": "2026-10-09",
+    "contentBytes": 8664,
+    "reviews": []
+  },
+  {
+    "id": "mattpocock-implement-spec",
+    "name": "implement-spec",
+    "category": "development",
+    "description": "Implement the result of /to-spec and /to-tickets in code.",
+    "githubUrl": "https://github.com/mattpocock/skills/tree/main/skills/engineering/implement-spec",
+    "cloneCommand": "git clone https://github.com/mattpocock/skills.git",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "GitHub Copilot"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-09",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 281414,
+      "forks": 23584,
+      "pushedAt": "Thu 2026-10-08 4:49 PM CST (UTC+08:00)"
+    },
+    "contentPath": "skill-content/mattpocock-implement-spec.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/mattpocock/skills@main/skills/engineering/implement-spec/SKILL.md",
+    "contentFetchedAt": "2026-10-09",
+    "contentBytes": 2780,
+    "reviews": []
+  },
+  {
+    "id": "addyosmani-code-review-and-quality",
+    "name": "code-review-and-quality",
+    "category": "development",
+    "description": "Conducts multi-axis code review. Use before merging any change. Use when reviewing code written by yourself, another agent, or a human. Use when you need to assess code quality across multiple dimensions before it enters the main branch. Use when asked to review a diff or a pull request, even when the diff is pasted inline.",
+    "githubUrl": "https://github.com/addyosmani/agent-skills/tree/main/skills/code-review-and-quality",
+    "cloneCommand": "git clone https://github.com/addyosmani/agent-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "GitHub Copilot"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-10",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 104176,
+      "forks": 10872,
+      "pushedAt": "2026-10-03T18:21:11Z"
+    },
+    "contentPath": "skill-content/addyosmani-code-review-and-quality.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/addyosmani/agent-skills@main/skills/code-review-and-quality/SKILL.md",
+    "contentFetchedAt": "2026-10-10",
+    "contentBytes": 20976,
+    "reviews": []
+  },
+  {
+    "id": "dietrichgebert-ponytail",
+    "name": "ponytail",
+    "category": "development",
+    "description": "Minimal-code discipline for coding agents: inspect existing code and platform APIs first, then implement the smallest complete change.",
+    "githubUrl": "https://github.com/DietrichGebert/ponytail/blob/main/skills/ponytail/SKILL.md",
+    "cloneCommand": "git clone https://github.com/DietrichGebert/ponytail.git",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 161412,
+      "pushedAt": "2026-10-10T04:19:53Z"
+    },
+    "contentPath": "skill-content/dietrichgebert-ponytail.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/DietrichGebert/ponytail@main/skills/ponytail/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "reviews": [],
+    "firstListedAt": "2026-10-12"
+  },
+  {
+    "id": "pbakaus-impeccable",
+    "name": "impeccable",
+    "category": "product-design",
+    "description": "Frontend design Skill for improving UI hierarchy, responsive behavior, accessibility and visual design through structured critique and polish commands.",
+    "githubUrl": "https://github.com/pbakaus/impeccable/blob/main/.agents/skills/impeccable/SKILL.md",
+    "cloneCommand": "git clone https://github.com/pbakaus/impeccable.git",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 80044,
+      "pushedAt": "2026-10-12T03:48:59Z"
+    },
+    "contentPath": "skill-content/pbakaus-impeccable.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/pbakaus/impeccable@main/.agents/skills/impeccable/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "reviews": [],
+    "firstListedAt": "2026-10-12"
+  },
+  {
+    "id": "tt-a1i-archify",
+    "name": "archify",
+    "category": "product-design",
+    "description": "Turns software architecture, workflows and codebase relationships into interactive diagrams and portable HTML deliverables.",
+    "githubUrl": "https://github.com/tt-a1i/archify/blob/main/archify/SKILL.md",
+    "cloneCommand": "git clone https://github.com/tt-a1i/archify.git",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 82297,
+      "pushedAt": "2026-10-12T04:54:47Z"
+    },
+    "contentPath": "skill-content/tt-a1i-archify.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/tt-a1i/archify@main/archify/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "reviews": [],
+    "firstListedAt": "2026-10-12"
+  },
+  {
+    "id": "op7418-humanizer-zh",
+    "name": "humanizer-zh",
+    "category": "writing",
+    "description": "Chinese-language editing Skill that reduces templated wording while preserving facts, uncertainty and author voice.",
+    "githubUrl": "https://github.com/op7418/Humanizer-zh/blob/main/SKILL.md",
+    "cloneCommand": "git clone https://github.com/op7418/Humanizer-zh.git",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 19491,
+      "pushedAt": "2026-09-23T02:24:28Z"
+    },
+    "contentPath": "skill-content/op7418-humanizer-zh.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/op7418/Humanizer-zh@main/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "reviews": [],
+    "firstListedAt": "2026-10-12"
+  },
+  {
+    "id": "hyacehila-humanizer-zh-next",
+    "name": "humanizer-zh-next",
+    "category": "writing",
+    "description": "October 2026 modular Chinese writing-editing Skill, with specialized references for marketing, academic revisions and grant proposals.",
+    "githubUrl": "https://github.com/Hyacehila/humanizer-zh-next/blob/main/SKILL.md",
+    "cloneCommand": "git clone https://github.com/Hyacehila/humanizer-zh-next.git",
+    "compatibility": [
+      "Claude Code",
+      "Codex"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 184,
+      "pushedAt": "2026-10-06T16:18:20Z"
+    },
+    "contentPath": "skill-content/hyacehila-humanizer-zh-next.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/Hyacehila/humanizer-zh-next@main/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "reviews": [],
+    "firstListedAt": "2026-10-12"
+  },
+  {
+    "id": "imraywang-wewrite",
+    "name": "wewrite",
+    "category": "seo-content",
+    "description": "WeChat Official Account research, sourcing, drafting and review workflow; images, formatting and draft publishing are opt-in.",
+    "githubUrl": "https://github.com/imraywang/wewrite/blob/main/skills/wewrite/SKILL.md",
+    "cloneCommand": "git clone https://github.com/imraywang/wewrite.git",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "OpenClaw"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 3440,
+      "pushedAt": "2026-10-05T09:10:22Z"
+    },
+    "contentPath": "skill-content/imraywang-wewrite.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/imraywang/wewrite@main/skills/wewrite/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "reviews": [],
+    "firstListedAt": "2026-10-12"
+  },
+  {
+    "id": "aiworkskills-wechat-article-main",
+    "name": "aws-wechat-article-main",
+    "category": "seo-content",
+    "description": "Modular WeChat Official Account content automation Skill covering topic planning, writing, review, HTML layout, images and publishing.",
+    "githubUrl": "https://github.com/aiworkskills/wechat-article-skills/blob/main/skills/aws-wechat-article-main/SKILL.md",
+    "cloneCommand": "git clone https://github.com/aiworkskills/wechat-article-skills.git",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "OpenClaw"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 672,
+      "pushedAt": "2026-09-23T01:36:09Z"
+    },
+    "contentPath": "skill-content/aiworkskills-wechat-article-main.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/aiworkskills/wechat-article-skills@main/skills/aws-wechat-article-main/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "reviews": [],
+    "firstListedAt": "2026-10-12"
+  },
+  {
+    "id": "earthtojake-cad",
+    "name": "cad",
+    "category": "product-design",
+    "description": "Local parametric CAD Skill for generating and inspecting STEP, STL, 3MF and GLB geometric models.",
+    "githubUrl": "https://github.com/earthtojake/text-to-cad/blob/main/skills/cad/SKILL.md",
+    "cloneCommand": "git clone https://github.com/earthtojake/text-to-cad.git",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 19436,
+      "pushedAt": "2026-10-12T02:51:45Z"
+    },
+    "contentPath": "skill-content/earthtojake-cad.md",
+    "contentUrl": "https://cdn.jsdelivr.net/gh/earthtojake/text-to-cad@main/skills/cad/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "reviews": [],
+    "firstListedAt": "2026-10-12"
+  },
+  {
+    "id": "vercel-labs-find-skills",
+    "name": "find-skills",
+    "category": "development",
+    "description": "Discovers installable Agent Skills by user task or keyword and provides guidance for evaluating and installing them with the Skills CLI. Discovery results require independent review before inclusion.",
+    "githubUrl": "https://github.com/vercel-labs/skills/blob/main/skills/find-skills/SKILL.md",
+    "cloneCommand": "git clone https://github.com/vercel-labs/skills.git",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "按自然语言场景检索可安装 Agent Skills，并提供安装线索；发现结果必须再检查上游源码、许可与依赖，不代表自动通过审核。",
+    "styles": {
+      "format": "技能检索结果 / 安装命令",
+      "summary": "按场景发现与安装 Agent Skills；不提供视觉风格。",
+      "items": [],
+      "hasStyles": false
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Source/repository review only (2026-10-12); not installed or executed",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核验上游 GitHub SKILL.md 路径、用途与公开安装依赖；待安排独立任务级测试。",
+      "evidence": [
+        {
+          "url": "https://github.com/vercel-labs/skills/blob/main/skills/find-skills/SKILL.md",
+          "label": "上游 SKILL.md",
+          "note": "来源核验，不是执行通过的证据"
+        }
+      ],
+      "score": null,
+      "evaluation": "上游 MIT；CLI 安装及搜索功能未在本站执行。"
+    },
+    "license": "MIT",
+    "contentPath": "skill-content/vercel-labs-find-skills.md",
+    "contentUrl": "https://raw.githubusercontent.com/vercel-labs/skills/main/skills/find-skills/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "contentBytes": 5456,
+    "repoStats": {
+      "stars": 33900,
+      "starsPrecision": "GitHub public page rounded 33.9k",
+      "capturedAt": "2026-10-12",
+      "starsSource": "https://github.com/vercel-labs/skills"
+    }
+  },
+  {
+    "id": "vercel-labs-agent-browser",
+    "name": "agent-browser",
+    "category": "development",
+    "description": "Browser automation skill using the agent-browser CLI to navigate websites, interact with forms, capture screenshots, inspect page content, and test web applications. Requires browser runtime setup.",
+    "githubUrl": "https://github.com/vercel-labs/agent-browser/blob/main/skills/agent-browser/SKILL.md",
+    "cloneCommand": "git clone https://github.com/vercel-labs/agent-browser.git",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "通过 agent-browser CLI 控制浏览器，实现页面操作、表单填写、截图、网页检查及前端自动化测试；需要安装 CLI 和浏览器运行时。",
+    "styles": {
+      "format": "浏览器自动化操作 / QA 截图",
+      "summary": "基于浏览器 CLI 的测试和操作流程；不提供视觉主题。",
+      "items": [],
+      "hasStyles": false
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Source/repository review only (2026-10-12); not installed or executed",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核验上游 GitHub SKILL.md 路径、用途与公开安装依赖；待安排独立任务级测试。",
+      "evidence": [
+        {
+          "url": "https://github.com/vercel-labs/agent-browser/blob/main/skills/agent-browser/SKILL.md",
+          "label": "上游 SKILL.md",
+          "note": "来源核验，不是执行通过的证据"
+        }
+      ],
+      "score": null,
+      "evaluation": "上游 Apache-2.0；本站未安装浏览器或跑端到端测试。"
+    },
+    "license": "Apache-2.0",
+    "contentPath": "skill-content/vercel-labs-agent-browser.md",
+    "contentUrl": "https://raw.githubusercontent.com/vercel-labs/agent-browser/main/skills/agent-browser/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "contentBytes": 3455,
+    "repoStats": {
+      "stars": 43600,
+      "starsPrecision": "GitHub public page rounded 43.6k",
+      "capturedAt": "2026-10-12",
+      "starsSource": "https://github.com/vercel-labs/agent-browser"
+    }
+  },
+  {
+    "id": "steipete-summarize",
+    "name": "summarize",
+    "category": "seo-content",
+    "description": "Summarize CLI skill for webpage and local document summaries, YouTube transcripts, audio and media inputs, with optional model provider setup and structured output.",
+    "githubUrl": "https://github.com/steipete/summarize/blob/main/.agents/skills/summarize/SKILL.md",
+    "cloneCommand": "git clone https://github.com/steipete/summarize.git",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "统一摘要网页、文档、YouTube 与音视频内容，支持 CLI 和结构化输出；模型能力依赖已配置的提供商或可用 CLI。",
+    "styles": {
+      "format": "Markdown / JSON 摘要",
+      "summary": "长文与媒体内容提取、摘要输出；非排版或视觉样式技能。",
+      "items": [],
+      "hasStyles": false
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Source/repository review only (2026-10-12); not installed or executed",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核验上游 GitHub SKILL.md 路径、用途与公开安装依赖；待安排独立任务级测试。",
+      "evidence": [
+        {
+          "url": "https://github.com/steipete/summarize/blob/main/.agents/skills/summarize/SKILL.md",
+          "label": "上游 SKILL.md",
+          "note": "来源核验，不是执行通过的证据"
+        }
+      ],
+      "score": null,
+      "evaluation": "上游 MIT；摘要工具本体未在本站运行，不保证无模型配置可直接使用。"
+    },
+    "license": "MIT",
+    "contentPath": "skill-content/steipete-summarize.md",
+    "contentUrl": "https://raw.githubusercontent.com/steipete/summarize/main/.agents/skills/summarize/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "contentBytes": 5436,
+    "repoStats": {
+      "stars": 6700,
+      "starsPrecision": "GitHub public page rounded 6.7k",
+      "capturedAt": "2026-10-12",
+      "starsSource": "https://github.com/steipete/summarize"
+    }
+  },
+  {
+    "id": "coreyhaines31-seo-audit",
+    "name": "seo-audit",
+    "category": "seo-content",
+    "description": "Audits technical and on-page SEO with checks for crawlability, indexability, metadata, canonicals, international URLs, performance and prioritized fixes. Findings require evidence.",
+    "githubUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/seo-audit/SKILL.md",
+    "cloneCommand": "npx skills add coreyhaines31/marketingskills --skill seo-audit",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 54296,
+      "forks": 8061,
+      "pushedAt": "2026-10-08T21:51:51Z",
+      "capturedAt": "2026-10-12",
+      "starsSource": "https://api.github.com/repos/coreyhaines31/marketingskills"
+    },
+    "contentPath": "skill-content/coreyhaines31-seo-audit.md",
+    "contentUrl": "https://raw.githubusercontent.com/coreyhaines31/marketingskills/main/skills/seo-audit/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "contentBytes": 17665,
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "技术 SEO 与站内 SEO 诊断：按证据核对抓取、索引、canonical、hreflang、性能和页面内容，输出按优先级排序的整改清单；不把推断当成搜索引擎实测。",
+    "styles": {
+      "format": "SEO 审计报告 / P0-P3 清单",
+      "summary": "技术 SEO、页面元信息、抓取/索引和证据分级审计，不定义视觉模板。",
+      "items": [],
+      "hasStyles": false
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Public GitHub source and license review only (2026-10-12); no CLI execution",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核对 seo-audit 原版 SKILL.md、与其他营销技能的协作依赖及 MIT 许可证；等待 FreeLLM 运行/任务级实测。",
+      "evidence": [
+        {
+          "url": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/seo-audit/SKILL.md",
+          "label": "上游原版 SKILL.md",
+          "note": "来源确认不等于在 Claude 或 Codex 中运行通过"
+        }
+      ],
+      "score": null,
+      "evaluation": "上游 SKILL.md 可读取，MIT 许可证已核对；并未执行工具安装、真实网页测试或模型基准。按 Skill 描述预期能力介绍，不保证 SEO/GEO 效果。"
+    },
+    "license": "MIT",
+    "licenseUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/LICENSE",
+    "collection": "SEO / GEO 增长技能合集"
+  },
+  {
+    "id": "coreyhaines31-ai-seo",
+    "name": "ai-seo",
+    "category": "seo-content",
+    "description": "AI search/GEO/AEO visibility audit, including crawl access, entity clarity, extractable answer blocks and citation opportunities; no guaranteed LLM recommendation or ranking.",
+    "githubUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/ai-seo/SKILL.md",
+    "cloneCommand": "npx skills add coreyhaines31/marketingskills --skill ai-seo",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 54296,
+      "forks": 8061,
+      "pushedAt": "2026-10-08T21:51:51Z",
+      "capturedAt": "2026-10-12",
+      "starsSource": "https://api.github.com/repos/coreyhaines31/marketingskills"
+    },
+    "contentPath": "skill-content/coreyhaines31-ai-seo.md",
+    "contentUrl": "https://raw.githubusercontent.com/coreyhaines31/marketingskills/main/skills/ai-seo/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "contentBytes": 33670,
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "AI 搜索可见性（GEO/AEO）：检查模型抓取与引用条件、可提取内容、品牌实体及答案结构；不能保证 ChatGPT、Google AI 或其他模型实际推荐。",
+    "styles": {
+      "format": "AI / GEO 可见性诊断",
+      "summary": "AI 搜索抓取、可引用内容与品牌实体可见性审核，不宣称排名保证。",
+      "items": [],
+      "hasStyles": false
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Public GitHub source and license review only (2026-10-12); no CLI execution",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核对 ai-seo 原版 SKILL.md、与其他营销技能的协作依赖及 MIT 许可证；等待 FreeLLM 运行/任务级实测。",
+      "evidence": [
+        {
+          "url": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/ai-seo/SKILL.md",
+          "label": "上游原版 SKILL.md",
+          "note": "来源确认不等于在 Claude 或 Codex 中运行通过"
+        }
+      ],
+      "score": null,
+      "evaluation": "上游 SKILL.md 可读取，MIT 许可证已核对；并未执行工具安装、真实网页测试或模型基准。按 Skill 描述预期能力介绍，不保证 SEO/GEO 效果。"
+    },
+    "license": "MIT",
+    "licenseUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/LICENSE",
+    "collection": "SEO / GEO 增长技能合集"
+  },
+  {
+    "id": "coreyhaines31-programmatic-seo",
+    "name": "programmatic-seo",
+    "category": "seo-content",
+    "description": "Plans data-backed programmatic SEO pages at scale, with unique per-page value, internal linking, structured templates, canonicals and indexation safeguards.",
+    "githubUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/programmatic-seo/SKILL.md",
+    "cloneCommand": "npx skills add coreyhaines31/marketingskills --skill programmatic-seo",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 54296,
+      "forks": 8061,
+      "pushedAt": "2026-10-08T21:51:51Z",
+      "capturedAt": "2026-10-12",
+      "starsSource": "https://api.github.com/repos/coreyhaines31/marketingskills"
+    },
+    "contentPath": "skill-content/coreyhaines31-programmatic-seo.md",
+    "contentUrl": "https://raw.githubusercontent.com/coreyhaines31/marketingskills/main/skills/programmatic-seo/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "contentBytes": 7525,
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "程序化 SEO 页面规划：用真实数据和模板批量组织目录/对比页面，核对每页独特价值、内链、canonical、索引和内容质量，避免薄内容批量铺页。",
+    "styles": {
+      "format": "数据驱动落地页 / 模板",
+      "summary": "从真实差异化数据批量生成页面；有质量与索引防护而不是关键词替换。",
+      "items": [],
+      "hasStyles": false
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Public GitHub source and license review only (2026-10-12); no CLI execution",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核对 programmatic-seo 原版 SKILL.md、与其他营销技能的协作依赖及 MIT 许可证；等待 FreeLLM 运行/任务级实测。",
+      "evidence": [
+        {
+          "url": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/programmatic-seo/SKILL.md",
+          "label": "上游原版 SKILL.md",
+          "note": "来源确认不等于在 Claude 或 Codex 中运行通过"
+        }
+      ],
+      "score": null,
+      "evaluation": "上游 SKILL.md 可读取，MIT 许可证已核对；并未执行工具安装、真实网页测试或模型基准。按 Skill 描述预期能力介绍，不保证 SEO/GEO 效果。"
+    },
+    "license": "MIT",
+    "licenseUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/LICENSE",
+    "collection": "SEO / GEO 增长技能合集"
+  },
+  {
+    "id": "coreyhaines31-site-architecture",
+    "name": "site-architecture",
+    "category": "seo-content",
+    "description": "Plans website information architecture, URL hierarchy, navigation, breadcrumbs, site maps, internal linking and migration-aware redirects.",
+    "githubUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/site-architecture/SKILL.md",
+    "cloneCommand": "npx skills add coreyhaines31/marketingskills --skill site-architecture",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 54296,
+      "forks": 8061,
+      "pushedAt": "2026-10-08T21:51:51Z",
+      "capturedAt": "2026-10-12",
+      "starsSource": "https://api.github.com/repos/coreyhaines31/marketingskills"
+    },
+    "contentPath": "skill-content/coreyhaines31-site-architecture.md",
+    "contentUrl": "https://raw.githubusercontent.com/coreyhaines31/marketingskills/main/skills/site-architecture/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "contentBytes": 14073,
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "站点信息架构与导航规划：设计 URL 层级、分类、面包屑和内部链接，可输出 Mermaid 站点关系图；适合梳理模型、服务商与 Skill 目录。",
+    "styles": {
+      "format": "站点结构图 / URL 规划表",
+      "summary": "Mermaid 站点树与内部链接建议；XML sitemap 技术审计应交给 seo-audit。",
+      "items": [
+        "站点树 / Mermaid",
+        "URL 路由规划",
+        "面包屑与内链"
+      ],
+      "hasStyles": true
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Public GitHub source and license review only (2026-10-12); no CLI execution",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核对 site-architecture 原版 SKILL.md、与其他营销技能的协作依赖及 MIT 许可证；等待 FreeLLM 运行/任务级实测。",
+      "evidence": [
+        {
+          "url": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/site-architecture/SKILL.md",
+          "label": "上游原版 SKILL.md",
+          "note": "来源确认不等于在 Claude 或 Codex 中运行通过"
+        }
+      ],
+      "score": null,
+      "evaluation": "上游 SKILL.md 可读取，MIT 许可证已核对；并未执行工具安装、真实网页测试或模型基准。按 Skill 描述预期能力介绍，不保证 SEO/GEO 效果。"
+    },
+    "license": "MIT",
+    "licenseUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/LICENSE",
+    "collection": "SEO / GEO 增长技能合集"
+  },
+  {
+    "id": "coreyhaines31-competitors",
+    "name": "competitors",
+    "category": "seo-content",
+    "description": "Creates honest competitor comparison, VS and alternatives pages for SEO, with verifiable feature/pricing claims and explicit unknowns; not a substitute for verified competitor research.",
+    "githubUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/competitors/SKILL.md",
+    "cloneCommand": "npx skills add coreyhaines31/marketingskills --skill competitors",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 54296,
+      "forks": 8061,
+      "pushedAt": "2026-10-08T21:51:51Z",
+      "capturedAt": "2026-10-12",
+      "starsSource": "https://api.github.com/repos/coreyhaines31/marketingskills"
+    },
+    "contentPath": "skill-content/coreyhaines31-competitors.md",
+    "contentUrl": "https://raw.githubusercontent.com/coreyhaines31/marketingskills/main/skills/competitors/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "contentBytes": 12075,
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "竞品对比与替代页：生成来源可核对的 VS/Alternatives 页面框架，标注功能、价格和限制的证据与更新时间，禁止杜撰竞品优缺点。",
+    "styles": {
+      "format": "竞品对比 / VS / Alternatives",
+      "summary": "单竞品替代、多竞品清单、对照页面与过期声明复核。",
+      "items": [
+        "竞品 VS",
+        "替代方案页",
+        "证据对照表"
+      ],
+      "hasStyles": true
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Public GitHub source and license review only (2026-10-12); no CLI execution",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核对 competitors 原版 SKILL.md、与其他营销技能的协作依赖及 MIT 许可证；等待 FreeLLM 运行/任务级实测。",
+      "evidence": [
+        {
+          "url": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/competitors/SKILL.md",
+          "label": "上游原版 SKILL.md",
+          "note": "来源确认不等于在 Claude 或 Codex 中运行通过"
+        }
+      ],
+      "score": null,
+      "evaluation": "上游 SKILL.md 可读取，MIT 许可证已核对；并未执行工具安装、真实网页测试或模型基准。按 Skill 描述预期能力介绍，不保证 SEO/GEO 效果。"
+    },
+    "license": "MIT",
+    "licenseUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/LICENSE",
+    "collection": "SEO / GEO 增长技能合集"
+  },
+  {
+    "id": "coreyhaines31-schema",
+    "name": "schema",
+    "category": "seo-content",
+    "description": "Implements source-consistent Schema.org JSON-LD for actual on-page content, tests markup validity and distinguishes valid schema from Google rich result eligibility.",
+    "githubUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/schema/SKILL.md",
+    "cloneCommand": "npx skills add coreyhaines31/marketingskills --skill schema",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 54296,
+      "forks": 8061,
+      "pushedAt": "2026-10-08T21:51:51Z",
+      "capturedAt": "2026-10-12",
+      "starsSource": "https://api.github.com/repos/coreyhaines31/marketingskills"
+    },
+    "contentPath": "skill-content/coreyhaines31-schema.md",
+    "contentUrl": "https://raw.githubusercontent.com/coreyhaines31/marketingskills/main/skills/schema/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "contentBytes": 7124,
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "Schema.org / JSON-LD 结构化数据：根据可见页面事实生成并核查组织、网站、面包屑或列表等数据；须验证 Google 当前支持的富结果类型。",
+    "styles": {
+      "format": "Schema.org / JSON-LD",
+      "summary": "页面事实一致的结构化数据与验证清单；富结果资格需单独查询官方支持类型。",
+      "items": [],
+      "hasStyles": false
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Public GitHub source and license review only (2026-10-12); no CLI execution",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核对 schema 原版 SKILL.md、与其他营销技能的协作依赖及 MIT 许可证；等待 FreeLLM 运行/任务级实测。",
+      "evidence": [
+        {
+          "url": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/schema/SKILL.md",
+          "label": "上游原版 SKILL.md",
+          "note": "来源确认不等于在 Claude 或 Codex 中运行通过"
+        }
+      ],
+      "score": null,
+      "evaluation": "上游 SKILL.md 可读取，MIT 许可证已核对；并未执行工具安装、真实网页测试或模型基准。按 Skill 描述预期能力介绍，不保证 SEO/GEO 效果。"
+    },
+    "license": "MIT",
+    "licenseUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/LICENSE",
+    "collection": "SEO / GEO 增长技能合集"
+  },
+  {
+    "id": "coreyhaines31-product-marketing",
+    "name": "product-marketing",
+    "category": "planning-office",
+    "description": "Builds and maintains a shared .agents/product-marketing.md context for product positioning, audience, goals and changelog, reused across marketing skills.",
+    "githubUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/product-marketing/SKILL.md",
+    "cloneCommand": "npx skills add coreyhaines31/marketingskills --skill product-marketing",
+    "compatibility": [
+      "Claude Code",
+      "Codex",
+      "Cursor"
+    ],
+    "status": "verified",
+    "source": "github-verified",
+    "lastCheckedAt": "2026-10-12",
+    "linkCheck": "ok",
+    "repoStats": {
+      "stars": 54296,
+      "forks": 8061,
+      "pushedAt": "2026-10-08T21:51:51Z",
+      "capturedAt": "2026-10-12",
+      "starsSource": "https://api.github.com/repos/coreyhaines31/marketingskills"
+    },
+    "contentPath": "skill-content/coreyhaines31-product-marketing.md",
+    "contentUrl": "https://raw.githubusercontent.com/coreyhaines31/marketingskills/main/skills/product-marketing/SKILL.md",
+    "contentFetchedAt": "2026-10-12",
+    "contentBytes": 9433,
+    "reviews": [],
+    "firstListedAt": "2026-10-12",
+    "description_zh": "增长技能共享产品背景：生成和维护 .agents/product-marketing.md，集中记录受众、定位、价值主张与事实/未确认事项，供 SEO 和营销技能复用。",
+    "styles": {
+      "format": "产品营销背景文档",
+      "summary": "作为 SEO 技能的共享上下文前置项；记录来源、假设、版本与变更日志。",
+      "items": [],
+      "hasStyles": false
+    },
+    "freeLLMTest": {
+      "testedAt": "",
+      "environment": "Public GitHub source and license review only (2026-10-12); no CLI execution",
+      "testLevel": "unknown",
+      "status": "未实测",
+      "task": "核对 product-marketing 原版 SKILL.md、与其他营销技能的协作依赖及 MIT 许可证；等待 FreeLLM 运行/任务级实测。",
+      "evidence": [
+        {
+          "url": "https://github.com/coreyhaines31/marketingskills/blob/main/skills/product-marketing/SKILL.md",
+          "label": "上游原版 SKILL.md",
+          "note": "来源确认不等于在 Claude 或 Codex 中运行通过"
+        }
+      ],
+      "score": null,
+      "evaluation": "上游 SKILL.md 可读取，MIT 许可证已核对；并未执行工具安装、真实网页测试或模型基准。按 Skill 描述预期能力介绍，不保证 SEO/GEO 效果。"
+    },
+    "license": "MIT",
+    "licenseUrl": "https://github.com/coreyhaines31/marketingskills/blob/main/LICENSE",
+    "collection": "SEO / GEO 增长技能合集"
   }
 ]

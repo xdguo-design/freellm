@@ -21,15 +21,18 @@
   const render = scan => {
     if (!scan || !/^\d{4}-\d{2}-\d{2}$/.test(scan.date)
       || !Number.isInteger(scan.models) || !Number.isInteger(scan.offers)) return;
-    const current = onToday(scan.date);
-    const latest = '最近扫描：' + scan.date;
+    // A curated update can be newer than the last real scan; keep both dates separate.
+    const scanDate = scan.snapshotDate || scan.date;
+    const scanCurrent = scan.scanRunToday === true && onToday(scanDate);
+    const editorialCurrent = onToday(scan.date);
+    const latest = '最近扫描：' + scanDate;
     const home = document.querySelector('.prototype-stats');
     if (home) {
       const cards = home.querySelectorAll('.prototype-stat');
       const values = [scan.newCount,scan.models,scan.newOffers,scan.offers];
-      const labels = current
-        ? ['今日新增','模型记录','新增资源条目','已收录资源']
-        : [latest,'模型记录','新增资源条目','已收录资源'];
+      const labels = editorialCurrent
+        ? ['每日发现','模型记录','新资源动态','扫描资源数']
+        : [latest,'模型记录','新资源动态','扫描资源数'];
       cards.forEach((card,i) => {
         if (i >= values.length) return;
         set(card.querySelector('small'), labels[i]);
@@ -41,21 +44,21 @@
     set(hero,scan.offers);
     const badge = document.getElementById('daily-log-badge');
     if (badge) {
-      set(badge,current ? '新增 ' + scan.newCount + ' 项' : latest);
-      badge.dataset.newCount = current ? String(scan.newCount) : '0';
-      badge.dataset.changeCount = current ? String(scan.newCount) : '0';
+      set(badge,editorialCurrent ? '每日发现 ' + scan.newCount + ' 项' : '最近记录：' + scan.date);
+      badge.dataset.newCount = editorialCurrent ? String(scan.newCount) : '0';
+      badge.dataset.changeCount = editorialCurrent ? String(scan.newCount) : '0';
     }
     const intel = document.querySelector('.hero-intel-head > span');
-    if (intel) set(intel,current ? scan.date + ' · 最新扫描' : latest);
+    if (intel) set(intel,latest);
     if (!scan.hasHistoricalBaseline) {
       document.querySelectorAll('.mini-chart').forEach(node => node.remove());
     }
     document.querySelectorAll('.ref-update-metrics > article').forEach(article => {
       const label = article.querySelector('span')?.textContent.trim();
-      const value = {今日新增:scan.newCount,模型记录:scan.models,已收录资源:scan.offers,来源核验:String(scan.sourceChecks),最近变更:scan.newCount}[label];
+      const value = {今日发现:scan.newCount,模型记录:scan.models,已收录资源:scan.offers,来源核验:String(scan.sourceChecks)}[label];
       if (value !== undefined) set(article.querySelector('strong'),value);
-      if (label === '今日新增' && !current) {
-        set(article.querySelector('span'),'上次扫描新增');
+      if (label === '今日发现' && !editorialCurrent) {
+        set(article.querySelector('span'),'最近一次发现');
         set(article.querySelector('small'),latest);
       }
     });
@@ -64,22 +67,19 @@
       if (label.includes('模型')) set(card.querySelector('strong'),scan.models);
       if (label.includes('资源')) set(card.querySelector('strong'),scan.offers);
     });
-    if (!current) {
-      // Static HTML may be served after midnight without a new scan.
+    if (!editorialCurrent && !scanCurrent) {
+      // Do not obscure a new editorial discovery just because scanning lagged.
       // Keep the last real snapshot, but do not represent it as today's scan.
-      set(document.querySelector('.log-hero h1 [lang="zh-CN"]'), '最近扫描，发现 AI 新可能');
-      set(document.querySelector('.log-hero h1 [lang="en"]'), 'What changed in the latest scan?');
+      // The headline and the 7-day total are date-agnostic; only the
+      // directory state must not claim that today's scan already ran.
       const heroMeta = document.querySelectorAll('.log-hero-meta > div');
-      const status = heroMeta[1]?.querySelector('strong');
-      set(status?.querySelector('[lang="zh-CN"]'), '最近扫描完成');
-      set(status?.querySelector('[lang="en"]'), 'Latest scan complete');
       const directory = heroMeta[2]?.querySelector('strong');
       set(directory?.querySelector('[lang="zh-CN"]'), '最近扫描快照');
       set(directory?.querySelector('[lang="en"]'), 'Latest scan snapshot');
     }
     const shared = document.querySelectorAll('[data-scan-stat]');
     shared.forEach(node => set(node,scan[node.dataset.scanStat] ?? '—'));
-    document.querySelectorAll('[data-scan-date]').forEach(node => set(node,current ? scan.date : latest));
+    document.querySelectorAll('[data-scan-date]').forEach(node => set(node,scanCurrent ? scanDate : latest));
   };
   ready.then(async () => {
     try {

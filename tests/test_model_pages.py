@@ -75,6 +75,18 @@ def test_featured_models_show_multiple_access_routes_without_duplicate_cards():
     assert "OpenCode Zen" in page
 
 
+def test_empty_team_picks_route_to_real_evaluation_and_uses_active_offer_count():
+    page = render_models_landing_page(
+        offers=[{"id": "active", "status": "verified"}, {"id": "expired", "status": "expired"}],
+        models=[], vendor_directory=[], site_url="https://freellm.top", curated_models=[],
+        featured_agents=[], reference_date="2026-10-13",
+    )
+    assert 'href="#real-evaluation"' in page
+    assert "当前有效资源（1）" in page
+    assert 'id="featured-model-title"><span lang="zh-CN">团队复核精选模型</span>' in page
+    assert "精选模型 (0)" not in page
+
+
 def test_rounded_megatoken_context_is_readable_and_exact():
     assert _format_context_window("1.04858M") == "1M (1,048,576)"
     assert _format_context_window("1048576") == "1M (1,048,576)"
@@ -104,9 +116,9 @@ def test_featured_agent_registry_drives_models_page(tmp_path):
     page = (tmp_path / "models" / "index.html").read_text(encoding="utf-8")
     agent_cards = re.findall(r'<article class="featured-agent-card"', page)
 
-    assert len(agent_cards) == 13
-    assert "当前收录 13 个 AI Agent" in page
-    assert "13 个 Agent" in page
+    assert len(agent_cards) == 16  # 2026-10-12: + momo-code
+    assert "当前收录 16 个 AI Agent" in page
+    assert "16 个 Agent" in page
     assert 'href="/offers/manus-free-agent/"' in page
     assert 'href="/offers/workbuddy/"' in page
     assert 'href="https://grok.com/" target="_blank" rel="noopener noreferrer"' in page
@@ -122,7 +134,7 @@ def test_featured_agent_registry_drives_models_page(tmp_path):
 def test_featured_agent_registry_is_validated(tmp_path):
     agents = _load_featured_agents(ROOT / "data")
 
-    assert len(agents) == 13
+    assert len(agents) == 16
     assert len({agent["id"] for agent in agents}) == len(agents)
     assert all(agent["url"].startswith("https://") for agent in agents)
 
@@ -273,8 +285,12 @@ def test_models_landing_separates_offer_model_vendor_and_provider_id_counts(tmp_
     assert "精选模型与 AI Agent" in overview
     assert "精选模型" in overview
     assert "AI Agent 精选" in overview
-    assert f"完整目录含 {len(models)}+ 个模型" in overview
-    assert f"当前收录 {len(curated)} 个模型" in overview
+    assert f"完整目录共 {len(models)} 条模型记录" in overview
+    assert (
+        f"达到实测标准的团队精选 {len(curated)} 个" in overview
+        if curated else "可复现实测标准的团队精选暂未建立" in overview
+    )
+    assert f"{len(models)}+" not in overview
     assert provider_pages
     assert 'href="/models/all/"' in overview
     assert 'href="/providers/"' in overview

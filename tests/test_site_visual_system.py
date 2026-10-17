@@ -63,7 +63,7 @@ class SiteVisualSystemTests(unittest.TestCase):
         self.assertIn('class="fl-ui-v2"', page)
         self.assertIn('class="fl-site-rail"', page)
         self.assertIn('class="fl-site-ribbon"', page)
-        self.assertIn("freellm-pastel-ui.css?v=20261003a", page)
+        self.assertIn("freellm-pastel-ui.css?v=20261013-overflow", page)
 
     def test_phase_one_homepage_isolated_aurora_style(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
@@ -91,7 +91,7 @@ class SiteVisualSystemTests(unittest.TestCase):
     def test_all_primary_pages_have_isolated_aurora_assets(self):
         pages = {
             "models/index.html": ("aurora-models.css", "20260929b"),
-            "skills/index.html": ("aurora-skills.css", "20260930o"),
+            "skills/index.html": ("aurora-skills.css", "20261012-icons1"),
             "tools/index.html": ("aurora-tools.css", "20260924a"),
             "workflow/index.html": ("aurora-workflow.css", "20260924a"),
             "logs/index.html": ("aurora-logs.css", "20260924a"),
@@ -135,8 +135,8 @@ class SiteVisualSystemTests(unittest.TestCase):
         weekly = page.index('id="weekly-changes"')
         offers = page.index('id="catalog-offers"')
         student = page.index('id="student-offers"')
-        self.assertLess(hero, weekly)
-        self.assertLess(weekly, offers, "Verified scans should precede the full resource catalog")
+        self.assertLess(hero, offers)
+        self.assertLess(offers, weekly, "The progressive resource catalog should precede the scan summary")
         self.assertLess(offers, student, "Student eligibility belongs after general catalog access")
         self.assertIn('class="weekly-scan-cards"', page)
         self.assertIn('class="offer-grid"', page)

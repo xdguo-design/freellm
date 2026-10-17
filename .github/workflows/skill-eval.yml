@@ -1,0 +1,78 @@
+name: skill-eval
+
+# Real Skill task tests with free models. Never runs on eval/** (that is model-eval).
+on:
+  workflow_dispatch:
+    inputs:
+      models:
+        description: "Comma-separated model ids from scripts/eval_skills.py MODELS (default modelscope,nvidia)"
+        required: false
+      only:
+        description: "Comma-separated skill ids (empty = all skills)"
+        required: false
+  push:
+    branches:
+      - "skill-eval/**"
+    paths:
+      - "scripts/eval_skills.py"
+      - "data/skill-eval-tasks.json"
+      - "data/skill-eval-request.json"
+      - ".github/workflows/skill-eval.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: skill-eval-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Install grader deps
+        run: pip install pyyaml
+      - name: Run real skill evaluation
+        id: eval
+        timeout-minutes: 80
+        continue-on-error: true
+        env:
+          SILICONFLOW_API_KEY: ${{ secrets.SILICONFLOW_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          MODELSCOPE_API_KEY: ${{ secrets.MODELSCOPE_API_KEY }}
+          ZHIPU_API_KEY: ${{ secrets.ZHIPU_API_KEY }}
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          SKILL_EVAL_MODELS: ${{ inputs.models }}
+          SKILL_EVAL_ONLY: ${{ inputs.only }}
+        run: |
+          [ -n "$SKILL_EVAL_MODELS" ] || unset SKILL_EVAL_MODELS
+          python scripts/eval_skills.py --out data/evaluations | tee -a "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: skill-eval-results
+          path: |
+            data/evaluations/skills-latest.json
+            data/evaluations/skills-raw.json
+      - name: Commit results
+        if: always()
+        run: |
+          git config user.name "freellm-eval-bot"
+          git config user.email "actions@users.noreply.github.com"
+          if [ "${{ steps.eval.outcome }}" != "success" ] || [ ! -f data/evaluations/skills-latest.json ]; then
+            python scripts/eval_skills.py --out data/evaluations --regrade
+          fi
+          git add data/evaluations/skills-latest.json data/evaluations/skills-raw.json
+          if git diff --cached --quiet; then echo "no changes"; exit 0; fi
+          git commit -m "data(skill-eval): real skill task evaluation $(date -u +%F)"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

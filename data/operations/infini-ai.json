@@ -22,13 +22,13 @@
         {
           "title": "Embedding",
           "detail": "调用 bge-m3 embeddings API。",
-          "command": "curl https://cloud.infini-ai.com/maas/v1/embeddings -H 'Authorization: Bearer ${INFINIAI_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"bge-m3\",\"input\":[\"hello world\"]}'",
+          "command": "curl https://cloud.infini-ai.com/maas/v1/embeddings -H \"Authorization: Bearer $INFINIAI_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"bge-m3\",\"input\":[\"hello world\"]}'",
           "expected": "返回 embedding vector。"
         },
         {
           "title": "Rerank",
           "detail": "调用 bge-reranker-v2-m3 rerank API。",
-          "command": "curl https://cloud.infini-ai.com/maas/v1/rerank -H 'Authorization: Bearer ${INFINIAI_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"bge-reranker-v2-m3\",\"query\":\"apple\",\"documents\":[\"apple\",\"banana\"]}'",
+          "command": "curl https://cloud.infini-ai.com/maas/v1/rerank -H \"Authorization: Bearer $INFINIAI_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"bge-reranker-v2-m3\",\"query\":\"apple\",\"documents\":[\"apple\",\"banana\"]}'",
           "expected": "返回文档相关性排序。"
         },
         {

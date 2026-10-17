@@ -33,7 +33,7 @@ class P0ConvergenceTests(unittest.TestCase):
             [log], [], [], {"models": 2, "offers": 0, "providers": 0}
         )
         feature = re.search(
-            r'<section class="ref-update-feature"><h2>最近重点更新</h2>.*?</section>',
+            r'<section class="ref-update-feature"><h2>今日重点发现</h2>.*?</section>',
             modules, re.S,
         )
         self.assertIsNotNone(feature)
@@ -41,11 +41,11 @@ class P0ConvergenceTests(unittest.TestCase):
         self.assertNotIn("Aggregator listing", feature.group(0))
 
 
-    def test_p1_6_retired_hotspot_strip_does_not_reintroduce_overlapping_badges(self):
+    def test_p1_6_approved_hotspot_has_four_cards_without_legacy_badges(self):
         home = (ROOT / "design/free-china-ai-index.html").read_text(encoding="utf-8")
         self.assertIn('class="weekly-scan-cards"', home)
         self.assertIn('id="weekly-changes"', home)
-        self.assertNotIn('class="prototype-hot-grid"', home)
+        self.assertEqual(home.count('class="prototype-hot-card'), 4)
         self.assertNotIn('class="prototype-original-note"', home)
         self.assertNotIn('class="today-hotspot-card"', home)
 
@@ -150,10 +150,14 @@ class P0ConvergenceTests(unittest.TestCase):
         all_models = (ROOT / "models" / "all" / "index.html").read_text(encoding="utf-8")
         curated_count = page.count('class="featured-model-card"')
         self.assertIn("精选模型", page)
-        self.assertIn(f"({curated_count})", page)
+        if curated_count:
+            self.assertIn(f"({curated_count})", page)
+        else:
+            self.assertIn("团队复核精选模型", page)
+            self.assertNotIn("(0)</small>", page)
         self.assertIn('href="/models/all/"', page)
         self.assertGreaterEqual(len(models), curated_count)
-        self.assertIn(f"{len(models)}+", page)
+        self.assertIn(f"完整目录共 {len(models)} 条模型记录", page)
         self.assertIn("模型目录", all_models)
 
     def test_home_models_logs_and_about_share_canonical_daily_scan(self):
@@ -162,9 +166,24 @@ class P0ConvergenceTests(unittest.TestCase):
         self.assertTrue(logs, "daily log data is required for public freshness metadata")
         latest = json.loads(logs[-1].read_text(encoding="utf-8"))
         self.assertEqual(summary["date"], latest["date"])
-        self.assertEqual(summary["source"], f'/data/daily-log/{latest["date"]}.json')
-        self.assertEqual(summary["models"], len(latest["observed"]["models"]))
-        self.assertEqual(summary["offers"], len(latest["observed"]["offers"]))
+        # Today's editorial discoveries can exist without an actual scan.
+        # Source / snapshotDate must refer to the latest *observed* scan.
+        observed_logs = [
+            json.loads(path.read_text(encoding="utf-8"))
+            for path in logs
+        ]
+        snapshots = [
+            entry for entry in observed_logs
+            if isinstance((entry.get("observed") or {}).get("models"), list)
+            and isinstance((entry.get("observed") or {}).get("offers"), list)
+        ]
+        self.assertTrue(snapshots, "a real scan snapshot is required")
+        snapshot = snapshots[-1]
+        self.assertEqual(summary["source"], f'/data/daily-log/{snapshot["date"]}.json')
+        self.assertEqual(summary["snapshotDate"], snapshot["date"])
+        self.assertEqual(summary["scanRunToday"], latest["date"] == snapshot["date"])
+        self.assertEqual(summary["scannedModels"], len(snapshot["observed"]["models"]))
+        self.assertEqual(summary["scannedOffers"], len(snapshot["observed"]["offers"]))
         events = [*latest.get("events", []), *latest.get("curatedEvents", [])]
         fresh = [event for event in events if event.get("eventType") in {"new", "new_route"}]
         self.assertEqual(summary["newCount"], len(fresh))
@@ -184,19 +203,34 @@ class P0ConvergenceTests(unittest.TestCase):
                 about,
             )
         self.assertNotIn("已验证的免费资源</span>", about)
-        for label, key in (("今日新增", "newCount"), ("模型记录", "models"), ("已收录资源", "offers")):
+        for label, key in (("今日发现", "newCount"), ("模型目录", "models"), ("当前有效资源", "offers")):
             self.assertRegex(
                 logs_page,
                 rf"<span>{label}</span><strong>{summary[key]}</strong>",
             )
         self.assertIn(f"<strong>{summary['date']}</strong>", logs_page)
 
-        # Directory counts are a separate layer and must not overwrite scan counts.
+        # Catalog counts come from scripts/site_counts.py; scan coverage stays separate (scanned*).
         models = json.loads((ROOT / "data" / "models.json").read_text(encoding="utf-8"))
         models_page = (ROOT / "models" / "index.html").read_text(encoding="utf-8")
         all_models = (ROOT / "models" / "all" / "index.html").read_text(encoding="utf-8")
         self.assertIn('href="/models/all/"', models_page)
         self.assertIn(f"{len(models)}", all_models)
+        latest_date = summary["snapshotDate"]
+        self.assertIn(f"<strong>{latest_date}</strong>", logs_page)
+        scan_summary = json.loads((ROOT / "data" / "scan-summary.json").read_text(encoding="utf-8"))
+        self.assertEqual(scan_summary["scannedModels"], len(snapshot["observed"].get("models") or []))
+        self.assertEqual(scan_summary["scannedOffers"], len(snapshot["observed"].get("offers") or []))
+        self.assertIn(
+            f'<span lang="zh-CN">扫描观测模型</span><span lang="en">Scanned models</span></span><strong>{scan_summary["scannedModels"]}</strong>',
+            logs_page,
+        )
+        self.assertIn(
+            f'<span lang="zh-CN">扫描观测资源</span><span lang="en">Scanned offers</span></span><strong>{scan_summary["scannedOffers"]}</strong>',
+            logs_page,
+        )
+        # Catalog totals (shared helper) agree with /models/all/.
+        self.assertEqual(scan_summary["models"], len(models))
 
     def test_home_surfaces_high_intent_seo_guides_above_catalog(self):
         page = (ROOT / "design" / "free-china-ai-index.html").read_text(encoding="utf-8")
@@ -222,7 +256,13 @@ class P0ConvergenceTests(unittest.TestCase):
         self.assertIn("测试任务", page)
         self.assertIn("查看真实测试任务、限制与评价", page)
         levels = {entry.get("testLevel") for entry in tests.values()}
-        self.assertEqual(levels, {"e2e", "artifact", "task", "partial", "blocked"})
+        historical_levels = {"e2e", "artifact", "task", "partial", "blocked"}
+        self.assertTrue(historical_levels.issubset(levels))
+        self.assertTrue(levels.issubset(historical_levels | {"unknown"}))
+        for entry in tests.values():
+            if entry.get("testLevel") == "unknown":
+                self.assertIsNone(entry.get("score"))
+                self.assertFalse(str(entry.get("testedAt") or "").strip())
         self.assertIn("BLOCKED", page)
         self.assertIn("PARTIAL", page)
 
@@ -237,7 +277,9 @@ class P0ConvergenceTests(unittest.TestCase):
         self.assertEqual(weekly.count("<article>"), 4)
         for key in ("newCount", "newModels", "models", "offers"):
             self.assertIn(f'data-scan-stat="{key}">{summary[key]}</strong>', weekly)
-        self.assertIn(f'<span data-scan-date>{summary["date"]}</span>', weekly)
+        scan_date = summary["snapshotDate"] or summary["date"]
+        scan_label = scan_date if summary["scanRunToday"] else f"最近扫描：{scan_date}"
+        self.assertIn(f'<span data-scan-date>{scan_label}</span>', weekly)
         self.assertIn('href="/logs/"', weekly)
         self.assertIn("未建立可比较的同口径历史基线", weekly)
         self.assertNotRegex(weekly, r"(?:↑|↓|环比\\s*[+\\-]?\\d+%|较上周\\s*[+\\-]?\\d+%)")
@@ -248,7 +290,7 @@ class P0ConvergenceTests(unittest.TestCase):
         match = re.search(r'<nav class="fl-site-nav">(.*?)</nav>', page, re.S)
         self.assertIsNotNone(match)
         self.assertEqual(match.group(1).count("<a "), 7)
-        for label in ("首页", "模型", "技能", "工具", "工作流", "今日发现", "关于"):
+        for label in ("首页", "模型", "技能", "工具", "工作流", "每日发现", "关于"):
             self.assertIn(f"<span>{label}</span>", match.group(1))
 
     def test_no_duplicate_global_top_nav_on_key_pages(self):

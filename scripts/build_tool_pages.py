@@ -52,7 +52,7 @@ TEMPLATE = '''<!doctype html>
 <script src="/tools/js/lib-format.js"></script>
 <script src="/tools/js/lib-utils.js"></script>
 @SCRIPTS@
-<script src="/js/freellm-sync.js"></script>
+<script src="/js/freellm-sync.js?v=20261012-daily-discovery"></script>
 <script>
 (function () {
 'use strict';

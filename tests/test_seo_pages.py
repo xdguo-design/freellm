@@ -249,12 +249,17 @@ def test_stepfun_offer_covers_official_limited_free_models_and_api():
     assert stepfun["productType"] == "api"
     assert stepfun["freeMechanism"] == "limited_time_free"
     assert set(("api", "free")) <= set(stepfun["type"])
-    for model_id in ("step-audio-r1.1", "step-1x-edit", "step-2x-large"):
+    for model_id in (
+        "stepaudio-3-realtime-preview",
+        "stepaudio-3-chat-preview",
+        "stepaudio-3-gen-preview",
+        "stepaudio-3-music-preview",
+    ):
         assert model_id in stepfun["model"]
     assert stepfun["usageGuide"]["endpoint"] == "https://api.stepfun.com/v1/chat/completions"
     assert stepfun["usageGuide"]["docsUrl"] == "https://platform.stepfun.com/docs/zh/quickstart/overview"
     assert "https://platform.stepfun.com/docs/zh/guides/pricing/details" in stepfun["sourceUrls"]
-    assert "${STEP_API_KEY}" in stepfun["usageGuide"]["examples"]["curl"]
+    assert '"Authorization: Bearer $STEP_API_KEY"' in stepfun["usageGuide"]["examples"]["curl"]
     assert "api" in categorize_offer(stepfun)
 
 
@@ -269,13 +274,15 @@ def test_agnes_ai_offer_covers_official_multimodal_models_and_free_api_access():
     for model_id in (
         "agnes-2.5-flash",
         "agnes-image-2.1-flash",
-        "agnes-video-v2.0",
+        "agnes-video-2.5-flash",
     ):
         assert model_id in agnes["model"]
+    # agnes-video-v2.0 was retired upstream on 2026-09-25 (re-checked 2026-10-12).
+    assert "agnes-video-v2.0" not in agnes["model"]
     assert agnes["usageGuide"]["endpoint"] == "https://api.agnes-ai.cn/v1/chat/completions"
     assert agnes["usageGuide"]["docsUrl"] == "https://agnes-ai.cn/zh-Hans/docs/overview"
     assert any(url.startswith("https://github.com/AgnesAI-Labs/AgnesAI-Models") for url in agnes["sourceUrls"])
-    assert "${AGNES_API_KEY}" in agnes["usageGuide"]["examples"]["curl"]
+    assert '"Authorization: Bearer $AGNES_API_KEY"' in agnes["usageGuide"]["examples"]["curl"]
     assert "api" in categorize_offer(agnes)
     # 官方同时运营国内站与国际站两套入口，两套地址都必须留在数据里。
     blob = json.dumps(agnes, ensure_ascii=False)
@@ -309,12 +316,11 @@ def test_agnes_free_models_match_the_official_cn_pricing_page():
         "agnes-image-2.5-flash",
         "agnes-image-2.1-flash",
         "agnes-image-2.0-flash",
-        "agnes-video-v2.0",
         "agnes-video-2.5-flash",
     }
     assert {part.strip() for part in agnes["model"].split("·")} == free_ids
 
-    for paid in ("agnes-2.5-pro", "agnes-2.5-pro-beta", "agnes-video-2.5"):
+    for paid in ("agnes-2.5-pro", "agnes-2.5-pro-beta", "agnes-video-2.5", "agnes-video-v2.0"):
         assert paid not in free_ids
     for entry in agnes["freeModels"]:
         assert entry["sourceUrl"].startswith("https://agnes-ai.cn/")
@@ -359,10 +365,14 @@ def test_offer_page_marks_hands_on_verified_entries_with_test_evidence():
     assert "国内+国际双入口" in atria_page
     assert "2026-09-15" in atria_page
 
-    plain_page = render_offer_page(by_id["glm"], offers, "https://freellm.top")
+    # glm is now an expired record, and expired pages drop every verification
+    # chip (see tests/test_expired_lifecycle.py); use an active site-only entry.
+    plain_page = render_offer_page(by_id["trae"], offers, "https://freellm.top")
     assert "实测好用" not in plain_page
     assert "接口已验证" not in plain_page or "官网已验证" in plain_page
     assert "官网已验证" in plain_page
+    expired_page = render_offer_page(by_id["glm"], offers, "https://freellm.top")
+    assert "官网已验证" not in expired_page and "实测通过" not in expired_page
 
     untested_page = render_offer_page(by_id["tinyfish-search-fetch-free"], offers, "https://freellm.top")
     assert "接口已验证" not in untested_page
@@ -450,15 +460,17 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
         path.name: path.read_text(encoding="utf-8")
         for path in sorted(tmp_path.glob("sitemap*.xml"))
     }
+    # sitemap-english.xml was added on purpose for the independent English hubs (P1-4, PR #62).
     assert set(sitemap_texts) == {
         "sitemap.xml",
         "sitemap-pages.xml",
         "sitemap-offers.xml",
         "sitemap-providers.xml",
         "sitemap-models.xml",
+        "sitemap-english.xml",
     }
     assert "<sitemapindex" in sitemap_texts["sitemap.xml"]
-    for section in ("pages", "offers", "providers", "models"):
+    for section in ("pages", "offers", "providers", "models", "english"):
         assert f"https://freellm.top/sitemap-{section}.xml" in sitemap_texts["sitemap.xml"]
     sitemap = "".join(
         text for name, text in sitemap_texts.items() if name != "sitemap.xml"
@@ -503,6 +515,8 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
         "https://freellm.top/submit/",
         "https://freellm.top/terms/",
         "https://freellm.top/health/",
+        # Hand-maintained contact page added for AdSense trust pages (ADSENSE-8, commit 13c89622).
+        "https://freellm.top/contact/",
     }
     locs = re.findall(r"<loc>(.*?)</loc>", sitemap)
     assert len(locs) == len(set(locs)), "sitemaps must not advertise the same URL twice"
@@ -634,7 +648,10 @@ def test_models_page_renders_queryable_provider_model_catalog(tmp_path):
     assert 'Ollama' in all_pages
     assert 'deepseek-v4-pro-0813' in all_pages
     assert 'Score' in page
-    assert '目录来源' in page
+    # Rows now label provenance (official / public API / third-party) instead of a generic
+    # "目录来源" link since P0-5 (commit 93099d80, _catalog_source_label).
+    assert 'class="source-link"' in page
+    assert '厂商官方来源' in page
 
 
 def test_static_seo_pages_can_follow_the_saved_locale_without_mixed_visible_copy(tmp_path):
@@ -848,7 +865,12 @@ def test_multi_model_offers_expose_free_models_lists():
     offers = {offer["id"]: offer for offer in read_offers()}
 
     stepfun_models = [entry["model"] for entry in offers["stepfun-limited-time-free"]["freeModels"]]
-    assert stepfun_models == ["step-audio-r1.1", "step-1x-edit", "step-2x-large"]
+    assert stepfun_models == [
+        "stepaudio-3-realtime-preview",
+        "stepaudio-3-chat-preview",
+        "stepaudio-3-gen-preview",
+        "stepaudio-3-music-preview",
+    ]
     siliconflow_models = offers["siliconflow-free-models"]["freeModels"]
     assert len(siliconflow_models) == 7
     assert siliconflow_models[-1]["model"] == "Kwai-Kolors"
@@ -939,7 +961,7 @@ def test_daily_log_page_expands_new_entries_with_detailed_access_and_evidence_fi
 
     page = render_daily_log_page(logs, "https://freellm.top")
 
-    assert "今日更新" in page
+    assert "每日发现" in page
     assert "Alpha free API" in page
     assert "monthly_quota" in page
     assert "100 requests/day" in page
@@ -981,9 +1003,9 @@ def test_daily_log_dashboard_renders_baseline_snapshot_and_health():
     assert "297" in page
     assert "25" in page
     assert "37" in page
-    assert "模型来源" in page and "<span>ok</span>" in page
-    assert "资源来源" in page and "<span>ok</span>" in page
-    assert "今日扫描完成" in page
+    assert "模型来源" in page and "<span>正常</span>" in page
+    assert "资源来源" in page and "<span>正常</span>" in page
+    assert "近 7 天发现" in page
     assert ".log-days::before" in page
     assert "class=\"log-registration\"" not in page
     assert "首次建立基线" not in page
@@ -1277,7 +1299,7 @@ def test_category_pages_fit_the_shared_navigation_content_area(tmp_path):
     assert "width:100% !important" in page
     assert "max-width:none !important" in page
     assert "overflow-wrap:anywhere" in page
-    assert "/css/freellm-pastel-ui.css?v=20261003a" in page
+    assert "/css/freellm-pastel-ui.css?v=20261013-overflow" in page
 
 
 def test_thin_category_pages_are_kept_out_of_the_sitemap_but_stay_reachable():

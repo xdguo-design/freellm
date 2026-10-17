@@ -1,7 +1,146 @@
 {
-  "checkedAt": null,
-  "sourceCount": 0,
-  "okCount": 0,
-  "changedCount": 0,
-  "sources": []
+  "checkedAt": "2026-10-17T01:11:01+00:00",
+  "sourceCount": 7,
+  "okCount": 6,
+  "changedCount": 5,
+  "sources": [
+    {
+      "id": "openai-api-changelog",
+      "vendor": "OpenAI",
+      "kind": "api_changelog",
+      "url": "https://developers.openai.com/api/docs/changelog",
+      "status": "ok",
+      "httpStatus": 200,
+      "finalUrl": "https://developers.openai.com/api/docs/changelog",
+      "title": "Changelog | OpenAI API",
+      "bytes": 540112,
+      "sha256": "1220e65a829c88ed0d16c0216aeabd6bf6fed5298d991ee9c2031aca95d0dedf",
+      "matchedKeywords": [
+        "Agents API",
+        "computer use",
+        "Responses API",
+        "realtime",
+        "model",
+        "deprecation"
+      ],
+      "changed": true,
+      "previousSha256": "013abf2963fc40b92ceeed7b2dac20c28bad114a663e4d3d6ba07ea77a804d20"
+    },
+    {
+      "id": "openai-news",
+      "vendor": "OpenAI",
+      "kind": "news",
+      "url": "https://openai.com/news/",
+      "status": "http_error",
+      "httpStatus": 403,
+      "error": "HTTP Error 403: Forbidden",
+      "changed": false,
+      "previousSha256": null
+    },
+    {
+      "id": "anthropic-news",
+      "vendor": "Anthropic",
+      "kind": "news",
+      "url": "https://www.anthropic.com/news",
+      "status": "ok",
+      "httpStatus": 200,
+      "finalUrl": "https://www.anthropic.com/news",
+      "title": "Newsroom \\ Anthropic",
+      "bytes": 433034,
+      "sha256": "2a4cee7ae796022ca1f1bbf0fffc0595b708c278a6bb9aca5aca3825316af6da",
+      "matchedKeywords": [
+        "Claude",
+        "Agent",
+        "Code",
+        "Computer",
+        "model"
+      ],
+      "changed": true,
+      "previousSha256": "8326f101122886f6f408b3442d4e47af0dcc2f6c8f133494c6103e8a5dfedbe9"
+    },
+    {
+      "id": "gemini-api-changelog",
+      "vendor": "Google Gemini",
+      "kind": "api_changelog",
+      "url": "https://ai.google.dev/gemini-api/docs/changelog",
+      "status": "ok",
+      "httpStatus": 200,
+      "finalUrl": "https://ai.google.dev/gemini-api/docs/changelog",
+      "title": "Release notes  |  Gemini API  |  Google AI for Developers",
+      "bytes": 174879,
+      "sha256": "d30bb7970e8d9247fb5c0ca3e7752fc494d6b15ccb9dd8c673ab0987667e8875",
+      "matchedKeywords": [
+        "Computer Use",
+        "Managed Agents",
+        "Live API",
+        "TTS",
+        "deprecation",
+        "Gemini"
+      ],
+      "changed": true,
+      "previousSha256": "8846d7fd9c6dfadf59abe4c97928acb9535a7f1b98c7024716e87520fa9131d2"
+    },
+    {
+      "id": "deepseek-api-changelog",
+      "vendor": "DeepSeek",
+      "kind": "api_changelog",
+      "url": "https://api-docs.deepseek.com/updates/",
+      "status": "ok",
+      "httpStatus": 200,
+      "finalUrl": "https://api-docs.deepseek.com/updates/",
+      "title": "Change Log | DeepSeek API Docs",
+      "bytes": 48079,
+      "sha256": "94baa49975bc0994ccc3d2fcf09931788b79693045ee0a82f6ec67b3cd0b34e8",
+      "matchedKeywords": [
+        "Release",
+        "Agent",
+        "Responses API",
+        "pricing",
+        "retired"
+      ],
+      "changed": false,
+      "previousSha256": "94baa49975bc0994ccc3d2fcf09931788b79693045ee0a82f6ec67b3cd0b34e8"
+    },
+    {
+      "id": "alibaba-model-lifecycle",
+      "vendor": "Alibaba Cloud Model Studio",
+      "kind": "model_lifecycle",
+      "url": "https://help.aliyun.com/en/model-studio/newly-released-models",
+      "status": "ok",
+      "httpStatus": 200,
+      "finalUrl": "https://help.aliyun.com/en/model-studio/newly-released-models",
+      "title": "Model lifecycle and updates_Alibaba Cloud Model Studio(Model Studio)-Alibaba Cloud Model Studio(Model Studio)-阿里云帮助中心",
+      "bytes": 1001778,
+      "sha256": "a891c5bc2c9cc5e44b465515d66fbd099ef70dc7b8c83606c0554a124372572b",
+      "matchedKeywords": [
+        "Agent",
+        "Visual understanding",
+        "Reasoning",
+        "release"
+      ],
+      "changed": true,
+      "previousSha256": "046437b8513e81f38bf9ac8496c060ef4ec71d3dcc86bec5ee38811e1fbc301b"
+    },
+    {
+      "id": "alibaba-model-studio-release-notes",
+      "vendor": "Alibaba Cloud Model Studio",
+      "kind": "platform_changelog",
+      "url": "https://help.aliyun.com/en/model-studio/model-release-notes",
+      "status": "ok",
+      "httpStatus": 200,
+      "finalUrl": "https://help.aliyun.com/en/model-studio/model-release-notes",
+      "title": "Model Studio release notes and feature updates - Model Studio-Alibaba Cloud Model Studio(Model Studio)-阿里云帮助中心",
+      "bytes": 149714,
+      "sha256": "76c732e917198ea201b53057b402951c346641956414cdd600c253000ce56eda",
+      "matchedKeywords": [
+        "Feature updates",
+        "free quota",
+        "model",
+        "evaluation",
+        "Agent"
+      ],
+      "changed": true,
+      "previousSha256": "1853be89454b5716e56ace54f4985700431124bb9d2d31e67af2842e729d1693"
+    }
+  ]
 }

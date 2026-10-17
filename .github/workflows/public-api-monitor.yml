@@ -1,0 +1,54 @@
+name: public-api-evidence-monitor
+
+# Artifact-only probes: no automatic catalog edits, no production deployments.
+# A documentation response never implies that a model/API invocation succeeded.
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  gateway-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Verify evaluation contract (offline)
+        run: python -m unittest tests.test_public_api_probe -v
+      - name: Check public gateway documentation (never uses a credential)
+        run: |
+          mkdir -p .tmp/public-api/reports
+          python scripts/probe_public_api.py --mode documentation --timeout 12 --output .tmp/public-api/reports/docs.json
+      - name: Optional one-request authenticated proof
+        env:
+          HCNSEC_API_KEY: ${{ secrets.HCNSEC_API_KEY }}
+        run: |
+          if [ -n "${HCNSEC_API_KEY:-}" ]; then
+            python scripts/probe_public_api.py --mode authenticated_chat --timeout 15 --output .tmp/public-api/reports/auth.json
+          else
+            echo "Authenticated API probe not configured; no credential requested"
+          fi
+      - name: Restore recent sanitized GitHub Actions artifacts
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/restore_public_api_history.py --output-dir .tmp/public-api/reports --limit 40
+      - name: Evaluate evidence without promoting review scores
+        if: always()
+        run: |
+          python scripts/evaluate_public_api.py --observations data/public-api-observations.json --reports-dir .tmp/public-api/reports --output .tmp/public-api/evaluation.json
+      - name: Keep scrubbed monitoring evidence for independent review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-api-evidence-${{ github.run_id }}
+          path: .tmp/public-api/
+          retention-days: 90
+          if-no-files-found: warn

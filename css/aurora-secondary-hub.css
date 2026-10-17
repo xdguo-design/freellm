@@ -1,0 +1,34 @@
+/* Aurora secondary page governance: scoped community & submit surfaces. */
+body.community-page,body.submit-page{--hub-ink:#102745;--hub-line:#d8e6f5}
+html.fl-pastel-ui body.submit-page{max-width:none!important;margin:0!important;padding-bottom:45px!important}
+body.community-page .info-page-header,body.community-page .info-page-main,body.community-page .info-page-footer,body.submit-page>header,body.submit-page>main,body.submit-page>footer{width:min(100% - 44px,1120px);max-width:1120px;margin-left:auto;margin-right:auto}
+body.community-page .info-page-header{padding-top:52px}
+body.community-page .info-page-header h1,body.submit-page>header h1{font-size:clamp(36px,5vw,58px);line-height:1.18;letter-spacing:-.04em}
+body.community-page .community-card{border-color:#d1e3f5;background:#fff;box-shadow:0 13px 37px rgba(29,78,126,.08);border-radius:22px;min-height:300px}
+body.community-page .community-card h2{color:#11325a}
+body.community-page .community-card p{color:#567493}
+body.community-page .info-action{color:#216db9}
+body.community-page .hub-intro{grid-column:1/-1;padding:24px 27px;border-radius:20px;background:linear-gradient(120deg,#0b203f,#164472);color:#fff}
+body.community-page .hub-intro>span,body.submit-page .submit-intro>span{font:800 11px/1.5 ui-monospace,monospace;letter-spacing:.13em;color:#7de0c6}
+body.community-page .hub-intro strong{display:block;margin-top:10px;font-size:clamp(23px,3vw,32px);line-height:1.4;color:#fff!important}
+body.community-page .hub-intro p{max-width:850px;color:#c5def7;line-height:1.85;font-size:13px}
+body.community-page .hub-intro a{display:inline-flex;margin-top:9px;color:#fff;font-size:13px;font-weight:850}
+body.community-page .hub-review-participation{grid-column:1/-1;border:1px solid #d5e5f5;border-radius:21px;background:#fff;padding:25px 30px}
+body.community-page .hub-review-participation h2{margin:0 0 12px;font-size:24px}
+body.community-page .hub-review-participation ol{padding-left:25px;font-size:13px;color:#526f90;line-height:2}
+body.community-page .hub-review-participation>a{font-size:13px;color:#2067b6;font-weight:800}
+body.submit-page>header,body.submit-page>main,body.submit-page>footer{border-radius:20px;border:1px solid #d2e3f4;box-shadow:0 16px 38px rgba(40,91,144,.06);background:#fff}
+body.submit-page>header{margin-top:38px;padding:clamp(25px,4vw,43px);background:linear-gradient(110deg,#fff,#eef6ff)}
+body.submit-page>main{padding:clamp(22px,4vw,40px)}
+body.submit-page>footer{padding:20px 30px}
+body.submit-page .checklist{grid-template-columns:repeat(2,minmax(0,1fr))}
+body.submit-page .checklist li{border:1px solid #d7e6f5;background:#f6faff;border-radius:12px;color:#375778;font-size:13px}
+body.submit-page .submit-intro{padding:22px 27px;background:#0e2849;border-radius:16px}
+body.submit-page .submit-intro>h2{color:#fff;margin:10px 0 8px;font-size:26px}
+body.submit-page .submit-intro>p{color:#d2e4f6;font-size:13px;line-height:1.85}
+body.submit-page .submit-intro a{color:#a4ecdc;font-weight:800}
+body.submit-page .submit-review-guidelines{margin-top:23px;padding:21px 26px;border:1px solid #d6e6f5;border-radius:16px;background:#f5faff}
+body.submit-page .submit-review-guidelines h2{margin:3px 0 10px}
+body.submit-page .submit-review-guidelines ol{padding-left:22px;font-size:13px;line-height:1.95;color:#436587}
+body.submit-page .submit-privacy-note{padding:11px 14px;border-left:3px solid #d58b3b;background:#fff7e9;color:#6c573e;font-size:12px}
+@media(max-width:700px){body.community-page .hub-intro{padding:22px}body.community-page .hub-review-participation{padding:22px}body.submit-page .checklist{grid-template-columns:1fr}body.submit-page>header{margin-top:20px}body.submit-page>header,body.submit-page>main,body.submit-page>footer{width:min(100% - 30px,1120px)}}

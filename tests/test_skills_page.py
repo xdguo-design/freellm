@@ -73,22 +73,48 @@ class SkillBenchmarkDataTests(unittest.TestCase):
 
     def test_test_records_never_fake_unexecuted_scores(self):
         scored = 0
-        allowed = {"e2e", "task", "artifact", "partial", "blocked"}
+        allowed = {"e2e", "task", "artifact", "partial", "blocked", "unknown"}
         for skill_id, entry in self.entries.items():
             level = entry.get("testLevel")
             self.assertIn(level, allowed, skill_id)
-            self.assertTrue(str(entry.get("testedAt") or "").strip(), skill_id)
+            if level == "unknown":
+                self.assertFalse(str(entry.get("testedAt") or "").strip(), skill_id)
+                self.assertEqual(entry.get("status"), "未实测", skill_id)
+            else:
+                self.assertTrue(str(entry.get("testedAt") or "").strip(), skill_id)
             self.assertTrue(str(entry.get("environment") or "").strip(), skill_id)
             self.assertTrue(str(entry.get("task") or "").strip(), skill_id)
             self.assertTrue(str(entry.get("evaluation") or "").strip(), skill_id)
-            if level in {"blocked", "partial"}:
+            if level in {"blocked", "partial", "unknown"}:
                 self.assertIsNone(entry.get("score"), skill_id)
             else:
                 self.assertIsInstance(entry.get("score"), (int, float), skill_id)
                 scored += 1
                 self.assertGreaterEqual(entry["score"], 0, skill_id)
                 self.assertLessEqual(entry["score"], 10, skill_id)
-        self.assertEqual(scored, 34)
+        # 34 sandbox-scored entries, plus never-executed entries that scripts/eval_skills.py promoted
+        # from a real free-model run (data/evaluations/skills-latest.json).
+        promoted = [sid for sid, e in self.entries.items() if str(e.get("status", "")).startswith("免费模型任务级")]
+        self.assertEqual(scored, 34 + len(promoted))
+
+    def test_free_model_runs_match_committed_results(self):
+        results_path = ROOT / "data" / "evaluations" / "skills-latest.json"
+        if not results_path.is_file():
+            self.skipTest("no skill eval results yet")
+        results = {s["id"]: s for s in json.loads(results_path.read_text(encoding="utf-8"))["skills"]}
+        for skill_id, entry in self.entries.items():
+            run = entry.get("freeModelRun")
+            if not run:
+                continue
+            real = results[skill_id]
+            self.assertEqual(run["bestVerdict"], real["bestVerdict"], skill_id)
+            self.assertEqual([r["verdict"] for r in run["runs"]], [r["verdict"] for r in real["runs"]], skill_id)
+            if str(entry.get("status", "")).startswith("免费模型任务级"):
+                answered = [r["score"] for r in real["runs"] if r.get("callOk")]
+                self.assertEqual(entry["score"], max(answered), skill_id)
+            for r in run["runs"]:
+                if r["verdict"] == "调用失败":
+                    self.assertNotIn("score", r, skill_id)
 
     def test_internal_evidence_targets_exist(self):
         for skill_id, entry in self.entries.items():
@@ -141,8 +167,8 @@ class RecipeDataTests(unittest.TestCase):
         recipes = json.loads(RECIPES_PATH.read_text(encoding="utf-8"))
         skill_ids = {item["id"] for item in json.loads(SKILLS_PATH.read_text(encoding="utf-8"))}
 
-        self.assertEqual(len(recipes), 6)
-        self.assertEqual(len({recipe["id"] for recipe in recipes}), 6)
+        self.assertEqual(len(recipes), 15)
+        self.assertEqual(len({recipe["id"] for recipe in recipes}), 15)
         for recipe in recipes:
             self.assertTrue(
                 {"id", "title", "description", "input", "output", "steps"}
@@ -321,5 +347,96 @@ class SkillsBuildTests(unittest.TestCase):
         self.assertIn('href="/skills/"', homepage)
 
 
+
+class SkillsCuratedEightTests(unittest.TestCase):
+    """Keep complete Skill source records while showing only a curated eight-card shortlist."""
+
+    def test_all_twelve_categories_have_at_most_eight_real_unique_picks(self):
+        import re
+        script = (ROOT / "js" / "reference-shell.js").read_text(encoding="utf-8")
+        topics = re.findall(
+            r"'([^']+)': \{title:'[^']+',intro:'[^']+',picks:\[([^\]]+)\]\}",
+            script,
+        )
+        catalog = json.loads(SKILLS_PATH.read_text(encoding="utf-8"))
+        by_id = {item["id"]: item for item in catalog}
+        self.assertEqual(len(topics), 12)
+        for category, payload in topics:
+            ids = re.findall(r"'([^']+)'", payload)
+            self.assertLessEqual(len(ids), 8, category)
+            self.assertEqual(len(ids), len(set(ids)), category)
+            count = sum(item["category"] == category for item in catalog)
+            self.assertEqual(len(ids), min(8, count), category)
+            for skill_id in ids:
+                self.assertIn(skill_id, by_id, category)
+                self.assertEqual(by_id[skill_id]["category"], category, skill_id)
+
+    def test_first_three_get_evidence_and_three_sections(self):
+        import re
+        script = (ROOT / "js" / "reference-shell.js").read_text(encoding="utf-8")
+        topics = re.findall(
+            r"'([^']+)': \{title:'[^']+',intro:'[^']+',picks:\[([^\]]+)\]\}",
+            script,
+        )
+        notes = script.split("    const insights = {", 1)[1].split("    };", 1)[0]
+        for category, payload in topics:
+            top = re.findall(r"'([^']+)'", payload)[:3]
+            for skill_id in top:
+                self.assertIn(f"'{skill_id}':", notes, (category, skill_id))
+        for label in ("核心能力", "适合场景", "限制与边界"):
+            self.assertIn(label, script)
+        self.assertIn('class="skill-editorial-details"', script)
+        self.assertIn("const DETAIL_PICK_COUNT = 3;", script)
+
+    def test_archive_and_category_limits_are_separate(self):
+        script = (ROOT / "js" / "reference-shell.js").read_text(encoding="utf-8")
+        self.assertIn("const MAX_CATEGORY_PICKS = 8;", script)
+        self.assertIn("list.slice(0, MAX_CATEGORY_PICKS)", script)
+        self.assertIn("matches.slice(0, MAX_CATEGORY_PICKS)", script)
+        self.assertIn("growthKit.hidden = !isArchive", script)
+        generator = (ROOT / "scripts" / "build_seo_pages.py").read_text(encoding="utf-8")
+        self.assertIn("每类最多 8 个精选 · 前 3 个详细解析", generator)
+        self.assertIn('min(8, sum(item.get("category") == key for item in skills))', generator)
+
+
 if __name__ == "__main__":
     unittest.main()
+
+
+class MarketingSkillsEditorialTests(unittest.TestCase):
+    """Marketing Skills collection must remain truthful, accessible and easy to navigate."""
+
+    def setUp(self):
+        self.skills = json.loads(SKILLS_PATH.read_text(encoding="utf-8"))
+
+    def test_marketing_collection_source_and_evidence(self):
+        items = [item for item in self.skills if item["id"].startswith("coreyhaines31-")]
+        self.assertEqual(len(items), 7)
+        self.assertEqual({item["name"] for item in items}, {
+            "seo-audit", "ai-seo", "programmatic-seo",
+            "site-architecture", "competitors", "schema", "product-marketing",
+        })
+        for item in items:
+            self.assertEqual(item.get("license"), "MIT")
+            self.assertEqual(item["freeLLMTest"]["testLevel"], "unknown")
+            self.assertEqual(item["freeLLMTest"]["status"], "未实测")
+            self.assertIsNone(item["freeLLMTest"]["score"])
+            self.assertTrue((CONTENT_DIR / f'{item["id"]}.md').is_file())
+
+    def test_marketing_editorial_links_to_real_skills(self):
+        from scripts.build_seo_pages import build_site
+
+        with tempfile.TemporaryDirectory() as directory:
+            output_root = Path(directory)
+            build_site(ROOT / "data" / "offers.json", output_root, site_url="https://example.test")
+            page = (output_root / "skills" / "index.html").read_text(encoding="utf-8")
+
+        self.assertIn('class="fl-growth-kit"', page)
+        self.assertEqual(page.count('class="fl-growth-card"'), 6)
+        for slug in ("seo-audit", "ai-seo", "programmatic-seo",
+                     "site-architecture", "competitors", "schema"):
+            self.assertIn("skill=coreyhaines31-" + slug, page)
+        self.assertIn("skill=coreyhaines31-product-marketing", page)
+        self.assertIn('data-growth-copy', page)
+        self.assertIn('未做效果实测', page)
+        self.assertIn('rel="nofollow noopener"', page)

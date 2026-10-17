@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "note": "人工复核改判（只针对自动检查项的误判；理由逐条写明）。",
+  "reviews": {
+    "blader-humanizer": {
+      "nvidia": {"verdict": "通过", "note": "命中的 “isn't just” 只出现在“标记出的问题”里对原文的引用；最终改写版本无套话，且保留 37% 与 2025 两个事实。"}
+    },
+    "composiohq-changelog-generator": {
+      "nvidia": {"verdict": "通过", "note": "“chore:” 只出现在“已过滤的内部提交”说明表中；更新日志正文已排除 chore/refactor 两条内部提交。"}
+    },
+    "obra-writing-plans": {
+      "modelscope": {"verdict": "未通过", "note": "输出在约 744 字处中断（计划只写到目标与架构说明），没有任务拆分与测试步骤；维持未通过。"}
+    }
+  }
+}

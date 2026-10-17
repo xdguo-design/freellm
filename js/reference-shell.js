@@ -121,9 +121,9 @@ if (section === 'home' || section === 'models') {
       if (legacyFooter) {
         const footer = document.createElement('footer');
         footer.className = 'prototype-footer';
-        footer.innerHTML = '<div class="prototype-footer-main"><div class="prototype-footer-brand"><img src="/assets/reference/rail-brand.png" alt=""><div><strong>FreeLLM</strong><small>AI for Everyone</small><p>让优质的 AI 资源，触手可及。</p></div></div><nav><strong>产品</strong><a href="/models/">模型库</a><a href="/tools/">工具箱</a><a href="/skills/">Skills</a><a href="/skills/lab/">工作流</a></nav><nav><strong>资源</strong><a href="/logs/">最新更新</a><a href="/models/">热门资源</a><a href="/about/">使用说明</a><a href="/submit/">提交资源</a></nav><nav><strong>社区</strong><a href="/about/">关于我们</a><a href="/submit/">提交资源</a><a href="mailto:xdguo0527@gmail.com">反馈建议</a></nav><div class="prototype-footer-slogan">Better AI<br>A Brighter Tomorrow</div></div><div class="prototype-footer-bottom"><span>© 2026 FreeLLM. All rights reserved.</span><span class="prototype-footer-social"><a href="https://github.com/xdguo-design/freellm" aria-label="GitHub">●</a><span aria-label="Twitter"><svg viewBox="0 0 24 24"><path d="M23.95 4.57a10 10 0 0 1-2.89.79 5.04 5.04 0 0 0 2.21-2.78 10.05 10.05 0 0 1-3.19 1.22 5.02 5.02 0 0 0-8.55 4.58A14.25 14.25 0 0 1 1.2 3.13a5.02 5.02 0 0 0 1.55 6.7 4.97 4.97 0 0 1-2.27-.63v.06a5.03 5.03 0 0 0 4.03 4.93 5.05 5.05 0 0 1-2.26.09 5.03 5.03 0 0 0 4.69 3.49A10.08 10.08 0 0 1 0 19.86a14.22 14.22 0 0 0 7.7 2.26c9.24 0 14.3-7.65 14.3-14.29v-.65a10.2 10.2 0 0 0 2.5-2.6Z"/></svg></span><span aria-label="Discord"><svg viewBox="0 0 24 24"><path d="M19.7 5.1A18.1 18.1 0 0 0 15.3 3l-.6 1.2a16.7 16.7 0 0 0-5.4 0L8.7 3a18.1 18.1 0 0 0-4.4 2.1C1.5 9.2.7 13.2 1.1 17.2a18.2 18.2 0 0 0 5.4 2.7l1.2-2a11.8 11.8 0 0 1-1.9-.9l.5-.4a13 13 0 0 0 11.4 0l.5.4a11.8 11.8 0 0 1-1.9.9l1.2 2a18.2 18.2 0 0 0 5.4-2.7c.5-4.6-.8-8.6-3.2-12.1ZM8.8 14.3c-1.1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Zm6.4 0c-1.1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Z"/></svg></span></span><button type="button" data-locale-switch="zh-CN">◎　简体中文　⌄</button></div>';
+        footer.innerHTML = '<div class="prototype-footer-main"><div class="prototype-footer-brand"><img src="/assets/reference/rail-brand.png" alt=""><div><strong>FreeLLM</strong><small>AI for Everyone</small><p>让优质的 AI 资源，触手可及。</p></div></div><nav><strong>产品</strong><a href="/models/">模型库</a><a href="/tools/">工具箱</a><a href="/skills/">Skills</a><a href="/skills/lab/">工作流</a></nav><nav><strong>资源</strong><a href="/logs/">最新更新</a><a href="/models/">热门资源</a><a href="/about/">使用说明</a><a href="/submit/">提交资源</a></nav><nav><strong>社区</strong><a href="/about/">关于我们</a><a href="/submit/">提交资源</a><a href="mailto:xdguo0527@gmail.com">反馈建议</a></nav><div class="prototype-footer-slogan">Better AI<br>A Brighter Tomorrow</div></div><div class="prototype-footer-bottom"><span>© 2026 FreeLLM. All rights reserved.</span><span class="prototype-footer-social"><a href="https://github.com/xdguo-design/freellm" aria-label="GitHub">●</a><span aria-label="Twitter"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M23.95 4.57a10 10 0 0 1-2.89.79 5.04 5.04 0 0 0 2.21-2.78 10.05 10.05 0 0 1-3.19 1.22 5.02 5.02 0 0 0-8.55 4.58A14.25 14.25 0 0 1 1.2 3.13a5.02 5.02 0 0 0 1.55 6.7 4.97 4.97 0 0 1-2.27-.63v.06a5.03 5.03 0 0 0 4.03 4.93 5.05 5.05 0 0 1-2.26.09 5.03 5.03 0 0 0 4.69 3.49A10.08 10.08 0 0 1 0 19.86a14.22 14.22 0 0 0 7.7 2.26c9.24 0 14.3-7.65 14.3-14.29v-.65a10.2 10.2 0 0 0 2.5-2.6Z"/></svg></span><span aria-label="Discord"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M19.7 5.1A18.1 18.1 0 0 0 15.3 3l-.6 1.2a16.7 16.7 0 0 0-5.4 0L8.7 3a18.1 18.1 0 0 0-4.4 2.1C1.5 9.2.7 13.2 1.1 17.2a18.2 18.2 0 0 0 5.4 2.7l1.2-2a11.8 11.8 0 0 1-1.9-.9l.5-.4a13 13 0 0 0 11.4 0l.5.4a11.8 11.8 0 0 1-1.9.9l1.2 2a18.2 18.2 0 0 0 5.4-2.7c.5-4.6-.8-8.6-3.2-12.1ZM8.8 14.3c-1.1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Zm6.4 0c-1.1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Z"/></svg></span></span><button type="button" data-locale-switch="zh-CN">◎　简体中文　⌄</button></div>';
         if (section === 'about') {
-          footer.innerHTML = '<div class="prototype-footer-main"><div class="prototype-footer-brand"><img src="/assets/reference/rail-brand.png" alt=""><div><strong>FreeLLM</strong><small>AI for Everyone</small><p>让优质的 AI 资源，触手可及。</p></div></div><nav><strong>产品</strong><a href="/models/">模型库</a><a href="/skills/">Skills</a><a href="/tools/">工具</a><a href="/skills/lab/">工作流</a></nav><nav><strong>资源</strong><a href="/logs/">最新更新</a><a href="/models/">热门资源</a><a href="/guide/">使用教程</a><a href="https://github.com/xdguo-design/freellm">开发文档</a><a href="/category/student/">学生优惠</a></nav><nav><strong>社区</strong><a href="/about/">关于我们</a><a href="/submit/">提交资源</a><a href="/community/">加入社区</a><a href="mailto:xdguo0527@gmail.com">反馈建议</a></nav><div class="prototype-footer-slogan">Better AI<br>A Brighter Tomorrow</div></div><div class="prototype-footer-bottom"><span>© 2026 FreeLLM. All rights reserved.</span><nav class="prototype-footer-legal"><a href="/privacy/">隐私政策</a><a href="/terms/">服务条款</a><a href="/terms/#disclaimer">免责声明</a></nav><span class="prototype-footer-social"><a href="https://github.com/xdguo-design/freellm" aria-label="GitHub"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.61-3.37-1.18-3.37-1.18-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.54 2.36 1.1 2.94.84.09-.65.35-1.1.64-1.36-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.6 9.6 0 0 1 12 6.91c.85 0 1.71.11 2.52.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.85-2.34 4.7-4.57 4.95.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg></a><span aria-label="Twitter"><svg viewBox="0 0 24 24"><path d="M23.95 4.57a10 10 0 0 1-2.89.79 5.04 5.04 0 0 0 2.21-2.78 10.05 10.05 0 0 1-3.19 1.22 5.02 5.02 0 0 0-8.55 4.58A14.25 14.25 0 0 1 1.2 3.13a5.02 5.02 0 0 0 1.55 6.7 4.97 4.97 0 0 1-2.27-.63v.06a5.03 5.03 0 0 0 4.03 4.93 5.05 5.05 0 0 1-2.26.09 5.03 5.03 0 0 0 4.69 3.49A10.08 10.08 0 0 1 0 19.86a14.22 14.22 0 0 0 7.7 2.26c9.24 0 14.3-7.65 14.3-14.29v-.65a10.2 10.2 0 0 0 2.5-2.6Z"/></svg></span><span aria-label="Discord"><svg viewBox="0 0 24 24"><path d="M19.7 5.1A18.1 18.1 0 0 0 15.3 3l-.6 1.2a16.7 16.7 0 0 0-5.4 0L8.7 3a18.1 18.1 0 0 0-4.4 2.1C1.5 9.2.7 13.2 1.1 17.2a18.2 18.2 0 0 0 5.4 2.7l1.2-2a11.8 11.8 0 0 1-1.9-.9l.5-.4a13 13 0 0 0 11.4 0l.5.4a11.8 11.8 0 0 1-1.9.9l1.2 2a18.2 18.2 0 0 0 5.4-2.7c.5-4.6-.8-8.6-3.2-12.1ZM8.8 14.3c-1.1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Zm6.4 0c-1.1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Z"/></svg></span></span><button type="button" data-locale-switch="zh-CN">◎　简体中文　⌄</button></div>';
+          footer.innerHTML = '<div class="prototype-footer-main"><div class="prototype-footer-brand"><img src="/assets/reference/rail-brand.png" alt=""><div><strong>FreeLLM</strong><small>AI for Everyone</small><p>让优质的 AI 资源，触手可及。</p></div></div><nav><strong>产品</strong><a href="/models/">模型库</a><a href="/skills/">Skills</a><a href="/tools/">工具</a><a href="/skills/lab/">工作流</a></nav><nav><strong>资源</strong><a href="/logs/">最新更新</a><a href="/models/">热门资源</a><a href="/guide/">使用教程</a><a href="https://github.com/xdguo-design/freellm">开发文档</a><a href="/category/student/">学生优惠</a></nav><nav><strong>社区</strong><a href="/about/">关于我们</a><a href="/submit/">提交资源</a><a href="/community/">加入社区</a><a href="mailto:xdguo0527@gmail.com">反馈建议</a></nav><div class="prototype-footer-slogan">Better AI<br>A Brighter Tomorrow</div></div><div class="prototype-footer-bottom"><span>© 2026 FreeLLM. All rights reserved.</span><nav class="prototype-footer-legal"><a href="/privacy/">隐私政策</a><a href="/terms/">服务条款</a><a href="/terms/#disclaimer">免责声明</a></nav><span class="prototype-footer-social"><a href="https://github.com/xdguo-design/freellm" aria-label="GitHub"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.61-3.37-1.18-3.37-1.18-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.54 2.36 1.1 2.94.84.09-.65.35-1.1.64-1.36-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.6 9.6 0 0 1 12 6.91c.85 0 1.71.11 2.52.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.85-2.34 4.7-4.57 4.95.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg></a><span aria-label="Twitter"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M23.95 4.57a10 10 0 0 1-2.89.79 5.04 5.04 0 0 0 2.21-2.78 10.05 10.05 0 0 1-3.19 1.22 5.02 5.02 0 0 0-8.55 4.58A14.25 14.25 0 0 1 1.2 3.13a5.02 5.02 0 0 0 1.55 6.7 4.97 4.97 0 0 1-2.27-.63v.06a5.03 5.03 0 0 0 4.03 4.93 5.05 5.05 0 0 1-2.26.09 5.03 5.03 0 0 0 4.69 3.49A10.08 10.08 0 0 1 0 19.86a14.22 14.22 0 0 0 7.7 2.26c9.24 0 14.3-7.65 14.3-14.29v-.65a10.2 10.2 0 0 0 2.5-2.6Z"/></svg></span><span aria-label="Discord"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M19.7 5.1A18.1 18.1 0 0 0 15.3 3l-.6 1.2a16.7 16.7 0 0 0-5.4 0L8.7 3a18.1 18.1 0 0 0-4.4 2.1C1.5 9.2.7 13.2 1.1 17.2a18.2 18.2 0 0 0 5.4 2.7l1.2-2a11.8 11.8 0 0 1-1.9-.9l.5-.4a13 13 0 0 0 11.4 0l.5.4a11.8 11.8 0 0 1-1.9.9l1.2 2a18.2 18.2 0 0 0 5.4-2.7c.5-4.6-.8-8.6-3.2-12.1ZM8.8 14.3c-1.1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Zm6.4 0c-1.1 0-1.9-1-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1Z"/></svg></span></span><button type="button" data-locale-switch="zh-CN">◎　简体中文　⌄</button></div>';
         }
         legacyFooter.classList.add('prototype-legacy-footer');
         legacyFooter.insertAdjacentElement('afterend', footer);
@@ -163,6 +163,7 @@ if (section === 'home' || section === 'models') {
       if (section === 'logs') {
         const archive = body.querySelector('#log-archive');
         const archiveLink = body.querySelector('.ref-update-history-head a[href="#log-archive"]');
+        const history = body.querySelector('.ref-update-history');
         archiveLink?.addEventListener('click', event => {
           event.preventDefault();
           if (archive) {
@@ -170,6 +171,63 @@ if (section === 'home' || section === 'models') {
             archive.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
         });
+        if (history && history.dataset.historyReady !== '1') {
+          history.dataset.historyReady = '1';
+          const filters = [...history.querySelectorAll('[data-history-filter]')];
+          const table = history.querySelector('.ref-update-history-table');
+          const rows = [...history.querySelectorAll('[data-history-row]')];
+          const placeholder = history.querySelector('[data-history-placeholder]');
+          const empty = history.querySelector('[data-history-empty]');
+          const visibleCount = history.querySelector('[data-history-visible-count]');
+          const resultCount = history.querySelector('[data-history-result-count]');
+          const sortButton = history.querySelector('[data-history-sort]');
+          const total = rows.length;
+          let activeFilter = 'all';
+
+          const sortRows = direction => {
+            const ordered = rows.slice().sort((a, b) => {
+              const left = Date.parse(a.querySelector('time')?.dateTime || '') || 0;
+              const right = Date.parse(b.querySelector('time')?.dateTime || '') || 0;
+              return direction === 'asc' ? left - right : right - left;
+            });
+            ordered.forEach(row => table?.appendChild(row));
+          };
+
+          const applyFilter = () => {
+            const matching = rows.filter(row => {
+              const category = row.dataset.category || 'other';
+              const change = row.dataset.change || '';
+              const matches = activeFilter === 'all' || category === activeFilter || change === activeFilter;
+              row.style.setProperty('display', matches ? '' : 'none', 'important');
+              return matches;
+            });
+            if (placeholder) placeholder.style.setProperty('display', total === 0 && activeFilter === 'all' ? '' : 'none', 'important');
+            if (visibleCount) visibleCount.textContent = String(matching.length);
+            if (resultCount) resultCount.textContent = `显示${activeFilter === 'all' ? '全部' : '筛选后'} ${matching.length} / ${total} 条记录`;
+            if (empty) empty.hidden = matching.length > 0 || total === 0;
+          };
+
+          filters.forEach(button => button.addEventListener('click', () => {
+            activeFilter = button.dataset.historyFilter || 'all';
+            filters.forEach(item => {
+              const selected = item === button;
+              item.classList.toggle('is-active', selected);
+              item.setAttribute('aria-pressed', String(selected));
+            });
+            applyFilter();
+          }));
+
+          sortButton?.addEventListener('click', () => {
+            const direction = sortButton.dataset.historySort === 'desc' ? 'asc' : 'desc';
+            sortButton.dataset.historySort = direction;
+            sortButton.setAttribute('aria-pressed', String(direction === 'asc'));
+            sortButton.textContent = direction === 'asc' ? '日期：旧 → 新' : '日期：新 → 旧';
+            sortRows(direction);
+          });
+
+          sortRows('desc');
+          applyFilter();
+        }
       }
     }
     if (section === 'about' && body.dataset.aboutStatic === 'true') {
@@ -222,9 +280,146 @@ if (section === 'home' || section === 'models') {
     if (!page || !grid || !data || page.dataset.skillsShowcaseReady === '1') return;
     page.dataset.skillsShowcaseReady = '1';
     const skills = JSON.parse(data.textContent || '[]');
+    // Only real repo data: no invented titles, owners, usage, ratings or review counts.
+    const formatStars = value => typeof value === 'number' && value >= 0 ? (value >= 1000 ? `${(value / 1000).toFixed(1)}k`.replace('.0k', 'k') : String(value)) : '';
+    const repoSlug = skill => { const url = String(skill.githubUrl || ''); const parts = url.includes('github.com/') ? url.split('github.com/')[1].split('/').filter(Boolean) : []; return parts.length >= 2 ? `${parts[0]}/${parts[1]}` : ''; };
+    const verdictOf = skill => { const run = (skill.freeLLMTest && skill.freeLLMTest.freeModelRun) || {}; return ['通过','部分通过','未通过','调用失败'].includes(run.bestVerdict) ? run.bestVerdict : ''; };
+    // FLSKILLS-CURATION-20261012: curated two-row category directory, independent deep links.
+    const topicOrder = ['development','planning-office','documents','data-office','presentations','product-design','writing','seo-content','resume','file-office','ecommerce','email-office'];
+    const MAX_CATEGORY_PICKS = 8;
+    const DETAIL_PICK_COUNT = 3;
+    const topics = {
+      'development': {title:'编程与工程',intro:'先解决真实的工程质量问题：性能、Skill 构建、根因排查；不是把所有开发提示词都摆出来。',picks:['dietrichgebert-ponytail','mattpocock-diagnosing-bugs','vercel-labs-react-best-practices','anthropics-skill-creator','alibaba-open-code-review','anthropics-mcp-builder','vercel-labs-find-skills','vercel-labs-agent-browser']},
+      'planning-office': {title:'任务与协作',intro:'优先选择能让问题复现、验收可追踪的流程，而不只是通用待办清单。',picks:['obra-systematic-debugging','obra-verification-before-completion','obra-test-driven-development','obra-writing-plans','obra-brainstorming','obra-executing-plans','coreyhaines31-product-marketing','composiohq-meeting-insights-analyzer']},
+      'documents': {title:'文档处理',intro:'优先展示真正处理过 PDF 和文档工作流的 Skill；需外部依赖的能力明确标注阻塞。',picks:['anthropics-pdf','anthropics-doc-coauthoring','anthropics-docx','iofficeai-officecli-docx','iofficeai-officecli-academic-paper','iofficeai-officecli-word-form','iofficeai-officecli']},
+      'data-office': {title:'表格与数据',intro:'区分能产出工作簿的验证记录，与尚需 Office CLI 的数据仪表盘链路。',picks:['anthropics-xlsx','iofficeai-officecli-data-dashboard','iofficeai-officecli-xlsx']},
+      'presentations': {title:'PPT 与演示',intro:'能做可编辑文件的优先，图片式演示和高级动画作为有条件的候选。',picks:['anthropics-pptx','hugohe3-ppt-master','jimliu-baoyu-slide-deck','iofficeai-officecli-pptx','iofficeai-officecli-pitch-deck','iofficeai-morph-ppt','op7418-nanobanana-ppt-skills','lewislulu-html-ppt-skill']},
+      'product-design': {title:'产品与视觉设计',intro:'分清设计创作、界面审查、静态视觉三类能力，避免只靠漂亮模板。',picks:['pbakaus-impeccable','tt-a1i-archify','anthropics-frontend-design','earthtojake-cad','vercel-labs-web-design-guidelines','anthropics-canvas-design','anthropics-theme-factory','leonxlnx-design-taste-frontend']},
+      'writing': {title:'内容写作',intro:'优先解决文字真实感与来源核验；插图生成作为依赖工具的扩展项。',picks:['hyacehila-humanizer-zh-next','blader-humanizer','composiohq-content-research-writer','op7418-humanizer-zh','jimliu-baoyu-article-illustrator','jimliu-baoyu-markdown-to-html','jimliu-baoyu-infographic','jimliu-baoyu-url-to-markdown']},
+      'seo-content': {title:'SEO · GEO 与内容增长',intro:'六个 Marketing Skills 拆解抓取、AI 搜索、程序化页面、站点架构、竞品和结构化数据；均已核验源码但尚未实测，公众号技能可在完整资料库查找。',picks:['coreyhaines31-seo-audit','coreyhaines31-ai-seo','coreyhaines31-programmatic-seo','coreyhaines31-site-architecture','coreyhaines31-competitors','coreyhaines31-schema','imraywang-wewrite','steipete-summarize']},
+      'resume': {title:'简历与求职',intro:'从岗位匹配、排版导出、可维护简历三个角度比较，绝不鼓励虚构经历。',picks:['composiohq-tailored-resume-generator','jzcreative-html-resume-beautifier','rendercv-rendercv']},
+      'file-office': {title:'文件与归档',intro:'更看重分类是否准确、移动操作可预览，以及对发票信息的真实抽取。',picks:['composiohq-invoice-organizer','composiohq-file-organizer']},
+      'ecommerce': {title:'商业与客户研究',intro:'广告洞察和潜客研究用途不同，均依赖第三方网站与授权环境。',picks:['composiohq-lead-research-assistant','composiohq-competitive-ads-extractor']},
+      'email-office': {title:'团队沟通',intro:'适合内部状态同步、管理汇报与团队信息表达；目前仅有一个符合分类的条目，不补凑数。',picks:['anthropics-internal-comms']}
+    };
+    // These are editorial judgments tied to source descriptions and FreeLLM test notes, not user ratings.
+    const insights = {
+      'coreyhaines31-seo-audit':['特点：覆盖 robots、sitemap、索引、canonical 和多语言信号。','适合：给 FreeLLM 建立可复核的技术 SEO 整改清单。','限制：只核验了上游原文，未完成本地或真实网站的运行验收。'],
+      'coreyhaines31-ai-seo':['特点：检查 AI 抓取、答案块与品牌引用线索。','适合：GEO / AEO 可见性初筛和内容结构优化。','限制：不保证被 AI 搜索引用或推荐；本站尚未实测效果。'],
+      'coreyhaines31-programmatic-seo':['特点：以可验证数据设计规模化页面与索引门禁。','适合：模型、供应商、免费额度等差异化资源页。','限制：批量模板可能造成薄内容，需事实来源和人工抽检。'],
+      'dietrichgebert-ponytail':["特点：编码前检查已有实现，减少不必要依赖、抽象和代码。","适合：小功能实现、重构与代码审查。","限制：高保真和复杂需求必须先列明验收范围；节省比例未经本站实测。"],
+      'pbakaus-impeccable':["特点：将界面视觉规范、响应式与常见设计反模式汇成一套流程。","适合：网站改版、设计 QA 与前端交付。","限制：部分命令依赖额外工具；本站尚未运行浏览器验收。"],
+      'tt-a1i-archify':["特点：从代码库或业务流程生成可分享、可交互的图表。","适合：系统架构、产品领域关系与 Agent 流程解释。","限制：图中结构须回查原始项目，不能代替事实核验。"],
+      'hyacehila-humanizer-zh-next':["特点：通用中文润色加商务、学术写作专用参考。","适合：已有稿件审稿、去模板化和正式文本语气调整。","限制：不识别作者身份、不保证通过任何 AI 检测；须人工审阅。"],
+      'imraywang-wewrite':["特点：先查来源再写稿，审稿后可单独加配图与排版。","适合：公众号定期更新和编辑团队。","限制：发布需额外配置并授权；本站未做真实账号验收。"],
+
+      'vercel-labs-react-best-practices':['特点：按优先级检查 React/Next.js 的请求瀑布、渲染与打包问题。','适合：实际前端性能优化与代码审查。','限制：任务级验证，需结合框架版本及真实性能测量。'],
+      'anthropics-skill-creator':['特点：覆盖 Skill 触发条件、迭代和基准检查。','适合：创建可复用 Agent 技能库。','限制：完整评测脚本链路在当前沙箱未打通。'],
+      'mattpocock-diagnosing-bugs':['特点：先建立复现反馈，再逐个验证原因。','适合：疑难 Bug 和性能回退。','限制：任务级检查通过不等于任何仓库自动修复成功。'],
+      'obra-systematic-debugging':['特点：先定位再改动，保留失败到通过的测试证据。','适合：有稳定复现的程序错误。','限制：需要能运行测试的工程环境。'],
+      'obra-verification-before-completion':['特点：先跑验证命令，再宣布完成。','适合：提交、修复和发布前的验收。','限制：只证明被测范围，不保证覆盖所有风险。'],
+      'obra-test-driven-development':['特点：RED—GREEN—REFACTOR 流程已在夹具中执行。','适合：需求边界明确的功能与缺陷修复。','限制：测试设计错误仍可能带来虚假的安全感。'],
+      'anthropics-pdf':['特点：真实完成 PDF 生成、拆分、旋转及渲染检查。','适合：表单、报告与 PDF 自动化。','限制：中文字体和扫描件 OCR 需额外检查。'],
+      'anthropics-doc-coauthoring':['特点：通过补上下文、迭代与读者校验协作写规格。','适合：长文档、PRD 与技术决策记录。','限制：轻量文档使用时流程偏重，非程序 E2E。'],
+      'anthropics-docx':['特点：覆盖 Word 编辑、批注、修订及排版。','适合：正式 Word 文档工作。','限制：沙箱依赖安装失败，不能标成端到端通过。'],
+      'anthropics-xlsx':['特点：工作簿公式、结构和数据校验有真实产物。','适合：Excel 分析、清洗与报表。','限制：验证采用替代工具链，不等于原 Skill E2E。'],
+      'iofficeai-officecli-data-dashboard':['特点：面向 KPI、图表和条件格式的 Excel 仪表盘。','适合：需要复用模板的经营看板。','限制：officecli 缺失，原链路未执行。'],
+      'iofficeai-officecli-xlsx':['特点：强调模板、公式与透视表的办公链路。','适合：复杂工作簿操作。','限制：依赖 officecli 安装和验证。'],
+      'anthropics-pptx':['特点：PPTX 生成后做了 PDF 转换与逐页渲染检查。','适合：可编辑演示与正式汇报。','限制：复杂模板和跨版本效果仍需复核。'],
+      'hugohe3-ppt-master':['特点：聚焦可编辑演示、模板填充和视觉还原。','适合：需要强版式控制的 PPT 制作。','限制：当前仅部分验证，未完成原脚本全流程。'],
+      'jimliu-baoyu-slide-deck':['特点：按内容结构规划幻灯片并生成页面图像。','适合：讲解型和视觉型演示。','限制：外部生成服务未接通，不能当作已实测通过。'],
+      'anthropics-frontend-design':['特点：强调有辨识度的视觉方向和响应式页面。','适合：原型设计及已有界面重塑。','限制：产物已验证，但浏览器交互 E2E 被环境阻塞。'],
+      'vercel-labs-web-design-guidelines':['特点：从可访问性、布局与交互审查 Web UI。','适合：上线前设计 QA。','限制：它是审查清单，不能替代真实用户测试。'],
+      'anthropics-canvas-design':['特点：强调原创静态视觉构图和可交付图稿。','适合：海报、封面与单页视觉。','限制：不适合代替复杂交互产品设计。'],
+      'blader-humanizer':['特点：减少套路化语句，保留核心事实与原意。','适合：已有草稿的语言打磨。','限制：不是客观 AI 文本检测器，需人工审稿。'],
+      'composiohq-content-research-writer':['特点：把研究、提纲、引用与逐段写作串联。','适合：长文、报告及内容策划。','限制：引用和事实可靠性需要单独核验。'],
+      'jimliu-baoyu-article-illustrator':['特点：根据文章逻辑决定插图位置和视觉风格。','适合：图文长文与公众号排版。','限制：实际生成依赖外部服务，本轮沙箱阻塞。'],
+      'jimliu-baoyu-post-to-wechat':['特点：衔接 HTML/Markdown 文章到公众号发布。','适合：公众号内容生产流水线。','限制：需要账户授权与真实发布复核，沙箱未验证。'],
+      'jimliu-baoyu-xhs-images':['特点：把主题拆分成社媒图文卡片。','适合：小红书多图内容制作。','限制：外部图像能力未接通，本轮未跑通。'],
+      'jimliu-baoyu-cover-image':['特点：按版式、配色和传播场景设计封面。','适合：文章头图及跨平台适配。','限制：实际图像生成链路待验收。'],
+      'composiohq-tailored-resume-generator':['特点：把岗位要求与已有经历一一对齐。','适合：针对目标岗位改写简历。','限制：不能为匹配关键词而杜撰经历。'],
+      'jzcreative-html-resume-beautifier':['特点：用 HTML 模板排版 A4 简历，强调隐私。','适合：网页版与 PDF 风格统一。','限制：原脚本与隐私审计未完成验证。'],
+      'rendercv-rendercv':['特点：YAML 内容与排版分离，便于版本维护。','适合：技术岗位简历的持续迭代。','限制：RenderCV/Typst 依赖尚未安装验证。'],
+      'composiohq-invoice-organizer':['特点：从发票抽取日期、金额和主体后归档。','适合：费用票据整理。','限制：扫描件、多币种和复杂税项需额外规则。'],
+      'composiohq-file-organizer':['特点：查重、命名和文件夹结构梳理。','适合：混乱文件夹的定期整理。','限制：任何批量移动都应先预览和备份。'],
+      'composiohq-lead-research-assistant':['特点：按目标客户画像寻找潜在线索。','适合：销售名单初筛和研究。','限制：需要外部数据访问，且须核实信息来源。'],
+      'composiohq-competitive-ads-extractor':['特点：从公开广告素材归纳竞品表达和创意。','适合：市场定位与投放内容研究。','限制：广告库可访问性和数据新鲜度未实测。'],
+      'anthropics-internal-comms':['特点：提供状态报告、组织公告与领导简报结构。','适合：团队内部信息同步。','限制：与普通写作提示存在重叠，需人工核对事实。']
+    };
+    const iconPaths = {
+      feather:'<path d="M20 4c-4-3-10 1-12 7l-1 6 6-1C19 14 23 8 20 4ZM4 21l12-12M7 17h6"/>',
+      bug:'<rect x="7" y="8" width="10" height="12" rx="5"/><path d="M9 8V5h6v3M12 9v11M3 11h4m10 0h4M3 16h4m10 0h4M5 4l3 4m8 0 3-4"/>',
+      atom:'<circle cx="12" cy="12" r="1" fill="currentColor"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/>',
+      sparkles:'<path d="m4 20 11-11 3 3L7 23ZM15 2l1 3 3 1-3 1-1 3-1-3-3-1 3-1ZM6 3v5M3.5 5.5h5M21 15v5m-2.5-2.5h5"/>',
+      review:'<path d="M9 4H6v17h14V4h-3M9 2h8v4H9ZM9 11l2 2 4-4M9 17h7"/>',
+      plug:'<path d="M8 2v5m8-5v5M6 7h12v3a6 6 0 0 1-12 0ZM12 16v6M3 10h3m12 0h3"/>',
+      shield:'<path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6ZM8 12l3 3 5-6"/>',
+      branch:'<circle cx="6" cy="5" r="2"/><circle cx="18" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><path d="M6 7v10m12-10v2c0 4-12 2-12 6"/>',
+      rocket:'<path d="M13 3c4-1 8-1 8-1s0 4-1 8l-6 6-6-6ZM8 10H4l-2 6h6m6 0v4l-6 2v-6M6 18l-3 3"/><circle cx="16" cy="7" r="2"/>',
+      layers:'<path d="m12 3 10 5-10 5L2 8ZM2 12l10 5 10-5M2 16l10 5 10-5"/>',
+      browser:'<rect x="2" y="3" width="20" height="18" rx="3"/><path d="M2 8h20M6 5.5h1m3 0h1M8 12l-3 3 3 3m8-6 3 3-3 3"/>',
+      flask:'<path d="M9 3h6M10 3v7l-6 9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2l-6-9V3M7 15h10"/>',
+      check:'<circle cx="12" cy="12" r="9"/><path d="m7 12 3 3 7-7"/>',
+      bulb:'<path d="M8 15a7 7 0 1 1 8 0l-1 3H9ZM9 21h6M12 6v5m-2-3 2 3 2-3"/>',
+      play:'<circle cx="12" cy="12" r="9"/><path d="m10 7 7 5-7 5Z"/>',
+      users:'<circle cx="9" cy="7" r="3"/><path d="M3 20v-3a6 6 0 0 1 12 0v3M17 4a3 3 0 0 1 0 6m1 3a5 5 0 0 1 3 5v2"/>',
+      pen:'<path d="m4 20 4-.8L20 7a2.8 2.8 0 0 0-4-4L4 15ZM14 5l5 5M4 20h16"/>',
+      pdf:'<path d="M5 2h9l5 5v15H5zM14 2v6h5M8 17h2a2 2 0 0 0 0-4H8v7m7-7h2v7h-2a3 3 0 0 1 0-7"/>',
+      form:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/>',
+      book:'<path d="M3 5a3 3 0 0 1 3-3h14v18H6a3 3 0 0 0-3 2ZM3 5v15a3 3 0 0 1 3-3h14M8 6h7"/>',
+      chart:'<path d="M3 3v18h18M7 14l4-4 3 3 6-7M16 6h4v4"/>',
+      calculator:'<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8v4H8Zm0 8h1m3 0h1m3 0h1m-9 4h1m3 0h1m3 0h1"/>',
+      trophy:'<path d="M8 21h8m-4-4v4M7 3h10v6a5 5 0 0 1-10 0ZM7 6H3v2a5 5 0 0 0 5 5m9-7h4v2a5 5 0 0 1-5 5"/>',
+      diamond:'<path d="m12 2 9 8-9 12-9-12Zm-9 8h18M8 10l4 12 4-12M8 10l4-8 4 8"/>',
+      building:'<path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1"/>',
+      brush:'<path d="m14 4 6 6M3 21c4 0 6-2 6-5l10-10a2.8 2.8 0 0 0-4-4L5 12c-3 0-4 5-2 9Z"/>',
+      leaf:'<path d="M20 4C9 3 4 8 4 15a5 5 0 0 0 5 5c7 0 12-5 11-16ZM3 22l11-11"/>',
+      search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5M8 10h5m-2.5-2.5v5"/>',
+      grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+      tree:'<path d="M12 22V8m0 5-5-4m5 1 5-4M12 3 9 7h6zM7 9l-3 4h6zm10-3-3 4h6z"/>',
+      code:'<path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-12-2 14"/>',
+      target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+      briefcase:'<rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V4h8v3M3 12h18m-11 0v3h4v-3"/>',
+      folder:'<path d="M3 5h7l2 3h9v11H3zM3 8h18"/>',
+      envelope:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="m3 7 9 7 9-7"/>'
+    };
+    const iconGroups = {
+      development:['feather','bug','atom','shield','branch','rocket','layers','browser','flask','check','bulb','play','code','grid','plug'],
+      'planning-office':['users','target','branch','check','bulb','tree','briefcase','layers'],
+      documents:['pen','pdf','form','book','search','feather','check'],
+      'data-office':['chart','calculator','grid','atom'],
+      presentations:['trophy','play','layers','chart','diamond','brush'],
+      'product-design':['diamond','building','grid','layers','brush','target'],
+      writing:['leaf','feather','book','pen','search','users'],
+      'seo-content':['search','tree','grid','target','chart','code','branch'],
+      resume:['briefcase','pen','users'],
+      'file-office':['form','folder','search'],
+      ecommerce:['target','chart','briefcase','grid'],
+      'email-office':['envelope','pen','users']
+    };
+    const skillIcons = {
+      ponytail:'feather','diagnosing-bugs':'bug','vercel-react-best-practices':'atom',
+      'skill-creator':'sparkles','open-code-review':'review','mcp-builder':'plug'
+    };
+    const skillHash = skill => Array.from(String(skill.id || skill.name || '')).reduce((value,char)=>(value*31+char.charCodeAt(0))>>>0,0);
+    const iconFor = skill => skillIcons[skill.name] || (iconGroups[skill.category] || iconGroups.development)[skillHash(skill) % (iconGroups[skill.category] || iconGroups.development).length];
+    const iconSvg = skill => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+iconPaths[iconFor(skill)]+'</svg>';
+    const iconTone = skill => {
+      const hash = skillHash(skill);
+      return '--skill-hue:'+((hash%36000)/100)+';--skill-saturation:'+(60+(hash>>>8)%16)+'%;--skill-lightness:'+(36+(hash>>>16)%10)+'%';
+    };
+    const searchParams = new URLSearchParams(window.location.search);
+    const deepLinkedSkill = skills.find(item => item.id === searchParams.get('skill'));
+    const urlTopic = searchParams.get('category');
+    const initialTopic = deepLinkedSkill && !topicOrder.includes(urlTopic) && urlTopic !== 'all'
+      ? deepLinkedSkill.category
+      : (topicOrder.includes(urlTopic) || urlTopic === 'all' ? urlTopic : 'development');
+    page.dataset.skillCategory = initialTopic;
     const copy = (value) => String(value || '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-    const categoryNames = { 'product-design':'产品设计', ecommerce:'电商运营', 'seo-content':'SEO & 内容流量', 'email-office':'邮件与消息', 'planning-office':'任务与会议', 'data-office':'报表与数据', 'file-office':'文件与资源', documents:'办公文档', presentations:'PPT 幻灯片', resume:'简历与求职', writing:'写作与文案', development:'开发工作流' };
-    const categoryColors = { 'product-design':'blue', ecommerce:'yellow', 'seo-content':'green', 'email-office':'violet', 'planning-office':'blue', 'data-office':'green', 'file-office':'yellow', documents:'blue', presentations:'violet', resume:'yellow', writing:'green', development:'blue' };
+    const workspace = page.querySelector('.skills-workspace');
+    const detailPanel = document.getElementById('selected-skill-panel');
+    let selectedId = deepLinkedSkill?.id || skills[0]?.id || '';
+    let panelOpen = Boolean(deepLinkedSkill);
     let view = 'grid';
     const viewKeys = ['recommend', 'skillhub', 'suites'];
     const activateView = (key, push = false) => {
@@ -257,46 +452,157 @@ if (section === 'home' || section === 'models') {
     const filtered = () => {
       const query = document.getElementById('skill-search').value.trim().toLowerCase();
       const status = document.getElementById('skill-status').value;
-      const category = page.dataset.skillCategory || 'all';
-      const groups = {
-        writing:['writing','seo-content','email-office'], development:['development'], research:['planning-office','data-office'],
-        office:['documents','presentations','file-office','resume','email-office'], image:['product-design'], data:['data-office'],
-        operations:['ecommerce','seo-content'], automation:['development','planning-office']
-      };
-      let list = skills.filter(skill => {
-        const values = [skill.name, skill.description, skill.description_zh, skill.githubUrl, ...(skill.compatibility || [])].join(' ').toLowerCase();
-        const categoryMatch = category === 'all' || (groups[category] || []).includes(skill.category);
-        return categoryMatch && (status === 'all' || status === skill.status) && (!query || values.includes(query));
+      const category = page.dataset.skillCategory || 'development';
+      const isSearch = Boolean(query);
+      const chosen = category === 'all' ? skills.slice() : (isSearch
+        ? skills.filter(skill => skill.category === category)
+        : topics[category].picks.map(id => skills.find(skill => skill.id === id)).filter(Boolean));
+      if (deepLinkedSkill && deepLinkedSkill.category === category && !chosen.some(skill => skill.id === deepLinkedSkill.id)) chosen.unshift(deepLinkedSkill);
+      let list = chosen.filter(skill => {
+        const values = [skill.name,skill.description,skill.description_zh,skill.githubUrl,...(skill.compatibility || [])].join(' ').toLowerCase();
+        return (status === 'all' || status === skill.status) && (!query || values.includes(query));
       });
       const sort = document.getElementById('skill-sort')?.value || 'recommended';
-      if (sort === 'popular') list.sort((a,b) => (b.repoStats?.stars || 0) - (a.repoStats?.stars || 0));
-      if (sort === 'rating') list.sort((a,b) => (Number(b.freeLLMTest?.score) || 0) - (Number(a.freeLLMTest?.score) || 0));
-      return list;
+      if (sort === 'popular') list = list.slice().sort((a,b) => (b.repoStats?.stars || 0) - (a.repoStats?.stars || 0));
+      if (sort === 'rating') list = list.slice().sort((a,b) => (Number(b.freeLLMTest?.score) || 0) - (Number(a.freeLLMTest?.score) || 0));
+      // The full archive is separate; every named category displays at most eight.
+      return category === 'all' ? list : list.slice(0, MAX_CATEGORY_PICKS);
     };
-    const card = skill => {
-      const title = skill.name || 'Skill';
+    const card = (skill, visibleIndex, isArchive) => {
+      const title = skill.name;
       const description = skill.description_zh || skill.description || '';
-      const stars = typeof skill.repoStats?.stars === 'number' ? `★ ${new Intl.NumberFormat('zh-CN', { notation:'compact', maximumFractionDigits:1 }).format(skill.repoStats.stars)}` : '';
-      const reviewCount = Array.isArray(skill.reviews) ? skill.reviews.length : 0;
-      const category = skill.category || '';
-      const statusLabel = skill.status === 'verified' ? '已核验' : skill.status === 'candidate' ? '社区候选' : '待核验';
-      const initial = Array.from(title.trim())[0] || 'S';
-      const evidence = [stars, reviewCount ? `${reviewCount} 条评价` : ''].filter(Boolean).map(value => `<span class="skill-stat">${copy(value)}</span>`).join('');
-      return `<article class="skill-card showcase-card" data-skill-id="${copy(skill.id)}" data-category="${copy(category)}" data-status="${copy(skill.status)}"><div class="skill-card-heading"><span class="skill-card-icon ${copy(categoryColors[category] || 'blue')}" aria-hidden="true">${copy(initial)}</span><button class="skill-details skill-card-more" type="button" data-skill-id="${copy(skill.id)}" aria-label="查看 ${copy(title)} 详情">+</button></div><div class="skill-card-top"><span class="skill-category ${copy(categoryColors[category] || 'blue')}">${copy(categoryNames[category] || category || 'Skill')}</span><span class="skill-status ${skill.status === 'verified' ? 'verified' : 'review'}">${copy(statusLabel)}</span></div><h2>${copy(title)}</h2><p>${copy(description)}</p><div class="skill-card-meta">${evidence}</div><div class="skill-card-bottom">${skill.githubUrl ? `<a class="skill-source-link" href="${copy(skill.githubUrl)}" target="_blank" rel="nofollow noopener">打开来源 ↗</a>` : '<span class="skill-source-missing">来源链接待补充</span>'}</div></article>`;
+      const tags = (skill.compatibility || []).slice(0,3);
+      const stars = formatStars(skill.repoStats?.stars);
+      const verdict = verdictOf(skill);
+      const owner = repoSlug(skill) || '来源仓库待补充';
+      const icon = iconFor(skill);
+      const featured = !isArchive && visibleIndex < DETAIL_PICK_COUNT;
+      const notes = featured ? insights[skill.id] : null;
+      const evidence = skill.freeLLMTest || {};
+      const testLevel = evidence.testLevel || 'unknown';
+      const testLabel = ({e2e:'原链路 E2E',artifact:'真实产物',task:'任务级验证',partial:'部分验证',blocked:'环境阻塞',unknown:'未实测'})[testLevel] || '未实测';
+      const detailedPoints = featured ? (notes || [
+        '特点：' + description,
+        '适合：' + (evidence.task || '先用典型小任务检查是否符合需要。'),
+        '限制：' + (evidence.evaluation || '依赖、输入和实际效果需要独立核验。')
+      ]) : [];
+      const detailLabels = ['核心能力','适合场景','限制与边界'];
+      const commentary = featured ? '<section class="skill-editorial" aria-label="TOP '+(visibleIndex+1)+' 详细介绍"><strong>精选深度解读</strong><dl class="skill-editorial-details">'+detailedPoints.slice(0,3).map((note,i)=>'<div><dt>'+detailLabels[i]+'</dt><dd>'+copy(String(note).replace(/^(特点|适合|限制)[:：]\s*/,''))+'</dd></div>').join('')+'</dl><small>核验证据：'+copy(testLabel)+' · 仓库 Star 非技能评分</small></section>' : '';
+      const rank = featured ? '<span class="skill-pick-label">TOP 0'+(visibleIndex+1)+' · 详细介绍</span>' : '';
+      const active = panelOpen && selectedId === skill.id;
+      return '<article class="skill-card showcase-card'+(featured?' skill-featured':' skill-compact')+(active?' is-selected':'')+'" data-skill-id="'+copy(skill.id)+'" data-category="'+copy(skill.category)+'" data-status="'+copy(skill.status)+'" tabindex="0" aria-label="'+copy(title)+'：'+copy(description)+'"><div class="skill-card-heading"><span class="skill-card-icon" data-icon="'+icon+'" style="'+iconTone(skill)+'" aria-hidden="true">'+iconSvg(skill)+'</span><button class="skill-card-select" type="button" data-select-skill="'+copy(skill.id)+'" aria-label="选择 '+copy(title)+'">'+(active?'✓':'＋')+'</button></div>'+rank+'<h3>'+copy(title)+'</h3><p>'+copy(description)+'</p>'+commentary+'<div class="skill-card-tags">'+tags.map(tag=>'<span>'+copy(tag)+'</span>').join('')+'</div><div class="skill-card-metrics"><span title="来源仓库的 GitHub Star，不是单个 Skill 的评分">仓库 ★ '+copy(stars || '—')+'</span><span>'+testLabel+'</span></div><div class="skill-card-footer"><span class="skill-owner-avatar" aria-hidden="true">◈</span><span>'+copy(owner)+'</span><button class="skill-details skill-card-more" type="button" data-skill-id="'+copy(skill.id)+'" aria-label="查看 '+copy(title)+' 详情">⋮</button></div></article>';
+    };
+    const setText = (id, value) => { const node = document.getElementById(id); if (node) node.textContent = value; };
+    const updatePanel = skill => {
+      if (!skill) return;
+      const title = skill.name;
+      const description = skill.description_zh || skill.description || '';
+      selectedId = skill.id;
+      setText('detail-title', title);
+      setText('detail-summary', description);
+      setText('detail-description', description);
+      const owner = document.getElementById('detail-owner');
+      if (owner) owner.innerHTML = `<i aria-hidden="true">◆</i> ${copy(repoSlug(skill) || '来源仓库待补充')}`;
+      const detailIcon = document.getElementById('detail-icon');
+      detailIcon.dataset.icon = iconFor(skill);
+      detailIcon.setAttribute('style', iconTone(skill));
+      detailIcon.innerHTML = iconSvg(skill);
+      setText('detail-rating', verdictOf(skill) || '未实测');
+      setText('detail-reviews', '免费模型任务实测');
+      setText('detail-usage', formatStars(skill.repoStats?.stars) || '—');
+      setText('detail-usage-label', '仓库 Star（整个仓库）');
+      const run = (skill.freeLLMTest && skill.freeLLMTest.freeModelRun) || {};
+      setText('detail-test-task', run.task || '暂无免费模型任务实测记录。');
+      const tags = (skill.compatibility || []).slice(0,6);
+      document.getElementById('detail-tags').innerHTML = tags.length ? tags.map(tag=>`<span>${copy(tag)}</span>`).join('') : '<span>未标注</span>';
+      document.getElementById('detail-use').dataset.skillId = skill.id;
+      document.getElementById('detail-favorite').dataset.skillId = skill.id;
+      const models = (skill.compatibility || []).slice(0,3);
+      document.getElementById('detail-models').innerHTML = models.length ? models.map(model=>`<span>${copy(model)}</span>`).join('') : '<span>未标注</span>';
+      grid.querySelectorAll('.skill-card').forEach(node => node.classList.toggle('is-selected', panelOpen && node.dataset.skillId === skill.id));
+      grid.querySelectorAll('.skill-card-select').forEach(node => { const active=panelOpen && node.dataset.selectSkill===skill.id; node.textContent=active?'✓':'＋'; node.setAttribute('aria-pressed',String(active)); });
+    };
+    const heading = page.querySelector('.skills-directory-heading > h2');
+    const headingSection = page.querySelector('.skills-directory-heading');
+    const topicMenu = page.querySelector('.skills-topic-nav') || document.createElement('nav');
+    topicMenu.className = 'skills-topic-nav';
+    topicMenu.setAttribute('aria-label', 'Skills 分类二级导航');
+    topicMenu.innerHTML = '<div class="skills-topic-heading"><strong>按技能类型探索</strong><span>每类最多 8 个精选 · 前 3 个详细解析</span></div><div class="skills-topic-links">' +
+      topicOrder.map(id => '<a data-skill-topic="'+id+'" href="/skills/?category='+encodeURIComponent(id)+'">'+copy(topics[id].title)+' <small>'+Math.min(MAX_CATEGORY_PICKS, topics[id].picks.length)+'</small></a>').join('') +
+      '<a data-skill-topic="all" class="skills-topic-archive" href="/skills/?category=all">完整资源库 <small>'+skills.length+'</small></a></div>';
+    if (!topicMenu.parentNode) headingSection.before(topicMenu);
+    const topicDescription = document.createElement('p');
+    topicDescription.className = 'skills-topic-description';
+    heading?.after(topicDescription);
+    const setTopic = (id, addHistory) => {
+      const next = topicOrder.includes(id) || id === 'all' ? id : 'development';
+      page.dataset.skillCategory = next;
+      showAllSkills = false;
+      if (addHistory) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('category', next);
+        url.searchParams.delete('skill');
+        history.pushState(null, '', url.pathname + url.search + url.hash);
+      }
+      render();
     };
     const render = () => {
+      const category = page.dataset.skillCategory || 'development';
       const matches = filtered();
-      const visible = matches;
-      grid.innerHTML = visible.map(card).join('');
+      const isArchive = category === 'all';
+      // The independent SEO growth showcase belongs to the complete archive only.
+      // Never double-count its six cards on a named category's eight-pick page.
+      const growthKit = page.querySelector('.fl-growth-kit');
+      if (growthKit) growthKit.hidden = !isArchive;
+      const searching = Boolean(document.getElementById('skill-search').value.trim());
+      const visible = isArchive && showAllSkills ? matches : matches.slice(0, MAX_CATEGORY_PICKS);
+      grid.innerHTML = visible.map((skill,i)=>card(skill,i,isArchive)).join('');
       document.getElementById('skill-empty').hidden = matches.length > 0;
-      document.getElementById('skill-count').textContent = `显示 ${visible.length} / ${matches.length}`;
+      const categoryTotal = isArchive ? skills.length : skills.filter(s=>s.category===category).length;
+      document.getElementById('skill-count').textContent = searching
+        ? (isArchive ? '搜索结果 '+visible.length+' / '+matches.length : '筛选展示 '+visible.length+' / 最多 8 项')
+        : (isArchive ? '显示 '+visible.length+' / '+categoryTotal : '精选 '+visible.length+' / 最多 8 项 · 资料库 '+categoryTotal+' 项');
+      if (heading) heading.textContent = isArchive ? '全部 Skill 资料库' : '分类精选 · '+topics[category].title;
+      topicDescription.textContent = isArchive
+        ? '保留全部已收录条目；默认只展示前八项，按需展开。完整资料不等于全部推荐。'
+        : topics[category].intro;
+      topicMenu.querySelectorAll('[data-skill-topic]').forEach(a => {
+        const active = a.dataset.skillTopic===category;
+        if(active) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
+      });
+      const browseButton = document.getElementById('skills-browse-all');
+      if (browseButton) {
+        browseButton.setAttribute('aria-expanded',String(isArchive && showAllSkills));
+        browseButton.innerHTML = isArchive
+          ? (showAllSkills ? '收起完整列表 <span aria-hidden="true">↑</span>' : '展开全部 '+skills.length+' 项 <span aria-hidden="true">→</span>')
+          : '查看完整资源库 <span aria-hidden="true">→</span>';
+      }
+      const selected = visible.find(skill=>skill.id===selectedId) || visible[0];
+      if (selected) updatePanel(selected);
+      const hidden = page.querySelector('.skills-hidden-filters');
+      if (hidden) hidden.setAttribute('aria-hidden','false');
     };
+    topicMenu.addEventListener('click', event => {
+      const link = event.target.closest('a[data-skill-topic]');
+      if (!link) return;
+      event.preventDefault();
+      setTopic(link.dataset.skillTopic, true);
+    });
+    window.addEventListener('popstate', () => {
+      if (!page.isConnected) return;
+      const found = new URLSearchParams(window.location.search).get('category');
+      setTopic(found, false);
+    });
+    document.getElementById('skills-browse-all')?.addEventListener('click', event => {
+      event.preventDefault();
+      if (page.dataset.skillCategory !== 'all') setTopic('all', true);
+      else { showAllSkills = !showAllSkills; render(); }
+      document.getElementById('skill-grid')?.scrollIntoView({behavior:'smooth',block:'start'});
+    });
     document.querySelectorAll('.skill-category-tab').forEach(button => button.addEventListener('click', event => {
       event.stopImmediatePropagation();
-      page.dataset.skillCategory = button.dataset.category;
-      document.querySelectorAll('.skill-category-tab').forEach(item => item.classList.toggle('is-active', item === button));
-      render();
-    }, { capture: true }));
+      setTopic(button.dataset.category, true);
+    }, {capture:true}));
     document.getElementById('skill-search').addEventListener('input', render);
     document.getElementById('skill-status').addEventListener('change', render);
     document.getElementById('skill-sort')?.addEventListener('change', render);
@@ -312,20 +618,26 @@ if (section === 'home' || section === 'models') {
       event.target.closest('.skill-card')?.querySelector('.skill-details')?.click();
     });
     document.getElementById('skill-clear').addEventListener('click', () => {
-      document.getElementById('skill-search').value=''; document.getElementById('skill-status').value='all'; page.dataset.skillCategory='all'; render();
+      document.getElementById('skill-search').value=''; document.getElementById('skill-status').value='all'; setTopic('development',true);
     });
     document.querySelector('[data-skills-intro]')?.addEventListener('click',()=>{
       document.getElementById('skills-intro-notice')?.showModal();
     });
     document.querySelector('[data-close-skills-intro]')?.addEventListener('click',()=>document.getElementById('skills-intro-notice')?.close());
-    document.querySelector('#skill-clear')?.addEventListener('click',()=>{ page.dataset.skillCategory='all'; });
-    document.querySelectorAll('[data-skill-scene]').forEach(link => link.addEventListener('click', event => {
-      event.preventDefault();
-      activateView('skillhub', true);
-      const category = link.dataset.skillScene;
-      document.querySelector(`.skill-category-tab[data-category="${CSS.escape(category)}"]`)?.click();
-      document.getElementById('skill-grid')?.scrollIntoView({ behavior:'smooth', block:'start' });
-    }));
+    // Topic reset is handled by the clear button above.
+    const accountNotice=document.createElement('div'); accountNotice.id='skills-account-notice'; accountNotice.className='skills-toast'; accountNotice.setAttribute('role','status'); accountNotice.hidden=true; page.append(accountNotice);
+    if (panelOpen) { workspace?.classList.add('has-detail'); detailPanel?.classList.remove('is-collapsed'); }
+    document.querySelector('[data-growth-copy]')?.addEventListener('click', async event => {
+      const button = event.currentTarget;
+      const command = document.getElementById('fl-growth-install-code')?.textContent?.trim();
+      if (!command) return;
+      try {
+        await navigator.clipboard.writeText(command);
+        button.textContent = '已复制 ✓';
+      } catch {
+        button.textContent = '请手动复制';
+      }
+    });
     render();
   };
   window.FreeLLMReferenceShell = { mount: boot };

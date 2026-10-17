@@ -30,21 +30,33 @@ jobs:
       - name: Install browser test dependencies
         run: python -m pip install playwright pytest && python -m playwright install --with-deps chromium
 
+      - name: Exercise no-reload sidebar navigation in Chromium
+        run: python -m unittest tests.test_site_navigation_browser -v
+
+      - name: Verify JavaScript navigation unit tests
+        run: node --test js/site-navigation.test.cjs
+
       - name: Rebuild deterministic static artifacts in CI workspace
         run: |
+          node scripts/generate_ranking.ts
           python scripts/build_tools_index.py
           python scripts/build_seo_pages.py --data data/offers.json --output . --site-url https://freellm.top
           python scripts/build_static.py --data data/offers.json --html design/free-china-ai-index.html
+          python scripts/sync_readme_counts.py
 
       - name: Compile and verify generated output
         run: |
           python -m py_compile scripts/build_static.py scripts/build_seo_pages.py scripts/build_tools_index.py scripts/check_home_performance.py scripts/check_public_home_performance.py scripts/check_adsense.py scripts/audit_all_pages.py scripts/ai_radar.py scripts/validate_evaluation_framework.py
           python scripts/build_tools_index.py --check
           python scripts/build_static.py --check
+          python scripts/sync_readme_counts.py --check
           python scripts/build_seo_pages.py --check
           python scripts/audit_all_pages.py --report .tmp/all-pages-audit.json
           python scripts/validate_evaluation_framework.py data/evaluation-framework.json
           python -m unittest tests.test_audit_all_pages tests.test_evaluation_framework -v
+
+      - name: Audit indexed editorial pages for AdSense content risks
+        run: python scripts/audit_adsense_content.py --report .tmp/adsense-editorial-inventory.json
 
       - name: Check AdSense readiness
         run: |
@@ -59,6 +71,16 @@ jobs:
 
       - name: Run unified repository unit tests
         run: python -m unittest discover -s tests -v
+
+      - name: Check homepage and navigation JavaScript syntax
+        run: |
+          node --check js/homepage.js
+          node --check js/site-navigation.js
+          node --check js/scan-trust.js
+          node --check js/site-search.js
+
+      - name: Verify UX remediation regression contracts
+        run: python -m unittest tests.test_ux_20261009_regressions -v
 
       - name: Run static page browser smoke tests
         run: python -m unittest tests.test_site_visual_system tests.test_e2e_static -v

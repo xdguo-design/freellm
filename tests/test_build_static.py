@@ -3,10 +3,83 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.build_static import build, update_trust_copy
+from scripts.build_static import (
+    build,
+    normalize_home_section_priority,
+    update_home_latest_discovery,
+    update_trust_copy,
+)
 
 
 class BuildStaticTests(unittest.TestCase):
+    def test_home_discovery_shows_unique_new_count_and_all_entries_link(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            data_path = root / "offers.json"
+            log_dir = root / "daily-log"
+            log_dir.mkdir()
+            (log_dir / "2026-10-11.json").write_text(json.dumps({
+                "date": "2026-10-11",
+                "events": [
+                    {"eventType": "new", "id": "model-a", "title": "Model A"},
+                    {"eventType": "new_route", "id": "offer-b", "title": "Offer B"},
+                    {"eventType": "recovered", "id": "old-c", "title": "Old C"},
+                ],
+                "curatedEvents": [
+                    {"eventType": "new", "id": "model-a", "title": "Model A"},
+                ],
+            }, ensure_ascii=False), encoding="utf-8")
+            source = '<div id="home-latest-discovery"><span>旧标签</span><a>单条旧资源</a></div>'
+
+            rendered = update_home_latest_discovery(source, data_path)
+
+            self.assertIn("新增 2 项", rendered)
+            self.assertIn('href="/logs/#discovery-day-2026-10-11"', rendered)
+            self.assertIn("查看今日发现", rendered)
+            self.assertIn("每日发现", rendered)
+            self.assertNotIn("Model A", rendered)
+            self.assertNotIn("Offer B", rendered)
+
+    def test_home_discovery_shows_zero_when_latest_log_has_no_additions(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            log_dir = root / "daily-log"
+            log_dir.mkdir()
+            (log_dir / "2026-10-12.json").write_text(json.dumps({
+                "date": "2026-10-12",
+                "events": [{"eventType": "recovered", "id": "offer-a"}],
+            }), encoding="utf-8")
+            source = '<div id="home-latest-discovery">placeholder</div>'
+
+            rendered = update_home_latest_discovery(source, root / "offers.json")
+
+            self.assertIn("新增 0 项", rendered)
+            self.assertIn('href="/logs/#discovery-day-2026-10-12"', rendered)
+
+    def test_home_discovery_uses_generic_link_when_no_valid_log_exists(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            log_dir = root / "daily-log"
+            log_dir.mkdir()
+            (log_dir / "2026-10-12.json").write_text("not json", encoding="utf-8")
+            source = '<div id="home-latest-discovery">placeholder</div>'
+
+            rendered = update_home_latest_discovery(source, root / "offers.json")
+
+            self.assertIn("暂无日志", rendered)
+            self.assertIn('href="/logs/"', rendered)
+            self.assertIn("查看每日发现", rendered)
+
+    def test_home_scan_summary_follows_resource_catalog(self):
+        html = (
+            '<section id="weekly-changes">Scan summary</section>'
+            '<section id="catalog-offers">Resource catalog</section>'
+        )
+
+        rendered = normalize_home_section_priority(html)
+
+        self.assertLess(rendered.index('id="catalog-offers"'), rendered.index('id="weekly-changes"'))
+
     def test_trust_copy_distinguishes_source_and_verification_status(self):
         rendered = update_trust_copy("每日核验 · 真实免费 / 通过人工核验，确认可免费使用")
         self.assertIn("官方来源 · 条件透明", rendered)
@@ -32,7 +105,15 @@ class BuildStaticTests(unittest.TestCase):
                 "lastVerifiedAt": "2026-09-06",
             }
             data_path.write_text(json.dumps([offer]), encoding="utf-8")
-            (root / "scan-summary.json").write_text(json.dumps({"offers": 9}), encoding="utf-8")
+            (root / "scan-summary.json").write_text(json.dumps({
+                "schemaVersion": 1,
+                "date": "2026-10-09",
+                "snapshotDate": "2026-10-08",
+                "newCount": 1,
+                "newModels": 0,
+                "models": 3,
+                "offers": 1,
+            }), encoding="utf-8")
             html_path.write_text(
                 '<b id="heroCount">27</b>'
                 '<b data-category-count="all">27</b>'
@@ -46,7 +127,8 @@ class BuildStaticTests(unittest.TestCase):
             self.assertTrue(build(data_path, html_path))
             rendered = html_path.read_text(encoding="utf-8")
 
-            self.assertIn('<b id="heroCount">9</b>', rendered)
+            # Hero total and the "全部" chip share one count (scripts/site_counts.py).
+            self.assertIn('<b id="heroCount">1</b>', rendered)
             self.assertIn('<b data-category-count="all">1</b>', rendered)
             self.assertIn('href="/offers/x/"', rendered)
             self.assertIn('"url": "https://freellm.top/offers/x/"', rendered)

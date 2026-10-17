@@ -16,6 +16,7 @@ on:
       - "data/skill-tests.json"
       - "data/skill-styles.json"
       - "scripts/build_static.py"
+      - "scripts/sync_readme_counts.py"
       - "scripts/build_seo_pages.py"
       - "scripts/build_tools_index.py"
       - "design/free-china-ai-index.html"
@@ -46,11 +47,17 @@ jobs:
         with:
           python-version: "3.11"
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
       - name: Regenerate static artifacts
         run: |
+          node scripts/generate_ranking.ts
           python scripts/build_tools_index.py
           python scripts/build_seo_pages.py --data data/offers.json --output . --site-url https://freellm.top
           python scripts/build_static.py --data data/offers.json --html design/free-china-ai-index.html
+          python scripts/sync_readme_counts.py
 
       - name: Commit one generated batch
         run: |

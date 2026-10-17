@@ -1,25 +1,42 @@
 # -*- coding: utf-8 -*-
 """把全站同步脚本注入所有静态页面（幂等：已注入的跳过）"""
+import re
 import sys, io
 from pathlib import Path
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 ROOT = Path(__file__).resolve().parent.parent
-TAG = '<script src="/js/freellm-sync.js"></script>'
-DIRS = ['models', 'providers', 'skills', 'guides', 'category', 'logs', 'about', 'privacy', 'terms', 'design']
+TAG = '<script src="/js/freellm-sync.js?v=20261012-daily-discovery"></script>'
+SITE_NAVIGATION_VERSION = '20261012-daily-discovery'
+SKIP_DIRS = {'.git', '.vercel', 'data', 'docs', 'node_modules', '.venv', 'tests', 'venv'}
 
 changed = skipped = 0
-for d in DIRS:
-    for p in (ROOT / d).rglob('index.html'):
-        html = p.read_text(encoding='utf-8')
-        if 'freellm-sync.js' in html:
-            skipped += 1
-            continue
-        if '</body>' not in html:
-            print('skip (no </body>):', p.relative_to(ROOT))
-            continue
-        html = html.rreplace('</body>', TAG + '</body>', 1) if hasattr(str, 'rreplace') else html[::-1].replace('</body>'[::-1], (TAG + '</body>')[::-1], 1)[::-1]
+for p in ROOT.rglob('*.html'):
+    relative = p.relative_to(ROOT)
+    if any(part in SKIP_DIRS for part in relative.parts) or relative.parts[:2] == ('design', 'prototypes'):
+        continue
+    html = p.read_text(encoding='utf-8')
+    html, nav_replaced = re.subn(
+        r'(<script\b[^>]*\bsrc="/js/site-navigation\.js)(?:\?[^"]*)?(">)',
+        rf'\g<1>?v={SITE_NAVIGATION_VERSION}\g<2>',
+        html,
+    )
+    html, sync_replaced = re.subn(
+        r'(<script\b[^>]*\bsrc="/js/freellm-sync\.js)(?:\?[^\"]*)?(")',
+        r'\g<1>?v=20261012-daily-discovery\g<2>',
+        html,
+    )
+    if nav_replaced or sync_replaced:
         p.write_text(html, encoding='utf-8')
         changed += 1
+        continue
+    if 'freellm-sync.js' in html:
+        skipped += 1
+        continue
+    if '</body>' not in html:
+        continue
+    html = html.replace('</body>', TAG + '</body>')
+    p.write_text(html, encoding='utf-8')
+    changed += 1
 
 print(f'injected: {changed}, already present: {skipped}')

@@ -33,7 +33,7 @@
         {
           "title": "发送测试请求",
           "detail": "发起一次短对话请求验证接入；Atria 支持思考模式（reasoning）与 function calling。",
-          "command": "curl https://discovery.intern-ai.org.cn/v1/chat/completions -H 'Authorization: Bearer ${ATRIA_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"Atria-Dawn-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
+          "command": "curl https://discovery.intern-ai.org.cn/v1/chat/completions -H \"Authorization: Bearer $ATRIA_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"Atria-Dawn-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"你好\"}]}'",
           "expected": "返回 200 与 choices[0].message.content，usage 字段显示 token 消耗，免费额度开始扣减。"
         },
         {
@@ -43,7 +43,7 @@
       ],
       "endpoint": "https://discovery.intern-ai.org.cn/v1",
       "auth": "Authorization: Bearer API key",
-      "example": "curl https://discovery.intern-ai.org.cn/v1/chat/completions -H 'Authorization: Bearer ${ATRIA_API_KEY}' -H 'Content-Type: application/json' -d '{\"model\":\"Atria-Dawn-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"hi\"}]}'",
+      "example": "curl https://discovery.intern-ai.org.cn/v1/chat/completions -H \"Authorization: Bearer $ATRIA_API_KEY\" -H 'Content-Type: application/json' -d '{\"model\":\"Atria-Dawn-Preview\",\"messages\":[{\"role\":\"user\",\"content\":\"hi\"}]}'",
       "validation": "测试请求返回 200 且 content 非空；usage 扣减来自注册免费额度；控制台 Key 用量页可见本次调用。",
       "sourceUrls": [
         "https://api.atria-asi.ai/docs",

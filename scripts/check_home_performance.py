@@ -24,18 +24,23 @@ except ImportError:  # package import from the repository root
     from scripts.public_assets import homepage_data_asset
 
 ROOT = Path(__file__).resolve().parents[1]
-BASELINE_COMMIT = os.environ.get("FREELLM_PERF_BASELINE", "1bb5a89cadd2a55b4e775e15e8ad42aff3996411")
+BASELINE_COMMIT = os.environ.get("FREELLM_PERF_BASELINE", "c978b07aaf82a333dfc9041b623189b365015c70")
 PUBLIC_URL = os.environ.get("FREELLM_PERF_URL", "https://freellm.top/")
 MOBILE_VIEWPORT = {"width": 390, "height": 844}
 RUNS = 2
 
 INIT_SCRIPT = r"""
 (() => {
-  window.__perfProbe = { lcp: 0, cls: 0, longTasks: [] };
+  window.__perfProbe = { lcp: 0, lcpElement: '', cls: 0, longTasks: [] };
   try {
     new PerformanceObserver(list => {
       for (const e of list.getEntries()) {
-        window.__perfProbe.lcp = Math.max(window.__perfProbe.lcp, e.startTime || e.renderTime || e.loadTime || 0);
+        const time = e.startTime || e.renderTime || e.loadTime || 0;
+        if (time >= window.__perfProbe.lcp) {
+          window.__perfProbe.lcp = time;
+          const el = e.element;
+          window.__perfProbe.lcpElement = el ? [el.tagName, el.id, typeof el.className === 'string' ? el.className : ''].join('#').slice(0, 150) : '';
+        }
       }
     }).observe({ type: 'largest-contentful-paint', buffered: true });
   } catch (_) {}
@@ -96,11 +101,16 @@ def archive_baseline(destination: Path) -> None:
     tar_path = destination / "baseline.tar"
     paths = [
         "design/free-china-ai-index.html",
-        "design/assets",
-        "css/freellm-pastel-ui.css",
-        "js/freellm-sync.js",
+        # Keep the historical page runnable when it references hashed bundles,
+        # prototype skins, shared navigation, and their local assets.
+        "assets/reference",
+        "css",
+        "js",
         "data/offers.json",
+        "data/offers-ranked.json",
         "data/community-signals.json",
+        "data/scan-summary.json",
+        "daily-update-status.json",
     ]
     with tar_path.open("wb") as handle:
         subprocess.run(
@@ -134,6 +144,7 @@ def read_metrics(page) -> dict:
           return {
             fcp: Math.round(paint['first-contentful-paint'] || 0),
             lcp: Math.round(p.lcp || 0),
+            lcpElement: p.lcpElement || '',
             cls: Number((p.cls || 0).toFixed(4)),
             ttfb: Math.round(nav?.responseStart || 0),
             domContentLoaded: Math.round(nav?.domContentLoadedEventEnd || 0),
@@ -189,13 +200,19 @@ def measure_once(browser, site: LocalSite) -> dict:
     cdp.send("Emulation.setCPUThrottlingRate", {"rate": 4})
 
     page.goto(site.url, wait_until="domcontentloaded", timeout=45_000)
-    page.wait_for_function("document.body && document.body.dataset.dataSource", timeout=20_000)
+    page.wait_for_function(
+        "document.body && (document.body.dataset.dataSource !== undefined || document.readyState === 'complete')",
+        timeout=20_000,
+    )
     page.wait_for_timeout(800)
     cold = read_metrics(page)
 
     page.goto("about:blank")
     page.goto(site.url, wait_until="domcontentloaded", timeout=45_000)
-    page.wait_for_function("document.body && document.body.dataset.dataSource", timeout=20_000)
+    page.wait_for_function(
+        "document.body && (document.body.dataset.dataSource !== undefined || document.readyState === 'complete')",
+        timeout=20_000,
+    )
     page.wait_for_timeout(800)
     warm = read_metrics(page)
     context.close()
@@ -224,11 +241,14 @@ def median_profile(samples: list[dict]) -> dict:
         out[phase]["dataSource"] = rows[-1]["dataSource"]
         out[phase]["horizontalOverflow"] = any(row["horizontalOverflow"] for row in rows)
         out[phase]["important"] = rows[-1]["important"]
+        out[phase]["lcpElement"] = rows[-1].get("lcpElement", "")
     return out
 
 
 def fetch_remote(url: str, etag: str | None = None) -> dict:
-    headers = {"User-Agent": "FreeLLM-performance-probe/1.0", "Accept-Encoding": "gzip, br"}
+    # urllib does not decode Brotli; request identity so the HTML inspection below
+    # always receives a parseable document body.
+    headers = {"User-Agent": "FreeLLM-performance-probe/1.0", "Accept-Encoding": "identity"}
     if etag:
         headers["If-None-Match"] = etag
     req = urllib.request.Request(url, headers=headers, method="GET")

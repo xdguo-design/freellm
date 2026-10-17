@@ -1,26 +1,26 @@
 (function () {
   'use strict';
 
-  if (window.FreeLLMNavigation) return;
-
-  var navigationKeys = new Set(['home', 'models', 'health', 'skills', 'prompts', 'public-api', 'tools', 'workflow', 'logs', 'about']);
-  var navigationPaths = new Map([
-    ['/', 'home'],
-    ['/models/', 'models'],
-    ['/health/', 'health'],
-    ['/skills/', 'skills'],
-    ['/prompts/', 'prompts'],
-    ['/public-api/', 'public-api'],
-    ['/tools/', 'tools'],
-    ['/workflow/', 'workflow'],
-    ['/logs/', 'logs'],
-    ['/about/', 'about']
-  ]);
-  var navigationInProgress = false;
-  var requestController = null;
-  var navigationEpoch = 0;
-  var sharedNavigationCss = '/css/primary-menu.css?v=20261016-public-api-menu';
+  var navigationKeys = new Set(['home', 'models', 'health', 'skills', 'tools', 'workflow', 'logs', 'about']);
+  var sharedNavigationCss = '/css/primary-menu.css?v=20261013-overflow';
   var updateIndicatorReady = false;
+  var lastUpdateDate = '';
+  var readUpdateKey = 'freellm-last-read-update';
+  function getLastReadUpdate() {
+    try { return window.localStorage.getItem(readUpdateKey) || ''; }
+    catch (error) { return ''; }
+  }
+  function markUpdateRead() {
+    if (!lastUpdateDate) return;
+    try { window.localStorage.setItem(readUpdateKey, lastUpdateDate); }
+    catch (error) { /* Storage can be disabled. */ }
+    setUpdateIndicator(false);
+  }
+  document.addEventListener('click', function (event) {
+    var link = event.target && event.target.closest && event.target.closest('.fl-site-nav [data-site-nav="logs"]');
+    if (link) markUpdateRead();
+  });
+
   // Cmd/Ctrl+K works on all pages, without hijacking a focused editor.
   document.addEventListener('keydown', function(event) {
     if (!(event.metaKey || event.ctrlKey) || event.altKey || event.shiftKey || event.key.toLowerCase() !== 'k') return;
@@ -90,7 +90,11 @@
         }).formatToParts(new Date());
         var today = Object.fromEntries(parts.filter(function (part) { return part.type !== 'literal'; }).map(function (part) { return [part.type, part.value]; }));
         var date = today.year + '-' + today.month + '-' + today.day;
-        setUpdateIndicator(status.latestDate === date && status.hasCatalogChanges === true);
+        lastUpdateDate = status.latestDate || '';
+        var onLogPage = /^\/(?:en\/)?logs\/?$/.test(window.location.pathname);
+        if (onLogPage) markUpdateRead();
+        setUpdateIndicator(lastUpdateDate === date && status.hasCatalogChanges === true &&
+          !onLogPage && getLastReadUpdate() !== lastUpdateDate);
       })
       .catch(function () { setUpdateIndicator(false); });
   }
@@ -104,6 +108,7 @@
       link.dataset.flSharedNavigationStyles = '1';
       document.head.appendChild(link);
     }
+    link.href = sharedNavigationCss;
     document.head.appendChild(link);
     return link;
   }
@@ -121,6 +126,9 @@
 
     rail.id = 'fl-shared-site-menu';
     rail.setAttribute('aria-label', 'FreeLLM 主导航');
+    var english = /^en(?:-|$)/i.test(document.documentElement.lang || '');
+    var discoveriesLabel = rail.querySelector('.fl-site-nav [data-site-nav="logs"] span:last-child');
+    if (discoveriesLabel) discoveriesLabel.textContent = english ? 'Discoveries' : '每日发现';
     function updateCurrentItem() {
       var active = currentPage();
       if (active === 'health') active = 'models';
@@ -154,7 +162,7 @@
       ['public-api', '/public-api/', '♡', english ? 'Public APIs' : '公益站'],
       ['tools', '/tools/', '⌘', english ? 'Tools' : '工具'],
       ['workflow', '/workflow/', '⌁', english ? 'Workflows' : '工作流'],
-      ['logs', '/logs/', '◷', english ? 'Discoveries' : '今日发现'],
+      ['logs', '/logs/', '◷', english ? 'Discoveries' : '每日发现'],
       ['about', '/about/', 'ⓘ', english ? 'About' : '关于']
     ];
     var active = currentPage();
@@ -210,6 +218,33 @@
 
   function currentPage() {
     return document.body && document.body.dataset.flSection || '';
+  }
+
+  // The directory already has a full card renderer, localized field labels,
+  // and working filters. Select it on first paint at phone widths.
+  function activateMobileModelCards() {
+    if (!window.matchMedia || !window.matchMedia('(max-width: 600px)').matches) return;
+    var section = document.getElementById('model-directory');
+    var button = section && section.querySelector('.mdir-view-btn[data-catalog-view="cards"]');
+    if (button && section.dataset.catalogView !== 'cards') button.click();
+  }
+
+  var navigationPaths = new Map([
+    ['/', 'home'], ['/models/', 'models'], ['/skills/', 'skills'],
+    ['/tools/', 'tools'], ['/workflow/', 'workflow'], ['/logs/', 'logs'],
+    ['/about/', 'about']
+  ]);
+  var navigationInProgress = false;
+  var requestController = null;
+  var navigationEpoch = 0;
+  var renderedPath = window.location.pathname;
+  var pageScriptBindings = [];
+
+  function clearPageScriptBindings() {
+    pageScriptBindings.forEach(function (binding) {
+      binding.target.removeEventListener(binding.type, binding.callback, binding.options);
+    });
+    pageScriptBindings = [];
   }
 
   function documentUrl(url) {
@@ -269,6 +304,9 @@
   }
 
   async function replaceStyles(parsed, responseUrl) {
+    // Keep the public rail and all shared styles alive across route changes.
+    // Reloading every stylesheet on each click caused visible flashes even
+    // though the rail DOM was preserved. Reuse identical, already-loaded links.
     var previousStyles = Array.from(document.head.querySelectorAll('link[rel="stylesheet"], style')).filter(function (node) {
       return !node.hasAttribute('data-fl-shared-navigation-styles');
     });
@@ -293,23 +331,29 @@
           return;
         }
         copy.href = href;
+        // A print/onload stylesheet is a lazy loader for screen CSS, not a
+        // print-only stylesheet. Cloning its inline onload would reset it to
+        // print after mount, which breaks the returning homepage.
         if (printLoader) copy.removeAttribute('onload');
         copy.dataset.flNavigationMedia = desiredMedia;
         copy.setAttribute('media', 'not all');
+        if (new URL(href).origin === window.location.origin) {
+          styleLoads.push(new Promise(function (resolve) {
+            copy.addEventListener('load', resolve, { once: true });
+            copy.addEventListener('error', resolve, { once: true });
+          }));
+        }
       } else {
         copy.disabled = true;
-      }
-      if (copy.tagName === 'LINK' && new URL(copy.href, window.location.href).origin === window.location.origin) {
-        styleLoads.push(new Promise(function (resolve) {
-          copy.addEventListener('load', resolve, { once: true });
-          copy.addEventListener('error', resolve, { once: true });
-        }));
       }
       document.head.appendChild(copy);
       nextStyles.push(copy);
       addedStyles.push(copy);
     });
 
+    // A blocked or low-priority stylesheet must never freeze navigation.
+    // It can finish loading after activation; the previous page stays styled
+    // while we await a bounded amount of time for the new stylesheets.
     if (styleLoads.length) {
       var timeoutId;
       await Promise.race([
@@ -333,8 +377,13 @@
         } else if (node.tagName === 'STYLE' && node.hasAttribute('data-fl-navigation-style')) {
           node.disabled = false;
         }
+        // Respect the destination page's cascade while retaining DOM/style
+        // identity for shared assets (no second download, no sidebar flash).
+        document.head.appendChild(node);
       });
-      previousStyles.forEach(function (node) { node.remove(); });
+      previousStyles.forEach(function (node) {
+        if (!nextStyles.includes(node)) node.remove();
+      });
       ensureSharedNavigationStyles();
     };
   }
@@ -348,6 +397,7 @@
     if (!rail || !ribbon) return false;
 
     event('freellm:page-unmount', { from: currentPage(), to: targetBody.dataset.flSection || '' });
+    clearPageScriptBindings();
     body.className = targetBody.className;
     Array.from(body.attributes).forEach(function (attribute) {
       if (attribute.name.indexOf('data-') === 0) body.removeAttribute(attribute.name);
@@ -358,7 +408,7 @@
 
     var pageNodes = Array.from(targetBody.childNodes).filter(function (node) {
       if (node.nodeType !== Node.ELEMENT_NODE) return true;
-      if (node.matches('.fl-site-rail, .fl-site-ribbon')) return false;
+      if (node.matches('.fl-site-rail, .fl-site-ribbon, .fl-skip-link')) return false;
       // JSON scripts are page data, not executable code. Skills needs its
       // #skill-data node before the shared page-mount handler renders cards.
       return !node.matches('script') || /^(?:application\/json|application\/ld\+json)$/i.test((node.type || '').trim());
@@ -372,26 +422,56 @@
     return true;
   }
 
-  function runScript(source, responseUrl) {
-    return new Promise(function (resolve) {
-      var script = document.createElement('script');
-      Array.from(source.attributes).forEach(function (attribute) {
-        if (attribute.name !== 'src' && attribute.name !== 'async' && attribute.name !== 'defer') {
-          script.setAttribute(attribute.name, attribute.value);
-        }
-      });
-      if (source.hasAttribute('src')) {
-        script.async = false;
-        script.src = new URL(source.getAttribute('src'), responseUrl).href;
-        script.addEventListener('load', resolve, { once: true });
-        script.addEventListener('error', resolve, { once: true });
-      } else {
-        var code = source.textContent || '';
-        script.textContent = script.type === 'module' ? code : '(function(){\n' + runReadyCallbacksImmediately(code) + '\n}).call(window);';
+  // Run each route's scripts in a fresh lexical scope. External classic
+  // scripts are fetched from our own origin so revisiting the home page does
+  // not redeclare its top-level "let"/"const" names in the same JS realm.
+  // Shared analytics, auth and navigation scripts are never re-executed.
+  async function runScript(source, responseUrl) {
+    var type = (source.getAttribute('type') || '').toLowerCase();
+    if (type && type !== 'text/javascript' && type !== 'application/javascript') return;
+    var code = source.textContent || '';
+    var sourceUrl = responseUrl;
+    if (source.hasAttribute('src')) {
+      sourceUrl = new URL(source.getAttribute('src'), responseUrl).href;
+      if (new URL(sourceUrl).origin !== window.location.origin) return;
+      var response = await fetch(sourceUrl, { credentials: 'same-origin' });
+      if (!response.ok) throw new Error('Script unavailable: ' + new URL(sourceUrl).pathname);
+      code = await response.text();
+    }
+    var script = document.createElement('script');
+    // Track global handlers registered by page-only scripts and remove them
+    // before mounting a different page. Page DOM handlers disappear with DOM.
+    var originalDocumentAdd = document.addEventListener;
+    var originalWindowAdd = window.addEventListener;
+    function track(target, original, type, callback, options) {
+      if ((type === 'DOMContentLoaded' || (type === 'load' && target === window)) &&
+          typeof callback === 'function') {
+        var boundEpoch = navigationEpoch;
+        Promise.resolve().then(function () {
+          if (boundEpoch === navigationEpoch) callback.call(target, new Event(type));
+        });
+        return;
       }
+      pageScriptBindings.push({ target: target, type: type, callback: callback, options: options });
+      return original.call(target, type, callback, options);
+    }
+    try {
+      document.addEventListener = function (type, callback, options) {
+        return track(document, originalDocumentAdd, type, callback, options);
+      };
+      window.addEventListener = function (type, callback, options) {
+        return track(window, originalWindowAdd, type, callback, options);
+      };
+      // The ready-listener converter preserves legacy inline boot handlers.
+      // Wrapping avoids collisions when users revisit a route repeatedly.
+      script.textContent = '(function(){\n' + runReadyCallbacksImmediately(code) +
+        '\n}).call(window);\n//# sourceURL=' + sourceUrl.replace(/[\r\n]/g, '') + '\n';
       document.body.appendChild(script);
-      if (!source.hasAttribute('src')) resolve();
-    });
+    } finally {
+      document.addEventListener = originalDocumentAdd;
+      window.addEventListener = originalWindowAdd;
+      script.remove();
+    }
   }
 
   function activateMenu(parsed) {
@@ -402,22 +482,6 @@
       else link.removeAttribute('aria-current');
     });
   }
-
-  // The directory already has a full card renderer, localized field labels,
-  // and working filters. Select it on first paint at phone widths.
-  function activateMobileModelCards() {
-    if (!window.matchMedia || !window.matchMedia('(max-width: 600px)').matches) return;
-    var section = document.getElementById('model-directory');
-    var button = section && section.querySelector('.mdir-view-btn[data-catalog-view="cards"]');
-    if (button && section.dataset.catalogView !== 'cards') button.click();
-  }
-
-  document.addEventListener('DOMContentLoaded', function () {
-    ensureSharedNavigation();
-    activateMenu(document);
-    refreshUpdateIndicator();
-    activateMobileModelCards();
-  });
 
   function findArgumentEnd(source, start) {
     var stack = [];
@@ -502,6 +566,8 @@
     var fromPage = currentPage();
     if (url.origin !== window.location.origin || !navigationPaths.has(url.pathname)) return false;
     if (url.href === window.location.href && !settings.force) return true;
+    // Query-only popstate belongs to the active page's own filters.
+    if (settings.history === false && renderedPath === url.pathname) return true;
     var epoch = ++navigationEpoch;
     if (requestController) requestController.abort();
     requestController = new AbortController();
@@ -522,6 +588,10 @@
       }
       var scripts = collectScripts(parsed, responseUrl);
 
+      // Load target styles without unmounting the old route. Rapid clicks
+      // must not commit stale metadata/history or leave orphan stylesheets.
+      var commitStyles = await replaceStyles(parsed, responseUrl);
+      if (epoch !== navigationEpoch) { commitStyles(false); return false; }
       if (settings.history !== false) {
         var previousState = Object.assign({}, history.state || {}, { freellmScrollY: window.scrollY });
         history.replaceState(previousState, '', window.location.href);
@@ -529,16 +599,21 @@
       } else if (settings.replaceHistory) {
         history.replaceState({ freellmNavigation: true }, '', url.href);
       }
-
-      // Reflect the selected route as soon as its document is available; the
-      // shared rail stays mounted while page styles finish loading.
       activateMenu(parsed);
       replaceMetadata(parsed);
-      var commitStyles = await replaceStyles(parsed, responseUrl);
-      if (epoch !== navigationEpoch) { commitStyles(false); return false; }
       if (!replacePageChrome(parsed)) throw new Error('Current page is missing the shared site shell');
       commitStyles();
-      for (var index = 0; index < scripts.length; index += 1) await runScript(scripts[index], responseUrl);
+      for (var index = 0; index < scripts.length; index += 1) {
+        if (epoch !== navigationEpoch) return false;
+        await runScript(scripts[index], responseUrl);
+      }
+      renderedPath = url.pathname;
+      if (url.pathname === '/workflow/' && !document.querySelector('script[data-workflow-sim]')) {
+        var simulation = document.createElement('script');
+        simulation.src = '/js/workflow-recipe-sim.js?v=20261012-sim';
+        simulation.dataset.workflowSim = '1';
+        document.head.appendChild(simulation);
+      }
       activateMobileModelCards();
       event('freellm:page-mount', {
         from: fromPage,
@@ -550,7 +625,7 @@
       else window.scrollTo(0, 0);
       return true;
     } catch (error) {
-      if (error.name !== 'AbortError') {
+      if (error.name !== 'AbortError' && epoch === navigationEpoch) {
         console.warn('[FreeLLM navigation] Falling back to a full page load:', error.message);
         window.location.assign(url.href);
       }
@@ -562,8 +637,8 @@
 
   window.addEventListener('click', function (clickEvent) {
     if (clickEvent.defaultPrevented || clickEvent.button !== 0 || clickEvent.metaKey || clickEvent.ctrlKey || clickEvent.shiftKey || clickEvent.altKey) return;
-    var link = clickEvent.target.closest('a[data-site-nav]');
-    if (!link || !navigationKeys.has(link.dataset.siteNav) || link.target || link.hasAttribute('download')) return;
+    var link = clickEvent.target.closest('.fl-site-rail a[data-site-nav], .fl-site-rail .fl-site-brand');
+    if (!link || (link.dataset.siteNav && !navigationKeys.has(link.dataset.siteNav)) || link.target || link.hasAttribute('download')) return;
     var url = new URL(link.href, window.location.href);
     if (!navigationPaths.has(url.pathname) || url.origin !== window.location.origin) return;
     clickEvent.preventDefault();
@@ -584,4 +659,24 @@
     navigate: navigate,
     isNavigating: function () { return navigationInProgress; }
   };
+  document.addEventListener('DOMContentLoaded', function () {
+    ensureSharedNavigation();
+    refreshUpdateIndicator();
+    activateMobileModelCards();
+  });
+
+})();
+
+/* Load workflow recipe simulation on workflow pages */
+(function () {
+  try {
+    var p = location.pathname || '';
+    if (p.indexOf('/workflow') === -1 && p.indexOf('/skills/lab') === -1) return;
+    if (document.querySelector('script[data-workflow-sim]')) return;
+    var s = document.createElement('script');
+    s.src = '/js/workflow-recipe-sim.js?v=20261012-sim';
+    s.defer = true;
+    s.setAttribute('data-workflow-sim', '1');
+    document.head.appendChild(s);
+  } catch (e) {}
 })();

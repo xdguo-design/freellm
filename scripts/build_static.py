@@ -15,6 +15,9 @@ from urllib.parse import quote
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from crawler.schema import validate_offers
+from scripts.site_counts import compute_site_counts, is_active_offer as _shared_is_active_offer, reference_date_for
+from crawler.source_tiers import THIRD_PARTY_SHORT_ZH, is_third_party_relay
+from scripts import daily_discoveries as discoveries
 
 START = '<script type="application/json" id="offer-data">'
 END = "</script>"
@@ -24,8 +27,8 @@ STATIC_OFFER_END = '<!-- STATIC-OFFERS:END -->'
 SITE_URL = "https://freellm.top"
 
 
-SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261016-public-api-menu"></script>
-<aside class="fl-site-rail" aria-label="FreeLLM 主导航">
+SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261015-spa2"></script>
+<aside id="fl-shared-site-menu" class="fl-site-rail" aria-label="FreeLLM 主导航">
   <a class="fl-site-brand" href="/">
     <span class="fl-site-brand-mark" aria-hidden="true">AI</span>
     <span class="fl-site-brand-copy"><strong>FreeLLM</strong><small>AI for Everyone</small></span>
@@ -38,7 +41,7 @@ SITE_CHROME = '''<script defer src="/js/site-navigation.js?v=20261016-public-api
     <a href="/public-api/" data-site-nav="public-api" aria-label="公益 AI API 导航 / Public AI APIs"><span class="fl-site-nav-icon" aria-hidden="true">♡</span><span>公益站</span></a>
     <a href="/tools/" data-site-nav="tools"><span class="fl-site-nav-icon" aria-hidden="true">⌘</span><span>工具</span></a>
     <a href="/workflow/" data-site-nav="workflow"><span class="fl-site-nav-icon" aria-hidden="true">⌁</span><span>工作流</span></a>
-    <a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>今日发现</span></a>
+    <a href="/logs/" data-site-nav="logs"><span class="fl-site-nav-icon" aria-hidden="true">◷</span><span>每日发现</span></a>
     <a href="/about/" data-site-nav="about"><span class="fl-site-nav-icon" aria-hidden="true">ⓘ</span><span>关于</span></a>
   </nav>
   <div class="fl-site-rail-note" aria-hidden="true"></div>
@@ -94,7 +97,7 @@ def ensure_pastel_shell(html: str) -> str:
         replacement = f'<body{attrs}>'
         updated = updated[:body_match.start()] + replacement + updated[body_match.end():]
 
-    theme_tag = '<link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20261003a">'
+    theme_tag = '<link rel="stylesheet" href="../css/freellm-pastel-ui.css?v=20261013-overflow">'
     updated = re.sub(
         r'<link rel="stylesheet" href="(?:\.\./|/)?css/freellm-pastel-ui\.css(?:\?[^"]*)?">',
         theme_tag,
@@ -106,14 +109,14 @@ def ensure_pastel_shell(html: str) -> str:
 
     # Always normalize the shell. Older generated HTML may already contain
     # a ten-item rail, so "only inject if missing" would preserve stale navigation.
-    shell_pattern = r'<aside class="fl-site-rail"[^>]*>.*?</aside>\s*<div class="fl-site-ribbon"[^>]*>.*?</div>'
+    shell_pattern = r'<aside\b(?=[^>]*\bclass="[^"]*\bfl-site-rail\b)[^>]*>.*?</aside>\s*<div class="fl-site-ribbon"[^>]*>.*?</div>'
     matches = list(re.finditer(shell_pattern, updated, flags=re.I | re.S))
     if matches:
         first = matches[0]
         rebuilt = updated[: first.start()] + SITE_CHROME + updated[first.end() :]
         tail_start = first.start() + len(SITE_CHROME)
         tail = re.sub(
-            r'\s*<aside class="fl-site-rail"[^>]*>.*?</aside>\s*<div class="fl-site-ribbon"[^>]*>.*?</div>',
+            r'\s*<aside\b(?=[^>]*\bclass="[^"]*\bfl-site-rail\b)[^>]*>.*?</aside>\s*<div class="fl-site-ribbon"[^>]*>.*?</div>',
             "",
             rebuilt[tail_start:],
             flags=re.I | re.S,
@@ -258,13 +261,17 @@ def render_network_chips(offer: dict) -> list[str]:
 
 def render_offer_flags(offer: dict) -> str:
     chips = []
+    # Expired offers never carry positive verification chips (实测通过 / 加精 /
+    # 实测好用 / 接口已验证): past tests must not read as current availability.
+    expired = offer.get("status") == "expired"
     featured = offer.get("featured")
-    if isinstance(featured, dict) and featured.get("reason"):
+    if not expired and isinstance(featured, dict) and featured.get("reason"):
         title = html_lib.escape(f"加精｜{featured['reason']}")
         chips.append(f'<span class="flag-chip flag-featured" title="{title}">◆ 加精</span>')
-    if offer.get("key"):
+    if offer.get("key") and not expired:
         chips.append('<span class="flag-chip flag-key">★ 重点</span>')
-    chips.extend(render_network_chips(offer))
+    if not expired:
+        chips.extend(render_network_chips(offer))
     edition_of = offer.get("editionOf")
     editions = offer.get("editions") or []
     if edition_of == "cn":
@@ -281,7 +288,9 @@ def render_offer_flags(offer: dict) -> str:
     if sibling:
         label = "也有国内版" if edition_of == "intl" else "也有国际版"
         chips.append(f'<a class="flag-chip flag-sibling" href="/offers/{quote(str(sibling), safe="")}/">{label} ↗</a>')
-    if offer.get("handsOn"):
+    if expired:
+        pass
+    elif offer.get("handsOn"):
         chips.append('<span class="flag-chip flag-hands-on">✓ 实测好用</span>')
     elif offer.get("endpointCheck") and offer["endpointCheck"].get("verdict") != "NETWORK_ERROR":
         check = offer["endpointCheck"]
@@ -295,11 +304,11 @@ def render_offer_flags(offer: dict) -> str:
 
 
 def is_active_offer(offer: dict, today: str) -> bool:
-    """One lifecycle predicate for both no-JS fallback and visible counters."""
-    if offer.get("status") == "expired":
-        return False
-    expires = str(offer.get("expires_at") or "")
-    return not (re.fullmatch(r"\d{4}-\d{2}-\d{2}", expires) and expires < today)
+    """One lifecycle predicate for both no-JS fallback and visible counters.
+
+    Delegates to scripts/site_counts.py so every page shares one definition.
+    """
+    return _shared_is_active_offer(offer, today)
 
 
 def offer_filter_categories(offer: dict) -> set[str]:
@@ -335,9 +344,10 @@ def offer_filter_categories(offer: dict) -> set[str]:
     return result
 
 
-def render_static_catalog(data: list[dict], limit: int = 11) -> str:
+def render_static_catalog(data: list[dict], limit: int = 11, reference_date: str | None = None) -> str:
     cards = []
-    for offer in key_first([item for item in data if is_active_offer(item, date.today().isoformat())])[:limit]:
+    reference_date = reference_date or date.today().isoformat()
+    for offer in key_first([item for item in data if is_active_offer(item, reference_date)])[:limit]:
         href = offer_href(offer)
         title = html_lib.escape(str(offer.get("title") or offer.get("name") or "AI offer"))
         provider = html_lib.escape(str(offer.get("provider") or "Official provider"))
@@ -371,14 +381,24 @@ def render_static_catalog(data: list[dict], limit: int = 11) -> str:
     return STATIC_OFFER_START + "".join(cards) + STATIC_OFFER_END
 
 
-def replace_static_catalog(html: str, data: list[dict], scan_offer_count: int | None = None) -> str:
-    count = len(data)
-    # The hero reports the canonical daily scan, not the raw offer-feed length.
-    # The catalog itself includes ended promotions for explicit historical access.
-    hero_count = scan_offer_count if isinstance(scan_offer_count, int) else count
-    today = date.today().isoformat()
-    active = [offer for offer in data if is_active_offer(offer, today)]
-    active_count = len(active)
+def replace_static_catalog(html: str, data: list[dict], scan_offer_count: int | None = None, reference_date: str | None = None) -> str:
+    """Render first-paint catalog counters from the shared count helper.
+
+    hero total, the "全部" chip and the result line all use the same
+    active-offer count (scripts/site_counts.py); ``scan_offer_count`` is only
+    accepted as a cross-check and must agree with it.
+    """
+    reference_date = reference_date or date.today().isoformat()
+    counts = compute_site_counts(data, [], reference_date)
+    count = counts["offersTotal"]
+    active = [offer for offer in data if is_active_offer(offer, reference_date)]
+    active_count = counts["offers"]
+    if isinstance(scan_offer_count, int) and scan_offer_count != active_count:
+        raise ValueError(
+            f"data/scan-summary.json offers={scan_offer_count} disagrees with the shared active-offer count {active_count}; "
+            "rerun scripts/build_seo_pages.py before scripts/build_static.py"
+        )
+    hero_count = active_count
     updated = re.sub(
         r'(<span>资源总览</span><strong>)\d+(</strong>)',
         rf"\g<1>{hero_count}\g<2>",
@@ -399,8 +419,8 @@ def replace_static_catalog(html: str, data: list[dict], scan_offer_count: int | 
         count=1,
     )
     updated = re.sub(
-        r'(<p id="catalog-result-count">Showing )\d+( offers</p>)',
-        rf"\g<1>{count}\g<2>",
+        r'(<p id="catalog-result-count"[^>]*>Showing )\d+( offers</p>)',
+        rf"\g<1>{active_count}\g<2>",
         updated,
         count=1,
     )
@@ -421,16 +441,30 @@ def replace_static_catalog(html: str, data: list[dict], scan_offer_count: int | 
             flags=re.S,
         )
     updated = re.sub(
-        r'(<p id="catalog-result-count">)[^<]*(</p>)',
-        lambda m: f"{m.group(1)}{active_count} 个当前有效入口（共存档 {count} 条）{m.group(2)}",
+        r'(<p id="catalog-result-count"[^>]*>)[^<]*(</p>)',
+        lambda m: f"{m.group(1)}{active_count} 个当前有效资源（存档共 {count} 条，{count - active_count} 条已结束）{m.group(2)}",
         updated,
         count=1,
     )
+    expired_count = count - active_count
+    featured_count = sum(1 for offer in active if (offer.get("featured") or {}).get("reason"))
+    for chip, value in (("expired", expired_count), ("featured", featured_count)):
+        updated = re.sub(
+            rf'(<button[^>]*data-filter="{chip}"[^>]*>(?:(?!</button>).)*?<em>)[^<]*(</em>)',
+            lambda match, value=value: f"{match.group(1)}{value}{match.group(2)}",
+            updated,
+            count=1,
+            flags=re.S,
+        )
+    updated = updated.replace(
+        "分类可以重叠；目录按有效优惠入口计数，扫描汇总按资源快照计数，口径不同。",
+        "分类可以重叠；全站资源数统一按“当前有效资源”（不含已结束）计数。",
+    )
     updated = updated.replace(
         "分类可以重叠，一条资源可能同时属于多个入口。",
-        "分类可以重叠；目录按有效优惠入口计数，扫描汇总按资源快照计数，口径不同。",
+        "分类可以重叠；全站资源数统一按“当前有效资源”（不含已结束）计数。",
     )
-    static_catalog = render_static_catalog(data)
+    static_catalog = render_static_catalog(data, reference_date=reference_date)
     marker_pattern = rf"({re.escape(STATIC_OFFER_START)}).*?({re.escape(STATIC_OFFER_END)})"
     if re.search(marker_pattern, updated, flags=re.S):
         updated = re.sub(marker_pattern, static_catalog, updated, count=1, flags=re.S)
@@ -491,31 +525,97 @@ def update_daily_log_summary(html: str, data_path: Path) -> str:
     return re.sub(r'<span[^>]*id="daily-log-badge"[^>]*>.*?</span>', badge_markup, updated, count=1, flags=re.S)
 
 
+def update_home_latest_discovery(html: str, data_path: Path) -> str:
+    """Show the latest daily-log additions count and link to the full discovery list."""
+    marker = '<div id="home-latest-discovery"'
+    if marker not in html:
+        return html
+    log_dir = data_path.parent / "daily-log"
+    log_paths = sorted(log_dir.glob("*.json")) if log_dir.is_dir() else []
+    logs = []
+    for path in log_paths:
+        try:
+            candidate = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError, TypeError):
+            continue
+        if isinstance(candidate, dict) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(candidate.get("date") or "")):
+            logs.append(candidate)
+    log_date = discoveries.latest_log_date(logs)
+
+    if log_date:
+        # Same rule as /logs/: an id is a discovery only on its first logged date.
+        new_count = len(discoveries.first_seen_discoveries(logs).get(log_date, []))
+        count_text = f"新增 {new_count} 项"
+        href = f"/logs/#discovery-day-{log_date}"
+        link_title = f"查看 {log_date} 的每日发现"
+        link_text = "查看今日发现 →"
+    else:
+        count_text = "暂无日志"
+        href = "/logs/"
+        link_title = "打开每日发现"
+        link_text = "查看每日发现 →"
+    text = (
+        '<span class="home-latest-discovery-label">每日发现</span>'
+        f'<strong class="home-latest-discovery-count">{count_text}</strong>'
+        f'<a href="{href}" title="{link_title}">{link_text}</a>'
+    )
+    replacement = f'<div id="home-latest-discovery" class="home-latest-discovery">{text}</div>'
+    return re.sub(
+        r'<div id="home-latest-discovery"[^>]*>.*?</div>',
+        lambda _match: replacement,
+        html, count=1, flags=re.S,
+    )
+
+
 def update_prototype_updates_table(html: str, data_path: Path) -> str:
     """Replace the placeholder rows of the homepage prototype-updates table
     with the latest events from the daily-log pipeline."""
+    try:
+        catalog = json.loads(data_path.read_text(encoding="utf-8"))
+        offer_ids = {
+            str(item.get("id"))
+            for item in catalog
+            if isinstance(item, dict) and item.get("id")
+        }
+    except (OSError, json.JSONDecodeError, TypeError):
+        offer_ids = set()
     log_dir = data_path.parent / "daily-log"
-    log_paths = sorted(log_dir.glob("*.json"))[-7:]
-    events: list[dict] = []
-    for path in reversed(log_paths):
+    all_logs = []
+    for path in sorted(log_dir.glob("*.json")):
         try:
             log = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
             continue
-        events.extend(
-            event
-            for event in (log.get("events") or [])
-            if isinstance(event, dict) and event.get("eventType") and event.get("asOf")
-        )
+        if isinstance(log, dict):
+            all_logs.append(log)
+    # A new/new_route row is shown only on the first date its id was logged
+    # (the 「每日发现」 rule), so scanner re-detections never repeat here.
+    first_seen = {
+        (day, discoveries.event_identity(event))
+        for day, items in discoveries.first_seen_discoveries(all_logs).items()
+        for event in items
+    }
+    events: list[dict] = []
+    for log in reversed(all_logs[-7:]):
+        day = str(log.get("date") or "")
+        for field in ("events", "curatedEvents"):
+            for event in log.get(field) or []:
+                if not (isinstance(event, dict) and event.get("eventType") and event.get("asOf")):
+                    continue
+                if event.get("eventType") in discoveries.DISCOVERY_EVENT_TYPES:
+                    if (day, discoveries.event_identity(event)) not in first_seen:
+                        continue
+                    first_seen.discard((day, discoveries.event_identity(event)))
+                events.append(event)
     if not events:
         return html
     events.sort(key=lambda event: str(event["asOf"]), reverse=True)
     events = events[:8]
 
-    kind_labels = {"model": "AI 模型", "offer": "免费接入"}
+    kind_labels = {"model": "AI 模型", "offer": "免费接入", "tool": "开发工具", "agent": "AI Agent", "skill": "Skill"}
     state_labels = {
-        "new": ("最新上线", "state-new"),
-        "new_route": ("API 更新", "state-api"),
+        "new": ("新发现", "state-new"),
+        "new_route": ("新渠道", "state-api"),
         "recovered": ("已恢复", "state-updated"),
         "offline": ("暂时下线", "state-off"),
         "source_unavailable": ("源不可用", "state-off"),
@@ -527,6 +627,8 @@ def update_prototype_updates_table(html: str, data_path: Path) -> str:
     for event in events:
         details = event.get("details") if isinstance(event.get("details"), dict) else {}
         provider = str(details.get("provider") or event.get("id") or "?")
+        if is_third_party_relay(event):
+            provider = f"{provider}（{THIRD_PARTY_SHORT_ZH}）"
         title = str(event.get("title") or event.get("id") or "?")
         label, state = state_labels.get(str(event.get("eventType")), (str(event.get("eventType")), "state-off"))
         try:
@@ -535,6 +637,13 @@ def update_prototype_updates_table(html: str, data_path: Path) -> str:
             delta = -1
         when = "今天" if delta == 0 else "昨天" if delta == 1 else f"{delta} 天前" if delta >= 0 else str(event["asOf"])
         kind = kind_labels.get(str(event.get("kind")), "AI 模型")
+        offer_id = str(details.get("id") or event.get("id") or "")
+        if event.get("kind") == "offer" and offer_id in offer_ids:
+            action_href = offer_href({"id": offer_id})
+            action_label = "查看详情 ↗"
+        else:
+            action_href = "/models/"
+            action_label = "浏览模型库 →"
         initial = (provider[:1] or "?").upper()
         rows.append(
             f'<tr><td><b class="prototype-update-logo">{html_lib.escape(initial)}</b>'
@@ -542,7 +651,7 @@ def update_prototype_updates_table(html: str, data_path: Path) -> str:
             f"<td>{html_lib.escape(kind)}</td><td>{when}</td>"
             f'<td><i class="{state}">{html_lib.escape(label)}</i></td>'
             f"<td>{html_lib.escape(provider)}</td>"
-            f'<td><a href="/models/">浏览模型库 →</a></td></tr>'
+            f'<td><a href="{html_lib.escape(action_href)}">{action_label}</a></td></tr>'
         )
     updated, replaced = re.subn(
         r'(<table class="prototype-update-table">.*?<tbody>).*?(</tbody>)',
@@ -604,7 +713,10 @@ def _home_asset_manifest(html_path: Path) -> dict[str, tuple[Path, Path, str]]:
         if not source.is_file():
             return {}
         data = source.read_bytes()
-        fingerprint = _git_blob_fingerprint(data)
+        # Git stores text assets with LF endings. Normalize Windows checkouts
+        # before deriving the fingerprint so the generated URL is identical
+        # on Windows and Linux CI.
+        fingerprint = _git_blob_fingerprint(data.replace(b"\r\n", b"\n"))
         target = source.with_name(f"{source.stem}.{fingerprint}{source.suffix}")
         web_ref = "../" + target.relative_to(root).as_posix()
         manifest[relative] = (source, target, web_ref)
@@ -644,7 +756,28 @@ def sync_home_asset_fingerprints(manifest: dict[str, tuple[Path, Path, str]], ch
 
 
 def normalize_home_section_priority(html: str) -> str:
-    """Keep fresh/verified discovery first and place student benefits right after offers."""
+    """Keep the full catalog before scan details and student benefits."""
+    weekly_match = re.search(
+        r'<section\b[^>]*\bid=["\']weekly-changes["\'][^>]*>.*?</section>\s*',
+        html,
+        flags=re.I | re.S,
+    )
+    offers_match = re.search(
+        r'<section\b[^>]*\bid=["\']catalog-offers["\'][^>]*>.*?</section>\s*',
+        html,
+        flags=re.I | re.S,
+    )
+    if weekly_match and offers_match and weekly_match.start() < offers_match.start():
+        weekly = weekly_match.group(0)
+        html = html[:weekly_match.start()] + html[weekly_match.end():]
+        offers_match = re.search(
+            r'<section\b[^>]*\bid=["\']catalog-offers["\'][^>]*>.*?</section>\s*',
+            html,
+            flags=re.I | re.S,
+        )
+        if offers_match:
+            html = html[:offers_match.end()] + weekly + html[offers_match.end():]
+
     student_match = re.search(
         r'<section\b[^>]*\bid=["\']student-offers["\'][^>]*>.*?</section>\s*',
         html,
@@ -665,6 +798,44 @@ def normalize_home_section_priority(html: str) -> str:
     # Keep them immediately after the main resource catalog and before comparison/download/FAQ.
     return without_student[:compare_match.start()] + student + without_student[compare_match.start():]
 
+def sync_home_scan_snapshot(html: str, summary: dict) -> str:
+    """Keep static first-paint counters aligned with the canonical scan summary.
+
+    An editorial discovery date may be newer than the last actual automated
+    scan. Never label that editorial date as an observed scan.
+    """
+    for key in ("newCount", "newModels", "models", "offers"):
+        value = summary.get(key)
+        if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+            raise ValueError(f"Invalid scan summary value: {key}")
+        html = re.sub(
+            rf'(<strong data-scan-stat="{key}">)[^<]*(</strong>)',
+            lambda m, value=value: m.group(1) + str(value) + m.group(2),
+            html,
+        )
+    snapshot_date = str(summary.get("snapshotDate") or summary.get("date") or "")
+    if snapshot_date:
+        label = snapshot_date if summary.get("scanRunToday") is True else f"最近扫描：{snapshot_date}"
+        html = re.sub(
+            r'(<span data-scan-date>)[^<]*(</span>)',
+            lambda m: m.group(1) + label + m.group(2),
+            html,
+        )
+    return html
+
+def update_eval_leaderboard(html: str) -> str:
+    """Insert the real-evaluation leaderboard (data/evaluations/latest.json) into the homepage."""
+    from scripts.eval_integration import LEADERBOARD_CSS, leaderboard_html
+
+    html = re.sub(r"<!--fl-evalboard-->.*?<!--/fl-evalboard-->", "", html, flags=re.S)
+    board = leaderboard_html(6)
+    anchor = '<section class="prototype-hot"'
+    if not board or anchor not in html:
+        return html
+    block = f"<!--fl-evalboard--><style>{LEADERBOARD_CSS}</style>{board}<!--/fl-evalboard-->"
+    return html.replace(anchor, block + anchor, 1)
+
+
 def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     errors = validate_offers(data_path)
     if errors:
@@ -683,16 +854,22 @@ def build(data_path: Path, html_path: Path, check: bool = False) -> bool:
     updated = remove_legacy_app(updated)
     scan_path = data_path.with_name("scan-summary.json")
     scan_offer_count = None
+    reference_date = None
     if scan_path.exists():
         scan_summary = json.loads(scan_path.read_text(encoding="utf-8"))
         if not isinstance(scan_summary.get("offers"), int) or scan_summary["offers"] < 0:
             raise ValueError("Invalid canonical scan offer count")
         scan_offer_count = scan_summary["offers"]
-    updated = replace_static_catalog(updated, source_data, scan_offer_count=scan_offer_count)
+        reference_date = reference_date_for(scan_summary.get("date"))
+    updated = replace_static_catalog(updated, source_data, scan_offer_count=scan_offer_count, reference_date=reference_date)
     updated = normalize_home_section_priority(updated)
     updated = update_static_item_list(updated, source_data)
     updated = update_daily_log_summary(updated, data_path)
+    updated = update_home_latest_discovery(updated, data_path)
     updated = update_prototype_updates_table(updated, data_path)
+    updated = update_eval_leaderboard(updated)
+    if scan_path.exists():
+        updated = sync_home_scan_snapshot(updated, scan_summary)
     updated = ensure_pastel_shell(remove_legacy_global_nav(updated))
     updated = re.sub(
         r'(<body\b)([^>]*)(>)',

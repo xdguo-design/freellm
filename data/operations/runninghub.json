@@ -1,0 +1,49 @@
+{
+  "providerId": "runninghub",
+  "provider": "RunningHub · VibeX",
+  "lastVerifiedAt": "2026-10-09",
+  "offerIds": [
+    "vibex-runninghub-daily"
+  ],
+  "paths": [
+    {
+      "id": "vibex-create",
+      "label": "用自然语言创建并预览 AI 网页应用",
+      "productType": "web",
+      "prerequisites": [
+        "可访问 VibeX 官网",
+        "准备 RunningHub 登录账号",
+        "使用公开演示数据，不要粘贴真实 API Key"
+      ],
+      "steps": [
+        {
+          "title": "打开 VibeX",
+          "detail": "进入 https://vibex.runninghub.cn/ ，选择网站或 AI 应用等创作方向。"
+        },
+        {
+          "title": "描述应用需求",
+          "detail": "说明目标用户、页面结构、核心功能和移动端适配要求，生成第一版。"
+        },
+        {
+          "title": "预览并修正",
+          "detail": "在预览中检查表单、按钮、路由和布局，用自然语言提出下一轮修改。"
+        },
+        {
+          "title": "核对额度与发布规则",
+          "detail": "检查账户里实际可用的开发 Token、模型倍率及发布/运行是否额外扣费；未核实前不要以免费 API 或无限额度对外宣传。"
+        }
+      ],
+      "validation": "在登录后控制台查看个人 Token 限额，完成一次不含敏感数据的生成任务，记录使用前后余额和发布费用。",
+      "limits": "媒体转述每天 100 亿 Token，但每个账户权益、日刷新、模型范围、部署及运行收费未实测。该额度不能当作外部 LLM API 免费额度。",
+      "commonIssues": [
+        "页面宣传的总补贴不一定等于单账号可用额度。",
+        "网站生成过程中使用的 Token 与 RunningHub 模型 API 的计费/密钥可能独立。",
+        "先核对项目发布和最终用户实际运行的资费。"
+      ],
+      "sourceUrls": [
+        "https://vibex.runninghub.cn/",
+        "https://rhtv.runninghub.cn/blog/ai-applications/blogvibex-ai-app-builder-guide"
+      ]
+    }
+  ]
+}

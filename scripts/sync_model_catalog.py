@@ -61,10 +61,24 @@ def sync_model_catalog(discovered: list[dict], previous: list[dict], as_of: str)
     current = _index(discovered)
     old = _index(previous)
     merged: list[dict] = []
+    # A provider can move a model's directory URL (e.g. ollama.com/library/x ->
+    # .../x:tag) while keeping the same model id. Match those by
+    # (providerId, modelId) so the move does not leave a duplicate stale row.
+    old_by_model: dict[tuple[str, str], list[tuple[str, str, str]]] = {}
+    for old_key in old:
+        old_by_model.setdefault(old_key[:2], []).append(old_key)
+    consumed: set[tuple[str, str, str]] = set()
 
     for key, record in current.items():
         item = dict(record)
-        prior = old.get(key)
+        prior_key = key if key in old else None
+        if prior_key is None:
+            candidates = [k for k in old_by_model.get(key[:2], []) if k not in current]
+            if len(candidates) == 1:
+                prior_key = candidates[0]
+        prior = old.get(prior_key) if prior_key else None
+        if prior_key:
+            consumed.add(prior_key)
         if prior:
             for field in MANUAL_FIELDS:
                 if field in prior:
@@ -83,7 +97,7 @@ def sync_model_catalog(discovered: list[dict], previous: list[dict], as_of: str)
         merged.append(item)
 
     for key, record in old.items():
-        if key in current:
+        if key in current or key in consumed:
             continue
         item = dict(record)
         item["freshnessStatus"] = "stale"
