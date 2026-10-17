@@ -7455,5 +7455,91 @@
       "status": "ok",
       "reason": ""
     }
-  }
+  },
+  "curatedEvents": [
+    {
+      "kind": "offer",
+      "eventType": "new",
+      "id": "requesty-free",
+      "title": "Requesty 上新：13 个免费大模型 API，每日共 200 次",
+      "asOf": "2026-10-17",
+      "curated": true,
+      "reason": "2026-10-17 首次纳入 FreeLLM 正式资源目录。Requesty 官方 2026-10-12 更新的免费模型文档列出 13 个模型并公开组织级额度；这是官方规则核验，非 FreeLLM 持 Key 实际推理。",
+      "details": {
+        "id": "requesty-free",
+        "providerId": "requesty",
+        "provider": "Requesty",
+        "model": "Nemotron 3、Gemma 4、Muse Glimmer、Ling 3.1 Flash 等 13 个 $0 路由",
+        "productType": "api",
+        "type": [
+          "api",
+          "free"
+        ],
+        "status": "verified",
+        "sourceKind": "official",
+        "sourceUrl": "https://docs.requesty.ai/features/free-models",
+        "sourceUrls": [
+          "https://docs.requesty.ai/features/free-models",
+          "https://www.requesty.ai/models/free",
+          "https://www.requesty.ai/pricing",
+          "https://www.requesty.ai/terms"
+        ],
+        "freeSummary": "官方列 13 个 $0 模型；新组织全模型共享 200 次/天、20 次/分钟；官网声明无需信用卡。仅完成官方资料/匿名目录预检，未实测模型生成质量和速度。",
+        "validitySummary": "免费政策和模型列表可能随时调整",
+        "accessSummary": "注册 Requesty 后创建 API Key；国内注册和年龄验证待测",
+        "register": "https://app.requesty.ai/",
+        "links": [
+          [
+            "资源详情（FreeLLM）",
+            "https://freellm.top/offers/requesty-free/"
+          ],
+          [
+            "官方免费模型文档",
+            "https://docs.requesty.ai/features/free-models"
+          ],
+          [
+            "免费模型目录",
+            "https://www.requesty.ai/models/free"
+          ]
+        ],
+        "notes": "隐私提示：部分免费模型可能允许输入/输出被训练使用，不应直接处理患者数据、个人隐私或商业机密。无 API Key，无推理/测速结果，暂不加精。",
+        "freeLLMTest": {
+          "testLevel": "preflight",
+          "status": "partial",
+          "testedAt": "2026-10-17",
+          "actualUsageVerified": false,
+          "task": "核实 Requesty 服务、免费模型数量、模型 ID、配额、免信用卡声明和隐私条款，区分公开来源确认与授权请求实测。",
+          "method": [
+            "核对 Requesty 官方定价页 $0 套餐和无需信用卡声明。",
+            "核对 2026-10-12 更新的 Free Models 文档中 13 个模型 ID、免费价格及 200/20 与 1000/60 的组织级额度。",
+            "检查公开 GET /v1/models 的零价格模型和模型数据政策字段。",
+            "核查 2026-08-14 服务条款 Training Permitted Models 与免费用户数据使用规则。",
+            "没有可用的真实 Requesty API Key，因此不调用 Chat Completions，也不虚构账号注册及中国大陆可用性结果。",
+            "2026-10-17 公开 GET https://router.requesty.ai/v1/models 可访问，未进行带 Key 推理请求。"
+          ],
+          "result": "已确认平台官网有免费套餐且官方清单列 13 个 $0 模型；尚未完成实际 API Key 授权调用及区域可达性验证。",
+          "limitations": "未验证邮箱/年龄认证是否有地区例外、Key 真实调用、每日重置时区、429 的实际响应、准确上下文限制和长时稳定性。官方价目与公开模型元数据可能变化。 无法仅凭公开模型目录判断生成质量、首 token 延迟或输出速度，不满足 FreeLLM 加精条件。",
+          "evidence": [
+            {
+              "label": "官方 Free Models 与额度",
+              "url": "https://docs.requesty.ai/features/free-models"
+            },
+            {
+              "label": "官方 $0 套餐及免信用卡",
+              "url": "https://www.requesty.ai/pricing"
+            },
+            {
+              "label": "官方免费模型目录",
+              "url": "https://www.requesty.ai/models/free"
+            },
+            {
+              "label": "服务条款与数据训练例外",
+              "url": "https://www.requesty.ai/terms"
+            }
+          ]
+        },
+        "lastVerifiedAt": "2026-10-17"
+      }
+    }
+  ]
 }
