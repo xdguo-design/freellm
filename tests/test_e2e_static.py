@@ -1030,6 +1030,39 @@ class BrowserPageTests(unittest.TestCase):
                     ))
         page.close()
 
+    def test_prompt_library_search_category_and_variable_preview(self):
+        """New indexed /prompts/ page must be interactive, not a blank sitemap target."""
+        page = self.new_page()
+        page.goto(f"{self.site.url}/prompts/", wait_until="domcontentloaded")
+        cards = page.locator('#prompt-grid [data-prompt-card]')
+        self.assertEqual(cards.count(), 24)
+        visible = page.locator('#prompt-grid [data-prompt-card]:not([hidden])')
+        self.assertEqual(visible.count(), 24)
+
+        search = page.locator('#prompt-search')
+        search.fill('this-template-never-exists-20261017')
+        self.assertEqual(visible.count(), 0)
+        self.assertTrue(page.locator('#prompt-empty').is_visible())
+        page.locator('#prompt-search-clear').click()
+        self.assertEqual(visible.count(), 24)
+
+        category = page.locator('button[data-prompt-category]:not([data-prompt-category="all"])').first
+        category.click()
+        self.assertEqual(visible.count(), 6)
+        self.assertEqual(category.get_attribute('aria-pressed'), 'true')
+        page.locator('button[data-prompt-category="all"]').click()
+        self.assertEqual(visible.count(), 24)
+
+        example = page.locator('#prompt-grid [data-prompt-card]:has(textarea[data-prompt-variable])').first
+        self.assertEqual(example.count(), 1)
+        example.locator('summary').click()
+        field = example.locator('textarea[data-prompt-variable]').first
+        field.fill('FreeLLM-20261017-预览测试')
+        preview = example.locator('[data-prompt-preview]').inner_text()
+        self.assertIn('FreeLLM-20261017-预览测试', preview)
+        self.assertFalse(example.locator('.prompt-preview-panel').is_hidden())
+        page.close()
+
     def test_skills_have_distinct_local_icons_and_matching_detail_icon(self):
         page = self.new_page()
         page.goto(f"{self.site.url}/skills/?category=development")
