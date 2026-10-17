@@ -1047,7 +1047,6 @@ class BrowserPageTests(unittest.TestCase):
 
         page.goto(f"{self.site.url}/skills/?category=all")
         total = len(json.loads((ROOT / 'data/skills.json').read_text(encoding='utf-8')))
-        page.locator('#skills-browse-all').click()
         page.wait_for_function(
             'total => document.querySelectorAll("#skill-grid .skill-card-icon svg").length === total',
             arg=total,
@@ -1058,7 +1057,6 @@ class BrowserPageTests(unittest.TestCase):
         self.assertEqual(len(set(signatures)), total)
         page.reload()
         page.wait_for_selector('#skill-grid .skill-card-icon svg')
-        page.locator('#skills-browse-all').click()
         page.wait_for_function(
             'total => document.querySelectorAll("#skill-grid .skill-card-icon svg").length === total',
             arg=total,
