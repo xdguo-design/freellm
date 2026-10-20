@@ -9,12 +9,13 @@ offers or models inline in a renderer: that is how the site ended up showing
 Count definitions (also published as ``countDefinitions`` in
 ``data/scan-summary.json``):
 
-* ``offers``         – active offers: records in ``data/offers.json`` whose
-                       status is not ``expired`` and whose ``expires_at`` (if
-                       any) is not before the reference date.  This is the
-                       homepage "全部" chip, hero total, /about/ "已收录资源".
-* ``offersTotal``    – every record in ``data/offers.json`` (active + ended).
-* ``offersExpired``  – ``offersTotal - offers``.
+* ``offers``         – active offers: only ``verified`` records whose
+                       ``expires_at`` (if present) is not before the reference date.
+                       This is the homepage "全部" chip, hero total and /about/ active count.
+* ``offersTotal``    – every record in ``data/offers.json``.
+* ``offersExpired``  – records explicitly expired or past their published end date.
+* ``offersNeedsReview`` – records held for manual review; never count as active.
+* ``offersInactive`` – ``offersTotal - offers``, including ended and review-held records.
 * ``models``         – every record in the published model catalog
                        (``data/models.json``), i.e. exactly what
                        /models/all/ lists.
@@ -33,9 +34,11 @@ from datetime import date
 _ISO_DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
 
 COUNT_DEFINITIONS = {
-    "offers": "当前有效资源：data/offers.json 中 status 不是 expired 且 expires_at 未早于参考日期的记录（首页“全部”、/about/“已收录资源”同一口径）",
-    "offersTotal": "存档资源总数：data/offers.json 全部记录（含已结束）",
-    "offersExpired": "已结束资源：存档总数减去当前有效资源",
+    "offers": "当前有效资源：data/offers.json 中 status 为 verified 且 expires_at 未早于参考日期的记录（首页“全部”与 /about/ 同一口径）",
+    "offersTotal": "存档资源总数：data/offers.json 全部记录",
+    "offersExpired": "已结束资源：status 为 expired 或公开结束日期早于参考日期的记录",
+    "offersNeedsReview": "待核验资源：status 为 needs_review 的记录，不计入当前有效资源",
+    "offersInactive": "非当前可用资源：存档总数减去当前有效资源（含已结束和待核验）",
     "models": "模型目录记录：data/models.json 全部记录（与 /models/all/ 列表一致）",
     "scannedModels": "最近一次自动扫描观测到的模型记录数，仅表示扫描覆盖，不是目录总数",
     "scannedOffers": "最近一次自动扫描观测到的资源记录数，仅表示扫描覆盖，不是目录总数",
@@ -43,11 +46,19 @@ COUNT_DEFINITIONS = {
 
 
 def is_active_offer(offer: dict, reference_date: str) -> bool:
-    """One lifecycle predicate shared by SSR counters, cards and JS mirror."""
-    if offer.get("status") == "expired":
+    """Only verified, not-yet-expired offers count as current."""
+    if offer.get("status") != "verified":
         return False
     expires = str(offer.get("expires_at") or "")
     return not (_ISO_DATE.fullmatch(expires) and expires < reference_date)
+
+
+def is_expired_offer(offer: dict, reference_date: str) -> bool:
+    """A record is ended when its lifecycle status or published end date says so."""
+    if offer.get("status") == "expired":
+        return True
+    expires = str(offer.get("expires_at") or "")
+    return bool(_ISO_DATE.fullmatch(expires) and expires < reference_date)
 
 
 def reference_date_for(latest_log_date: str | None) -> str:
@@ -58,9 +69,13 @@ def reference_date_for(latest_log_date: str | None) -> str:
 def compute_site_counts(offers: list[dict], models: list[dict], reference_date: str) -> dict[str, int]:
     offers = [offer for offer in offers or [] if isinstance(offer, dict)]
     active = sum(1 for offer in offers if is_active_offer(offer, reference_date))
+    expired = sum(1 for offer in offers if is_expired_offer(offer, reference_date))
+    needs_review = sum(1 for offer in offers if offer.get("status") == "needs_review")
     return {
         "offers": active,
         "offersTotal": len(offers),
-        "offersExpired": len(offers) - active,
+        "offersExpired": expired,
+        "offersNeedsReview": needs_review,
+        "offersInactive": len(offers) - active,
         "models": len([model for model in models or [] if isinstance(model, dict)]),
     }
