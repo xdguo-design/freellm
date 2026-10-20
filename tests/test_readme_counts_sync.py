@@ -20,7 +20,7 @@ class ReadmeCountsSyncTests(unittest.TestCase):
     def test_missing_bilingual_count_anchor_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "anchors changed"):
             render("README without numeric catalog summary", {
-                "offers": 0, "offersExpired": 0, "scannedOffers": 0
+                "offers": 0, "offersExpired": 0, "offersNeedsReview": 0, "scannedOffers": 0
             }, [], [], [])
 
     def test_rejects_conflicting_source_counts(self):
