@@ -351,9 +351,9 @@ def render_static_catalog(data: list[dict], limit: int = 11, reference_date: str
         href = offer_href(offer)
         title = html_lib.escape(str(offer.get("title") or offer.get("name") or "AI offer"))
         provider = html_lib.escape(str(offer.get("provider") or "Official provider"))
-        summary = html_lib.escape(str(offer.get("freeSummary") or offer.get("mechanism") or "See official terms"))
-        validity = html_lib.escape(str(offer.get("validitySummary") or offer.get("validity") or "See official terms"))
-        access = html_lib.escape(str(offer.get("accessSummary") or offer.get("access") or "See official terms"))
+        summary = html_lib.escape(str(offer.get("freeSummaryZh") or offer.get("freeSummary") or offer.get("mechanism") or "See official terms"))
+        validity = html_lib.escape(str(offer.get("validitySummaryZh") or offer.get("validitySummary") or offer.get("validity") or "See official terms"))
+        access = html_lib.escape(str(offer.get("accessSummaryZh") or offer.get("accessSummary") or offer.get("access") or "See official terms"))
         checked = html_lib.escape(str(offer.get("lastVerifiedAt") or "Unknown"))
         last_checked = str(offer.get("lastVerifiedAt") or "")
         try:
