@@ -9,6 +9,7 @@ import json
 import re
 from html.parser import HTMLParser
 from pathlib import Path
+from datetime import date
 from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -52,6 +53,95 @@ class VisibleText(HTMLParser):
                 self.main.append(value)
 
 
+def _date_age(value: object, today: date) -> int | None:
+    try:
+        return (today - date.fromisoformat(str(value)[:10])).days
+    except (TypeError, ValueError):
+        return None
+
+
+def _audit_source_data(root: Path, indexed_paths: set[str] | None = None, today: date | None = None) -> dict:
+    """Inventory source-data quality signals without treating heuristics as policy."""
+    today = today or date.today()
+    indexed_paths = indexed_paths or set()
+    result = {
+        "method": "Editorial review signals only; not Google's internal AdSense decision logic",
+        "offers": {
+            "total": 0,
+            "statuses": {},
+            "expired": [],
+            "expiredSitemapLeaks": [],
+            "staleVerificationReview": [],
+            "missingChineseWhy": [],
+            "missingChineseFreeSummary": [],
+            "missingOfficialEvidence": [],
+        },
+        "models": {
+            "total": 0,
+            "statuses": {},
+            "staleObservationReview": [],
+            "missingOfficialSource": [],
+        },
+    }
+    offers_path = root / "data" / "offers.json"
+    if offers_path.is_file():
+        try:
+            offers = json.loads(offers_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            offers = []
+        if isinstance(offers, list):
+            result["offers"]["total"] = len(offers)
+            for offer in offers:
+                if not isinstance(offer, dict):
+                    continue
+                offer_id = str(offer.get("id") or "").strip()
+                status = str(offer.get("status") or "missing")
+                result["offers"]["statuses"][status] = result["offers"]["statuses"].get(status, 0) + 1
+                path = f"/offers/{offer_id}/" if offer_id else ""
+                if status == "expired":
+                    result["offers"]["expired"].append(offer_id)
+                    if path in indexed_paths:
+                        result["offers"]["expiredSitemapLeaks"].append(offer_id)
+                age = _date_age(offer.get("lastVerifiedAt"), today)
+                if status == "verified" and age is not None and age > 30:
+                    result["offers"]["staleVerificationReview"].append({"id": offer_id, "daysSinceVerification": age})
+                why = str(offer.get("why") or "")
+                if why and not re.search(r"[\u3400-\u9fff]", why) and not str(offer.get("whyZh") or "").strip():
+                    result["offers"]["missingChineseWhy"].append(offer_id)
+                summary = str(offer.get("freeSummary") or "")
+                if summary and not re.search(r"[\u3400-\u9fff]", summary) and not str(offer.get("freeSummaryZh") or "").strip():
+                    result["offers"]["missingChineseFreeSummary"].append(offer_id)
+                has_evidence = bool(
+                    str(offer.get("evidence") or "").strip()
+                    or offer.get("sourceUrls")
+                    or offer.get("links")
+                    or str(offer.get("register") or "").strip()
+                )
+                if not has_evidence:
+                    result["offers"]["missingOfficialEvidence"].append(offer_id)
+
+    models_path = root / "data" / "models.json"
+    if models_path.is_file():
+        try:
+            models = json.loads(models_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            models = []
+        if isinstance(models, list):
+            result["models"]["total"] = len(models)
+            for model in models:
+                if not isinstance(model, dict):
+                    continue
+                model_id = str(model.get("id") or model.get("model") or "")
+                status = str(model.get("status") or "missing")
+                result["models"]["statuses"][status] = result["models"]["statuses"].get(status, 0) + 1
+                age = _date_age(model.get("lastSeenAt") or model.get("lastVerifiedAt"), today)
+                if age is not None and age > 30:
+                    result["models"]["staleObservationReview"].append({"id": model_id, "daysSinceObservation": age})
+                if not str(model.get("sourceUrl") or "").strip():
+                    result["models"]["missingOfficialSource"].append(model_id)
+    return result
+
+
 def audit(root: Path):
     pages = []
     seen = set()
@@ -77,8 +167,13 @@ def audit(root: Path):
             if path.startswith(("/guides/", "/offers/")) and not parser.source_hosts:
                 flags.append("external_evidence_review")
             pages.append({"path": path, "editorialChars": len(text), "sourceHostCount": len(parser.source_hosts), "flags": flags})
-    return {"method": "Heuristic editorial audit, not AdSense approval evidence", "total": len(pages), "rows": pages}
-
+    source_data = _audit_source_data(root, seen)
+    return {
+        "method": "Heuristic editorial audit, not AdSense approval evidence",
+        "total": len(pages),
+        "rows": pages,
+        "sourceData": source_data,
+    }
 
 def main():
     ap = argparse.ArgumentParser()
