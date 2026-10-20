@@ -1,8 +1,9 @@
 import tempfile
 import unittest
 from pathlib import Path
+from datetime import date
 
-from scripts.audit_adsense_content import VisibleText, audit
+from scripts.audit_adsense_content import VisibleText, _audit_source_data, audit
 
 
 class AdsenseContentAuditTests(unittest.TestCase):
@@ -36,6 +37,40 @@ class AdsenseContentAuditTests(unittest.TestCase):
         result = audit(root)
         self.assertGreaterEqual(result["total"], 100)
         self.assertFalse([r for r in result["rows"] if r.get("error")])
+        quality = result["sourceData"]["offers"]
+        self.assertEqual(quality["expiredSitemapLeaks"], [])
+        self.assertEqual(quality["missingChineseWhy"], [])
+        self.assertEqual(quality["missingChineseFreeSummary"], [])
+        self.assertEqual(quality["missingOfficialEvidence"], [])
+
+    def test_source_data_audit_flags_expired_leaks_and_review_signals(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            data = root / "data"
+            data.mkdir()
+            (data / "offers.json").write_text(
+                '[{"id":"old","status":"expired","lastVerifiedAt":"2026-10-01",'
+                '"why":"Expired campaign","freeSummary":"Expired","sourceUrls":["https://official.example"]},'
+                '{"id":"current","status":"verified","lastVerifiedAt":"2026-08-01",'
+                '"why":"English only","freeSummary":"Free quota","register":"https://official.example"}]',
+                encoding="utf-8",
+            )
+            (data / "models.json").write_text(
+                '[{"id":"model-1","status":"online","lastSeenAt":"2026-08-01","sourceUrl":""}]',
+                encoding="utf-8",
+            )
+            report = _audit_source_data(
+                root,
+                indexed_paths={"/offers/old/"},
+                today=date(2026, 10, 20),
+            )
+            offers = report["offers"]
+            self.assertEqual(offers["expiredSitemapLeaks"], ["old"])
+            self.assertEqual(offers["staleVerificationReview"][0]["id"], "current")
+            self.assertEqual(offers["missingChineseWhy"], ["current"])
+            self.assertEqual(offers["missingChineseFreeSummary"], ["current"])
+            self.assertEqual(report["models"]["missingOfficialSource"], ["model-1"])
+            self.assertEqual(report["models"]["staleObservationReview"][0]["id"], "model-1")
 
 
 if __name__ == "__main__":
