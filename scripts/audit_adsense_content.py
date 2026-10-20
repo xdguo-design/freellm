@@ -70,6 +70,7 @@ def _audit_source_data(root: Path, indexed_paths: set[str] | None = None, today:
             "total": 0,
             "statuses": {},
             "expired": [],
+            "verifiedPastExpiry": [],
             "expiredSitemapLeaks": [],
             "nonIndexableSitemapLeaks": [],
             "staleVerificationReview": [],
@@ -108,6 +109,9 @@ def _audit_source_data(root: Path, indexed_paths: set[str] | None = None, today:
                 age = _date_age(offer.get("lastVerifiedAt"), today)
                 if status == "verified" and age is not None and age > 30:
                     result["offers"]["staleVerificationReview"].append({"id": offer_id, "daysSinceVerification": age})
+                expiry_age = _date_age(offer.get("expires_at"), today)
+                if status == "verified" and expiry_age is not None and expiry_age > 0:
+                    result["offers"]["verifiedPastExpiry"].append({"id": offer_id, "daysPastExpiry": expiry_age})
                 why = str(offer.get("why") or "")
                 if why and not re.search(r"[\u3400-\u9fff]", why) and not str(offer.get("whyZh") or "").strip():
                     result["offers"]["missingChineseWhy"].append(offer_id)
