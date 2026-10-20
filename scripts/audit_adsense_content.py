@@ -71,6 +71,7 @@ def _audit_source_data(root: Path, indexed_paths: set[str] | None = None, today:
             "statuses": {},
             "expired": [],
             "expiredSitemapLeaks": [],
+            "nonIndexableSitemapLeaks": [],
             "staleVerificationReview": [],
             "missingChineseWhy": [],
             "missingChineseFreeSummary": [],
@@ -100,7 +101,9 @@ def _audit_source_data(root: Path, indexed_paths: set[str] | None = None, today:
                 path = f"/offers/{offer_id}/" if offer_id else ""
                 if status == "expired":
                     result["offers"]["expired"].append(offer_id)
-                    if path in indexed_paths:
+                if status in {"expired", "needs_review"} and path in indexed_paths:
+                    result["offers"]["nonIndexableSitemapLeaks"].append(offer_id)
+                    if status == "expired":
                         result["offers"]["expiredSitemapLeaks"].append(offer_id)
                 age = _date_age(offer.get("lastVerifiedAt"), today)
                 if status == "verified" and age is not None and age > 30:
