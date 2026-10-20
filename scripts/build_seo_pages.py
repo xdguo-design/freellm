@@ -1911,7 +1911,8 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     title = offer.get("title") or offer.get("name")
     description = _description(offer)
     page_title = f"{title} · FreeLLM 免费 AI 资源索引"
-    # Expired promotions are historical records, not current free offers.\n    indexable = offer.get("status") not in {"needs_review", "expired"}
+    # Expired promotions are historical records, not current free offers.
+    indexable = offer.get("status") not in {"needs_review", "expired"}
     social_meta = _social_meta(site_url, path, page_title, description, "article", indexable=indexable)
     guide = offer.get("usageGuide") or {}
     categories = categorize_offer(offer)
