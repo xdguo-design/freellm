@@ -414,8 +414,17 @@ def offer_url(offer: dict) -> str:
     return f"/offers/{_slug(offer['id'])}/"
 
 def _offer_is_indexable(offer: dict) -> bool:
-    """Only current offers are indexable; expired or unverified entries remain accessible by direct URL."""
-    return offer.get("status") not in {"needs_review", "expired"}
+    """Index only current, verified entries that genuinely belong in the free-resource directory.
+
+    Paid-as-you-go references can remain accessible to users, but must not be
+    advertised as indexable free offers when the record explicitly says there
+    is no free quota.
+    """
+    if offer.get("status") in {"needs_review", "expired"}:
+        return False
+    if offer.get("productType") == "payg" and offer.get("freeMechanism") == "not_confirmed":
+        return False
+    return True
 
 
 def category_url(category: str) -> str:
