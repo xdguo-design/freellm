@@ -39,6 +39,7 @@ class AdsenseContentAuditTests(unittest.TestCase):
         self.assertFalse([r for r in result["rows"] if r.get("error")])
         quality = result["sourceData"]["offers"]
         self.assertEqual(quality["expiredSitemapLeaks"], [])
+        self.assertEqual(quality["verifiedPastExpiry"], [])
         self.assertEqual(quality["nonIndexableSitemapLeaks"], [])
         self.assertEqual(quality["missingChineseWhy"], [])
         self.assertEqual(quality["missingChineseFreeSummary"], [])
@@ -53,7 +54,7 @@ class AdsenseContentAuditTests(unittest.TestCase):
                 '[{"id":"old","status":"expired","lastVerifiedAt":"2026-10-01",'
                 '"why":"Expired campaign","freeSummary":"Expired","sourceUrls":["https://official.example"]},'
                 '{"id":"current","status":"verified","lastVerifiedAt":"2026-08-01",'
-                '"why":"English only","freeSummary":"Free quota","register":"https://official.example"}]',
+                '"why":"English only","freeSummary":"Free quota","expires_at":"2026-10-01","register":"https://official.example"}]',
                 encoding="utf-8",
             )
             (data / "models.json").write_text(
@@ -69,6 +70,7 @@ class AdsenseContentAuditTests(unittest.TestCase):
             self.assertEqual(offers["expiredSitemapLeaks"], ["old"])
             self.assertEqual(offers["nonIndexableSitemapLeaks"], ["old"])
             self.assertEqual(offers["staleVerificationReview"][0]["id"], "current")
+            self.assertEqual(offers["verifiedPastExpiry"][0]["id"], "current")
             self.assertEqual(offers["missingChineseWhy"], ["current"])
             self.assertEqual(offers["missingChineseFreeSummary"], ["current"])
             self.assertEqual(report["models"]["missingOfficialSource"], ["model-1"])
