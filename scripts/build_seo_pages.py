@@ -743,12 +743,35 @@ def _locale_pair(zh: object, en: object, fallback_en: str = "See official terms"
 
 
 def _offer_locale_pair(offer: dict, fields: tuple[str, ...], fallback_en: str = "See official terms") -> str:
-    zh = next((offer.get(field) for field in fields if offer.get(field)), None)
+    """Render explicit locale overlays before falling back to the legacy base field.
+
+    A large part of the catalogue stores English prose in the unsuffixed field.
+    Prefer a curated Chinese translation when one is available.
+    """
+    zh = next((offer.get(f"{field}Zh") for field in fields if offer.get(f"{field}Zh")), None)
+    if not zh:
+        zh = next(
+            (
+                offer.get(field)
+                for field in fields
+                if offer.get(field) and re.search(r"[\u3400-\u9fff]", str(offer.get(field)))
+            ),
+            None,
+        )
+    if not zh:
+        zh = next((offer.get(field) for field in fields if offer.get(field)), None)
+
     en = next((offer.get(f"{field}En") for field in fields if offer.get(f"{field}En")), None)
     if not en:
-        en = next((offer.get(field) for field in fields if offer.get(field) and not re.search(r"[\u3400-\u9fff]", str(offer.get(field)))), None)
+        en = next(
+            (
+                offer.get(field)
+                for field in fields
+                if offer.get(field) and not re.search(r"[\u3400-\u9fff]", str(offer.get(field)))
+            ),
+            None,
+        )
     return _locale_pair(zh, en or zh, fallback_en)
-
 
 def _static_locale_nav() -> str:
     return '<nav class="static-locale-nav" aria-label="Language"><button type="button" data-locale-switch="zh-CN">中文</button><span aria-hidden="true">·</span><button type="button" data-locale-switch="en">English</button></nav>'
@@ -1888,7 +1911,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     title = offer.get("title") or offer.get("name")
     description = _description(offer)
     page_title = f"{title} · FreeLLM 免费 AI 资源索引"
-    indexable = offer.get("status") != "needs_review"
+    # Expired promotions are historical records, not current free offers.\n    indexable = offer.get("status") not in {"needs_review", "expired"}
     social_meta = _social_meta(site_url, path, page_title, description, "article", indexable=indexable)
     guide = offer.get("usageGuide") or {}
     categories = categorize_offer(offer)
