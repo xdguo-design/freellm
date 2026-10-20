@@ -1356,6 +1356,23 @@ def test_non_current_offers_are_noindex_and_absent_from_sitemaps(tmp_path):
         assert "adsbygoogle.js?client=ca-pub-2461062743308239" not in page
         assert f"https://freellm.top/offers/{offer['id']}/" not in sitemap_urls
 
+def test_paid_payg_reference_is_not_indexable_or_advertised_as_free_offer(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    offers = read_offers()
+    deepseek = next(offer for offer in offers if offer["id"] == "deepseek")
+    assert deepseek["productType"] == "payg"
+    assert deepseek["freeMechanism"] == "not_confirmed"
+
+    page = (tmp_path / "offers" / "deepseek" / "index.html").read_text(encoding="utf-8")
+    assert '<meta name="robots" content="noindex,follow">' in page
+    assert "adsbygoogle.js?client=ca-pub-2461062743308239" not in page
+
+    sitemap_urls = set()
+    for sitemap_path in tmp_path.glob("sitemap-*.xml"):
+        sitemap_urls.update(re.findall(r"<loc>(.*?)</loc>", sitemap_path.read_text(encoding="utf-8")))
+    assert "https://freellm.top/offers/deepseek/" not in sitemap_urls
+
+
 def test_about_summary_separates_ended_and_review_held_counts(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
     about = (tmp_path / "about" / "index.html").read_text(encoding="utf-8")
