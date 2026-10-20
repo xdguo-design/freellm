@@ -1340,19 +1340,29 @@ def test_offer_locale_pair_prefers_explicit_chinese_overlay():
     assert '<span lang="en">The official plan includes a limited monthly allowance.</span>' in markup
 
 
-def test_expired_offers_are_noindex_and_absent_from_sitemaps(tmp_path):
+def test_non_current_offers_are_noindex_and_absent_from_sitemaps(tmp_path):
     build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
     offers = read_offers()
-    expired = [offer for offer in offers if offer.get("status") == "expired"]
-    assert expired, "test fixture should include at least one expired offer"
+    non_current = [offer for offer in offers if offer.get("status") in {"expired", "needs_review"}]
+    assert non_current, "test fixture should include expired and review-held offers"
 
     sitemap_urls = set()
     for sitemap_path in tmp_path.glob("sitemap-*.xml"):
         sitemap_urls.update(re.findall(r"<loc>(.*?)</loc>", sitemap_path.read_text(encoding="utf-8")))
 
-    for offer in expired:
+    for offer in non_current:
         page = (tmp_path / "offers" / offer["id"] / "index.html").read_text(encoding="utf-8")
         assert '<meta name="robots" content="noindex,follow">' in page
         assert "adsbygoogle.js?client=ca-pub-2461062743308239" not in page
         assert f"https://freellm.top/offers/{offer['id']}/" not in sitemap_urls
+
+def test_about_summary_separates_ended_and_review_held_counts(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    about = (tmp_path / "about" / "index.html").read_text(encoding="utf-8")
+    summary = json.loads((tmp_path / "data" / "scan-summary.json").read_text(encoding="utf-8"))
+    assert summary["offers"] == 73
+    assert summary["offersExpired"] == 5
+    assert summary["offersNeedsReview"] == 3
+    assert 'data-scan-stat="offersExpired">5</strong> 条已结束' in about
+    assert 'data-scan-stat="offersNeedsReview">3</strong> 条待核验' in about
 
