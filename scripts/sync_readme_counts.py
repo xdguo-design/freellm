@@ -13,11 +13,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ZH = re.compile(
-    r"^- \*\*\d+ 个\*\*资源目录记录（\d+ 条当前有效、\d+ 条已结束；最近一次扫描观测到 \d+ 条资源），另有 \*\*\d+ 条\*\*第三方模型目录记录和 \*\*\d+ 家\*\*厂家目录$",
+    r"^- \*\*\d+ 个\*\*资源目录记录（\d+ 条当前有效、\d+ 条已结束、\d+ 条待核验；最近一次扫描观测到 \d+ 条资源），另有 \*\*\d+ 条\*\*第三方模型目录记录和 \*\*\d+ 家\*\*厂家目录$",
     re.M,
 )
 EN = re.compile(
-    r"^- \*\*\d+\*\* curated offer records \(\d+ currently active and \d+ ended; the latest scan observed \d+ offers\), plus \*\*\d+\*\* third-party model-directory records across \*\*\d+\*\* providers$",
+    r"^- \*\*\d+\*\* curated offer records \(\d+ currently active, \d+ ended and \d+ held for review; the latest scan observed \d+ offers\), plus \*\*\d+\*\* third-party model-directory records across \*\*\d+\*\* providers$",
     re.M,
 )
 
@@ -28,19 +28,20 @@ def render(text: str, scan: dict, offers: list, models: list, providers: list) -
     provider_count = len(providers)
     active = scan.get("offers")
     expired = scan.get("offersExpired")
+    review = scan.get("offersNeedsReview")
     seen = scan.get("scannedOffers")
-    for key, value in {"offers": active, "offersExpired": expired, "scannedOffers": seen}.items():
+    for key, value in {"offers": active, "offersExpired": expired, "offersNeedsReview": review, "scannedOffers": seen}.items():
         if not isinstance(value, int) or value < 0:
             raise ValueError(f"missing or invalid scan summary count: {key}")
-    if active + expired != total:
-        raise ValueError("scan summary active and expired totals do not match source offers")
+    if active + expired + review != total:
+        raise ValueError("scan summary active, ended and review-held totals do not match source offers")
     zh = (
-        f"- **{total} 个**资源目录记录（{active} 条当前有效、{expired} 条已结束；最近一次扫描观测到 {seen} 条资源），"
+        f"- **{total} 个**资源目录记录（{active} 条当前有效、{expired} 条已结束、{review} 条待核验；最近一次扫描观测到 {seen} 条资源），"
         f"另有 **{model_count} 条**第三方模型目录记录和 **{provider_count} 家**厂家目录"
     )
     en = (
-        f"- **{total}** curated offer records ({active} currently active and {expired} ended; "
-        f"the latest scan observed {seen} offers), plus **{model_count}** "
+        f"- **{total}** curated offer records ({active} currently active, {expired} ended and "
+        f"{review} held for review; the latest scan observed {seen} offers), plus **{model_count}** "
         f"third-party model-directory records across **{provider_count}** providers"
     )
     updated, zh_count = ZH.subn(lambda _: zh, text)
