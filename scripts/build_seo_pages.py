@@ -2409,7 +2409,6 @@ def render_guide_page(site_url: str, offers: list[dict] | None = None) -> str:
   <link rel="canonical" href="{_esc(_absolute(site_url, path))}">
   {_social_meta(site_url, path, f'{title} · Free AI Index', description, 'article', indexable=False)}
   {_analytics_script()}
-  {ADSENSE_SCRIPT}
   <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
   {SKILLS_THEME_ASSETS}
   <style>
