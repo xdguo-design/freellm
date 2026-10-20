@@ -442,11 +442,11 @@ def replace_static_catalog(html: str, data: list[dict], scan_offer_count: int | 
         )
     updated = re.sub(
         r'(<p id="catalog-result-count"[^>]*>)[^<]*(</p>)',
-        lambda m: f"{m.group(1)}{active_count} 个当前有效资源（存档共 {count} 条，{count - active_count} 条已结束）{m.group(2)}",
+        lambda m: f"{m.group(1)}{active_count} 个当前有效资源（存档共 {count} 条，{counts['offersExpired']} 条已结束、{counts['offersNeedsReview']} 条待核验）{m.group(2)}",
         updated,
         count=1,
     )
-    expired_count = count - active_count
+    expired_count = counts["offersExpired"]
     featured_count = sum(1 for offer in active if (offer.get("featured") or {}).get("reason"))
     for chip, value in (("expired", expired_count), ("featured", featured_count)):
         updated = re.sub(
