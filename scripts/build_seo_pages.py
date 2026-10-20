@@ -6821,6 +6821,8 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         "offers": site_counts["offers"],
         "offersTotal": site_counts["offersTotal"],
         "offersExpired": site_counts["offersExpired"],
+        "offersNeedsReview": site_counts["offersNeedsReview"],
+        "offersInactive": site_counts["offersInactive"],
         "scannedModels": len(observed.get("models") or []),
         "scannedOffers": len(observed.get("offers") or []),
         "newCount": len(new_events),
@@ -6906,7 +6908,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
             f'<p>数据日期：<time data-scan-date>{_esc(scan_label)}</time> · 今日发现 <strong data-scan-stat="newCount">{scan_summary["newCount"]}</strong>'
             f' · 模型目录 <strong data-scan-stat="models">{scan_summary["models"]}</strong> 条'
             f' · 当前有效资源 <strong data-scan-stat="offers">{scan_summary["offers"]}</strong> 条'
-            f'（存档共 <strong data-scan-stat="offersTotal">{scan_summary["offersTotal"]}</strong> 条，其中 <strong data-scan-stat="offersExpired">{scan_summary["offersExpired"]}</strong> 条已结束；<a href="/logs/">查看每日更新</a>）</p>'
+            f'（存档共 <strong data-scan-stat="offersTotal">{scan_summary["offersTotal"]}</strong> 条，其中 <strong data-scan-stat="offersExpired">{scan_summary["offersExpired"]}</strong> 条已结束、<strong data-scan-stat="offersNeedsReview">{scan_summary["offersNeedsReview"]}</strong> 条待核验；<a href="/logs/">查看每日更新</a>）</p>'
             '<p style="margin:6px 0 0;color:#5b6475;font-size:13px">口径：模型目录 = /models/all/ 列出的全部记录；当前有效资源 = 未结束的优惠记录（与首页“全部”一致）。全站这些数字由同一份构建数据生成。</p>'
             '</section>'
         )
@@ -6914,7 +6916,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         # Update the unhydrated About statistics as well: runtime JS is not
         # a substitute for accurate first-paint numbers.
         about = re.sub(
-            r'(<strong data-scan-stat="(newCount|newModels|models|offers|offersTotal|offersExpired)">)[^<]*(</strong>)',
+            r'(<strong data-scan-stat="(newCount|newModels|models|offers|offersTotal|offersExpired|offersNeedsReview|offersInactive)">)[^<]*(</strong>)',
             lambda m: m.group(1) + str(scan_summary[m.group(2)]) + m.group(3),
             about,
         )
