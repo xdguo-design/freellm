@@ -94,6 +94,29 @@ def test_offer_quick_start_matches_product_type():
     assert "GROQ_API_KEY" in groq_quick
 
 
+def test_offer_locale_prefers_chinese_copy_and_avoids_duplicate_ide_quick_start():
+    offers = read_offers()
+    codebuddy = next(offer for offer in offers if offer["id"] == "codebuddy")
+
+    localized = render_offer_page(codebuddy, offers, "https://freellm.top")
+    assert "腾讯云 CodeBuddy 个人体验计划价格为 ¥0" in localized
+    assert "The official personal experience plan is priced at ¥0" in localized
+
+    operations = [{
+        "offerIds": ["codebuddy"],
+        "paths": [{
+            "label": "CodeBuddy setup",
+            "prerequisites": ["CodeBuddy account"],
+            "steps": [{"title": "Install", "detail": "Install from the official product page."}],
+            "validation": "Confirm the plan in the account page.",
+            "sourceUrls": ["https://www.codebuddy.cn/"],
+        }],
+    }]
+    with_operations = render_offer_page(codebuddy, offers, "https://freellm.top", operations=operations)
+    assert '<section id="operation-guides">' in with_operations
+    assert '<section class="quick-start">' not in with_operations
+
+
 def test_ling_model_page_renders_its_registration_prerequisites_and_steps():
     offers = read_offers()
     ling = next(offer for offer in offers if offer["id"] == "ant-ling-3-1-flash-free")
