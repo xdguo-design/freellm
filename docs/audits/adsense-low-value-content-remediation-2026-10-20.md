@@ -8,7 +8,7 @@ Search Console 的 `noindex` 邮件是独立的索引覆盖问题，不是这次
 
 ## 二、基线盘点（dev 数据，2026-10-20）
 
-- 资源数据：81 条；verified 77 条、expired 2 条、needs_review 2 条。
+- 资源数据：81 条；verified 76 条、expired 2 条、needs_review 3 条。
 - 模型数据：297 条；online 257 条、offline 27 条、needs_review 13 条。
 - 资源中有 33 条的 `lastVerifiedAt` 距今超过 30 天；模型中有 18 条的 `lastSeenAt` 距今超过 30 天。这是人工复核队列，不代表数据已经失效，也不是 Google 的官方阈值。
 - 初始检查发现 34 条资源的英文说明没有中文版本、29 条资源的英文免费额度摘要没有中文版本。
@@ -24,8 +24,8 @@ Search Console 的 `noindex` 邮件是独立的索引覆盖问题，不是这次
    - 为 34 条英文核心说明补充中文版本。
    - 为 29 条英文免费额度摘要补充中文版本；英文原文保留。
 3. 静态产物核对
-   - 两条已结束优惠（GLM Coding Plan、StepFun 已结束体验）已生成 `noindex,follow` 页面，页面不再加载 AdSense 脚本，并从 `sitemap-offers.xml` 移除。
-   - 资源站点地图由 79 条降至 77 条；全站五份站点地图合计 235 个 URL。
+   - 两条已结束优惠（GLM Coding Plan、StepFun 已结束体验）已生成 `noindex,follow` 页面，页面不再加载 AdSense 脚本，并从 `sitemap-offers.xml` 移除。Qoder 的官方活动页仍显示 Qwen3.8-Flash 优惠于 2026-09-30 结束，与原数据中的“活动延期”说明冲突，因此已临时标记 `needs_review`，停止索引和广告，等待更新的官方延期证据。
+   - 资源站点地图由 79 条降至当前 76 条；全站五份站点地图合计 234 个 URL。
    - CodeBuddy、Qoder 等页面已出现对应中文说明。
 4. 审计与测试
    - `scripts/audit_adsense_content.py` 现在输出资源/模型的状态、过期复核、中文说明缺失、官方证据缺失和过期页面仍在站点地图等信号。
