@@ -1324,3 +1324,35 @@ def test_category_threshold_still_sits_in_a_real_gap():
     assert indexable_category_slugs(read_offers()) == healthy
     if thin and healthy:
         assert max(counts[slug] for slug in thin) < min(counts[slug] for slug in healthy)
+
+def test_offer_locale_pair_prefers_explicit_chinese_overlay():
+    from scripts.build_seo_pages import _offer_locale_pair
+
+    markup = _offer_locale_pair(
+        {
+            "why": "The official plan includes a limited monthly allowance.",
+            "whyZh": "官方方案包含有限的每月使用额度。",
+            "whyEn": "The official plan includes a limited monthly allowance.",
+        },
+        ("why",),
+    )
+    assert '<span lang="zh-CN">官方方案包含有限的每月使用额度。</span>' in markup
+    assert '<span lang="en">The official plan includes a limited monthly allowance.</span>' in markup
+
+
+def test_expired_offers_are_noindex_and_absent_from_sitemaps(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    offers = read_offers()
+    expired = [offer for offer in offers if offer.get("status") == "expired"]
+    assert expired, "test fixture should include at least one expired offer"
+
+    sitemap_urls = set()
+    for sitemap_path in tmp_path.glob("sitemap-*.xml"):
+        sitemap_urls.update(re.findall(r"<loc>(.*?)</loc>", sitemap_path.read_text(encoding="utf-8")))
+
+    for offer in expired:
+        page = (tmp_path / "offers" / offer["id"] / "index.html").read_text(encoding="utf-8")
+        assert '<meta name="robots" content="noindex,follow">' in page
+        assert "adsbygoogle.js?client=ca-pub-2461062743308239" not in page
+        assert f"https://freellm.top/offers/{offer['id']}/" not in sitemap_urls
+
