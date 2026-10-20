@@ -38,17 +38,17 @@ def test_count_helper_definitions():
         {"id": "d", "status": "needs_review", "expires_at": "2026-12-31"},
     ]
     counts = compute_site_counts(offers, [{"id": "m1"}, {"id": "m2"}], "2026-10-10")
-    assert counts == {"offers": 2, "offersTotal": 4, "offersExpired": 2, "models": 2}
-    assert is_active_offer(offers[3], "2026-10-10")
+    assert counts == {"offers": 1, "offersTotal": 4, "offersExpired": 2, "offersNeedsReview": 1, "offersInactive": 3, "models": 2}
+    assert not is_active_offer(offers[3], "2026-10-10")
     assert reference_date_for("2026-10-10") == "2026-10-10"
-    for key in ("offers", "offersTotal", "offersExpired", "models", "scannedModels", "scannedOffers"):
+    for key in ("offers", "offersTotal", "offersExpired", "offersNeedsReview", "offersInactive", "models", "scannedModels", "scannedOffers"):
         assert COUNT_DEFINITIONS[key]
 
 
 def test_scan_summary_carries_the_shared_counts(summary, expected_counts):
     for key, value in expected_counts.items():
         assert summary[key] == value, key
-    assert summary["offersTotal"] == summary["offers"] + summary["offersExpired"]
+    assert summary["offersTotal"] == summary["offers"] + summary["offersExpired"] + summary["offersNeedsReview"]
     assert summary["countDefinitions"] == COUNT_DEFINITIONS
     # Scan coverage stays available but under its own, explicit keys.
     assert isinstance(summary["scannedModels"], int)
@@ -62,7 +62,7 @@ def test_homepage_counts_agree(summary):
     assert f'<b data-category-count="all">{offers}</b>' in home
     assert re.search(rf'data-filter="all"[^>]*>全部 <em>{offers}</em>', home)
     assert re.search(rf'data-filter="expired"[^>]*>已结束 <em>{expired}</em>', home)
-    assert re.search(rf'id="catalog-result-count"[^>]*>{offers} 个当前有效资源（存档共 {total} 条，{expired} 条已结束）<', home)
+    assert re.search(rf'id="catalog-result-count"[^>]*>{offers} 个当前有效资源（存档共 {total} 条，{expired} 条已结束、{summary["offersNeedsReview"]} 条待核验）<', home)
     assert f'data-scan-stat="offers">{offers}</strong>' in home
     assert f'data-scan-stat="models">{summary["models"]}</strong>' in home
     # The old competing definitions must be gone from the homepage.
@@ -73,7 +73,7 @@ def test_homepage_counts_agree(summary):
 def test_about_logs_models_and_english_hubs_agree(summary):
     models, offers = summary["models"], summary["offers"]
     about = _read("about/index.html")
-    for key in ("models", "offers", "offersTotal", "offersExpired", "newCount"):
+    for key in ("models", "offers", "offersTotal", "offersExpired", "offersNeedsReview", "newCount"):
         assert f'data-scan-stat="{key}">{summary[key]}</strong>' in about, key
     assert f'<time data-scan-date>{summary["snapshotDate"]}</time>' in about
 
