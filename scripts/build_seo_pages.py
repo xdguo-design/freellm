@@ -2407,7 +2407,7 @@ def render_guide_page(site_url: str, offers: list[dict] | None = None) -> str:
   <title>{_esc(title)} · Free AI Index</title>
   <meta name="description" content="{_esc(description)}">
   <link rel="canonical" href="{_esc(_absolute(site_url, path))}">
-  {_social_meta(site_url, path, f'{title} · Free AI Index', description, 'article')}
+  {_social_meta(site_url, path, f'{title} · Free AI Index', description, 'article', indexable=False)}
   {_analytics_script()}
   {ADSENSE_SCRIPT}
   <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
@@ -6584,7 +6584,8 @@ def sitemap_section_paths(
         "/health/",
         "/public-api/",
         *public_api_review_urls(),
-        guide_url(),
+        # This page is a dated derivative snapshot of an external README; keep it reachable,
+        # but do not present it as an index-worthy original FreeLLM editorial page.
         GETTING_STARTED_GUIDE_PATH,
         *[GETTING_STARTED_GUIDE_PATH + provider_id + "/" for provider_id in GETTING_STARTED_PROVIDER_IDS],
         OPENAI_ALTERNATIVES_GUIDE_PATH,
