@@ -743,12 +743,27 @@ def _locale_pair(zh: object, en: object, fallback_en: str = "See official terms"
 
 
 def _offer_locale_pair(offer: dict, fields: tuple[str, ...], fallback_en: str = "See official terms") -> str:
-    zh = next((offer.get(field) for field in fields if offer.get(field)), None)
+    """Render localized offer facts from explicit Zh/En fields before generic values.
+
+    Several records keep the legacy base field in English and store the actual
+    Chinese copy in a field ending in Zh. Prefer that Chinese copy; otherwise
+    the Chinese page silently renders English prose and looks machine-generated.
+    """
+    zh = next((offer.get(f"{field}Zh") for field in fields if offer.get(f"{field}Zh")), None)
+    if not zh:
+        zh = next(
+            (offer.get(field) for field in fields
+             if offer.get(field) and re.search(r"[\u3400-\u9fff]", str(offer.get(field)))),
+            None,
+        )
     en = next((offer.get(f"{field}En") for field in fields if offer.get(f"{field}En")), None)
     if not en:
-        en = next((offer.get(field) for field in fields if offer.get(field) and not re.search(r"[\u3400-\u9fff]", str(offer.get(field)))), None)
-    return _locale_pair(zh, en or zh, fallback_en)
-
+        en = next(
+            (offer.get(field) for field in fields
+             if offer.get(field) and not re.search(r"[\u3400-\u9fff]", str(offer.get(field)))),
+            None,
+        )
+    return _locale_pair(zh or "中文说明待补充，请核对官方来源。", en or zh or fallback_en, fallback_en)
 
 def _static_locale_nav() -> str:
     return '<nav class="static-locale-nav" aria-label="Language"><button type="button" data-locale-switch="zh-CN">中文</button><span aria-hidden="true">·</span><button type="button" data-locale-switch="en">English</button></nav>'
@@ -1543,7 +1558,7 @@ def _operation_guides_markup(guides: list[dict], reference_command: str = "") ->
             sources = "".join(f'<li><a href="{_esc(url)}" target="_blank" rel="nofollow noopener">{_esc(url)} ↗</a></li>' for url in path.get("sourceUrls") or [])
             paths.append(f'''<article class="operation-path"><h3>{_esc(path.get("label") or path.get("id"))}</h3><p class="operation-type">{_esc(path.get("productType") or "operation")}</p>{endpoint_markup}{limits_markup}<h4>{_locale_pair("前置条件", "Prerequisites")}</h4>{prerequisite_markup}<h4>{_locale_pair("操作步骤", "Steps")}</h4><ol class="operation-steps">{"".join(steps)}</ol><div class="operation-validation"><strong>{_locale_pair("验证动作", "Validation")}</strong><p>{_esc(path.get("validation") or "")}</p></div>{issues_markup}<h4>{_locale_pair("官方来源", "Official sources")}</h4><ul class="link-list">{sources}</ul></article>''')
         rendered_guides.append("".join(paths))
-    return f'''<section id="operation-guides"><h2>{_locale_pair("详细操作步骤", "Detailed operation paths")}</h2><p class="muted">{_locale_pair("每条路径都拆成前置条件、步骤、可复制命令和验证动作；免费条件仍以官方页面实时状态为准。curl 命令按 macOS / Linux shell 编写，Windows 用户可使用同页的 Python 或 Node.js 示例。", "Each path includes prerequisites, steps, copyable commands and a validation action; free terms still follow the provider's live official policy. The curl examples use a macOS/Linux shell; Windows users can run the Python or Node.js examples on this page.")}</p>{"".join(rendered_guides)}<script>(() => {{ document.querySelectorAll('.operation-path .copy-command').forEach(button => button.addEventListener('click', async () => {{ const target = document.getElementById(button.dataset.copyTarget); if (!target) return; await navigator.clipboard.writeText(target.innerText); button.textContent = {json.dumps('已复制', ensure_ascii=False)}; setTimeout(() => button.textContent = {json.dumps('复制命令', ensure_ascii=False)}, 1400); }})); }})();</script></section>'''
+    return f'''<section id="operation-guides"><h2>{_locale_pair("详细操作步骤", "Detailed operation paths")}</h2><p class="muted">{_locale_pair("以下按具体产品整理操作路径，并区分官方说明与本站实测。未明确标记为实测的步骤属于使用指引，不代表我们已完成登录态验证；免费条件以官方页面为准。", "The paths below are tailored to each product and distinguish official instructions from FreeLLM tests. Steps not explicitly marked as tested are guidance, not proof of signed-in verification; confirm free terms on the official page.")}</p>{"".join(rendered_guides)}<script>(() => {{ document.querySelectorAll('.operation-path .copy-command').forEach(button => button.addEventListener('click', async () => {{ const target = document.getElementById(button.dataset.copyTarget); if (!target) return; await navigator.clipboard.writeText(target.innerText); button.textContent = {json.dumps('已复制', ensure_ascii=False)}; setTimeout(() => button.textContent = {json.dumps('复制命令', ensure_ascii=False)}, 1400); }})); }})();</script></section>'''
 
 
 def render_legacy_offer_redirect(legacy_id: str, target_id: str, site_url: str) -> str:
@@ -2140,7 +2155,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
         <div class="fact"><strong>{_locale_pair("最后核验", "Last checked")}</strong><span>{_esc(offer.get('lastVerifiedAt'))}</span></div>
       </div>
     </section>
-{_quick_start_markup(offer)}
+{"" if offer.get("productType") == "free_ide" and operation_guides_markup else _quick_start_markup(offer)}
 {context_window_markup}
 {access_paths_markup}
 {operation_guides_markup}
