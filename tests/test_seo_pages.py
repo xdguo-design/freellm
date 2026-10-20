@@ -479,7 +479,9 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert "https://freellm.top/offers/codebuddy/" in sitemap
     assert "https://freellm.top/offers/agnes-ai-free/" in sitemap
     assert "https://freellm.top/category/free-ide/" in sitemap
-    assert "https://freellm.top/guides/free-llm/" in sitemap
+    assert "https://freellm.top/guides/free-llm/" not in sitemap
+    reference_guide = (tmp_path / "guides" / "free-llm" / "index.html").read_text(encoding="utf-8")
+    assert '<meta name="robots" content="noindex,follow">' in reference_guide
     assert "https://freellm.top/guides/free-openai-api-alternatives/" in sitemap
     assert "https://freellm.top/guides/claude-code-free-alternatives/" in sitemap
     assert "https://freellm.top/models/" in sitemap
