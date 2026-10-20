@@ -1888,7 +1888,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     title = offer.get("title") or offer.get("name")
     description = _description(offer)
     page_title = f"{title} · FreeLLM 免费 AI 资源索引"
-    indexable = offer.get("status") != "needs_review"
+    indexable = offer.get("status") != "needs_review" and not (offer.get("productType") == "payg" and offer.get("freeMechanism") == "not_confirmed")
     social_meta = _social_meta(site_url, path, page_title, description, "article", indexable=indexable)
     guide = offer.get("usageGuide") or {}
     categories = categorize_offer(offer)
@@ -2370,9 +2370,8 @@ def render_guide_page(site_url: str, offers: list[dict] | None = None) -> str:
   <title>{_esc(title)} · Free AI Index</title>
   <meta name="description" content="{_esc(description)}">
   <link rel="canonical" href="{_esc(_absolute(site_url, path))}">
-  {_social_meta(site_url, path, f'{title} · Free AI Index', description, 'article')}
+  {_social_meta(site_url, path, f'{title} · Free AI Index', description, 'article', indexable=False)}
   {_analytics_script()}
-  {ADSENSE_SCRIPT}
   <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
   {SKILLS_THEME_ASSETS}
   <style>
@@ -6547,7 +6546,7 @@ def sitemap_section_paths(
         "/health/",
         "/public-api/",
         *public_api_review_urls(),
-        guide_url(),
+        # Dated derivative snapshot of an external README: keep reachable, not indexable.
         GETTING_STARTED_GUIDE_PATH,
         *[GETTING_STARTED_GUIDE_PATH + provider_id + "/" for provider_id in GETTING_STARTED_PROVIDER_IDS],
         OPENAI_ALTERNATIVES_GUIDE_PATH,
@@ -6572,7 +6571,7 @@ def sitemap_section_paths(
     indexable_slugs = indexable_model_slugs(models or [])
     sections = {
         "pages": page_paths,
-        "offers": [offer_url(offer) for offer in offers if offer.get("status") != "needs_review"],
+        "offers": [offer_url(offer) for offer in offers if offer.get("status") != "needs_review" and not (offer.get("productType") == "payg" and offer.get("freeMechanism") == "not_confirmed")],
         "providers": [provider_url(provider) for provider in (providers or [])],
         "models": [f"/models/{slug}/" for slug in sorted(indexable_slugs)],
     }
@@ -6793,6 +6792,8 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
         "offers": site_counts["offers"],
         "offersTotal": site_counts["offersTotal"],
         "offersExpired": site_counts["offersExpired"],
+        "offersNeedsReview": site_counts["offersNeedsReview"],
+        "offersInactive": site_counts["offersInactive"],
         "scannedModels": len(observed.get("models") or []),
         "scannedOffers": len(observed.get("offers") or []),
         "newCount": len(new_events),
@@ -6878,7 +6879,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
             f'<p>数据日期：<time data-scan-date>{_esc(scan_label)}</time> · 今日发现 <strong data-scan-stat="newCount">{scan_summary["newCount"]}</strong>'
             f' · 模型目录 <strong data-scan-stat="models">{scan_summary["models"]}</strong> 条'
             f' · 当前有效资源 <strong data-scan-stat="offers">{scan_summary["offers"]}</strong> 条'
-            f'（存档共 <strong data-scan-stat="offersTotal">{scan_summary["offersTotal"]}</strong> 条，其中 <strong data-scan-stat="offersExpired">{scan_summary["offersExpired"]}</strong> 条已结束；<a href="/logs/">查看每日更新</a>）</p>'
+            f'（存档共 <strong data-scan-stat="offersTotal">{scan_summary["offersTotal"]}</strong> 条，其中 <strong data-scan-stat="offersExpired">{scan_summary["offersExpired"]}</strong> 条已结束、<strong data-scan-stat="offersNeedsReview">{scan_summary["offersNeedsReview"]}</strong> 条待核验；<a href="/logs/">查看每日更新</a>）</p>'
             '<p style="margin:6px 0 0;color:#5b6475;font-size:13px">口径：模型目录 = /models/all/ 列出的全部记录；当前有效资源 = 未结束的优惠记录（与首页“全部”一致）。全站这些数字由同一份构建数据生成。</p>'
             '</section>'
         )
