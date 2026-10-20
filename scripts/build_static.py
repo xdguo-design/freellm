@@ -263,14 +263,14 @@ def render_offer_flags(offer: dict) -> str:
     chips = []
     # Expired offers never carry positive verification chips (实测通过 / 加精 /
     # 实测好用 / 接口已验证): past tests must not read as current availability.
-    expired = offer.get("status") == "expired"
+    inactive = offer.get("status") in {"expired", "needs_review"}
     featured = offer.get("featured")
-    if not expired and isinstance(featured, dict) and featured.get("reason"):
+    if not inactive and isinstance(featured, dict) and featured.get("reason"):
         title = html_lib.escape(f"加精｜{featured['reason']}")
         chips.append(f'<span class="flag-chip flag-featured" title="{title}">◆ 加精</span>')
-    if offer.get("key") and not expired:
+    if offer.get("key") and not inactive:
         chips.append('<span class="flag-chip flag-key">★ 重点</span>')
-    if not expired:
+    if not inactive:
         chips.extend(render_network_chips(offer))
     edition_of = offer.get("editionOf")
     editions = offer.get("editions") or []
@@ -288,7 +288,7 @@ def render_offer_flags(offer: dict) -> str:
     if sibling:
         label = "也有国内版" if edition_of == "intl" else "也有国际版"
         chips.append(f'<a class="flag-chip flag-sibling" href="/offers/{quote(str(sibling), safe="")}/">{label} ↗</a>')
-    if expired:
+    if inactive:
         pass
     elif offer.get("handsOn"):
         chips.append('<span class="flag-chip flag-hands-on">✓ 实测好用</span>')
@@ -442,13 +442,13 @@ def replace_static_catalog(html: str, data: list[dict], scan_offer_count: int | 
         )
     updated = re.sub(
         r'(<p id="catalog-result-count"[^>]*>)[^<]*(</p>)',
-        lambda m: f"{m.group(1)}{active_count} 个当前有效资源（存档共 {count} 条，{count - active_count} 条已结束）{m.group(2)}",
+        lambda m: f"{m.group(1)}{active_count} 个当前有效资源（存档共 {count} 条，{counts['offersExpired']} 条已结束、{counts['offersNeedsReview']} 条待核验）{m.group(2)}",
         updated,
         count=1,
     )
-    expired_count = count - active_count
+    inactive_count = counts["offersInactive"]
     featured_count = sum(1 for offer in active if (offer.get("featured") or {}).get("reason"))
-    for chip, value in (("expired", expired_count), ("featured", featured_count)):
+    for chip, value in (("expired", inactive_count), ("featured", featured_count)):
         updated = re.sub(
             rf'(<button[^>]*data-filter="{chip}"[^>]*>(?:(?!</button>).)*?<em>)[^<]*(</em>)',
             lambda match, value=value: f"{match.group(1)}{value}{match.group(2)}",
