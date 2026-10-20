@@ -413,6 +413,10 @@ def _slug(value: object) -> str:
 def offer_url(offer: dict) -> str:
     return f"/offers/{_slug(offer['id'])}/"
 
+def _offer_is_indexable(offer: dict) -> bool:
+    """Only current offers are indexable; expired or unverified entries remain accessible by direct URL."""
+    return offer.get("status") not in {"needs_review", "expired"}
+
 
 def category_url(category: str) -> str:
     return f"/category/{_slug(category)}/"
@@ -1912,7 +1916,7 @@ def render_offer_page(offer: dict, offers: list[dict], site_url: str, operations
     description = _description(offer)
     page_title = f"{title} · FreeLLM 免费 AI 资源索引"
     # Expired promotions are historical records, not current free offers.
-    indexable = offer.get("status") not in {"needs_review", "expired"}
+    indexable = _offer_is_indexable(offer)
     social_meta = _social_meta(site_url, path, page_title, description, "article", indexable=indexable)
     guide = offer.get("usageGuide") or {}
     categories = categorize_offer(offer)
@@ -6596,7 +6600,7 @@ def sitemap_section_paths(
     indexable_slugs = indexable_model_slugs(models or [])
     sections = {
         "pages": page_paths,
-        "offers": [offer_url(offer) for offer in offers if offer.get("status") != "needs_review"],
+        "offers": [offer_url(offer) for offer in offers if _offer_is_indexable(offer)],
         "providers": [provider_url(provider) for provider in (providers or [])],
         "models": [f"/models/{slug}/" for slug in sorted(indexable_slugs)],
     }
