@@ -479,7 +479,7 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
     assert "https://freellm.top/offers/codebuddy/" in sitemap
     assert "https://freellm.top/offers/agnes-ai-free/" in sitemap
     assert "https://freellm.top/category/free-ide/" in sitemap
-    assert "https://freellm.top/guides/free-llm/" in sitemap
+    assert "https://freellm.top/guides/free-llm/" not in sitemap
     assert "https://freellm.top/guides/free-openai-api-alternatives/" in sitemap
     assert "https://freellm.top/guides/claude-code-free-alternatives/" in sitemap
     assert "https://freellm.top/models/" in sitemap
@@ -524,6 +524,22 @@ def test_build_site_generates_indexable_detail_category_pages_and_sitemap(tmp_pa
 
     for legal_path in ("/about/", "/terms/", "/privacy/"):
         assert f"https://freellm.top{legal_path}" in sitemap
+
+
+def test_derivative_guide_and_paid_only_reference_are_not_indexable(tmp_path):
+    build_site(OFFERS_PATH, tmp_path, site_url="https://freellm.top")
+    guide = (tmp_path / "guides" / "free-llm" / "index.html").read_text(encoding="utf-8")
+    deepseek = (tmp_path / "offers" / "deepseek" / "index.html").read_text(encoding="utf-8")
+
+    for page in (guide, deepseek):
+        assert '<meta name="robots" content="noindex,follow">' in page
+        assert "adsbygoogle.js?client=ca-pub-2461062743308239" not in page
+
+    sitemap_urls = set()
+    for sitemap_path in tmp_path.glob("sitemap-*.xml"):
+        sitemap_urls.update(re.findall(r"<loc>(.*?)</loc>", sitemap_path.read_text(encoding="utf-8")))
+    assert "https://freellm.top/guides/free-llm/" not in sitemap_urls
+    assert "https://freellm.top/offers/deepseek/" not in sitemap_urls
 
 
 def test_models_page_is_bilingual_directory_with_registration_links(tmp_path):
