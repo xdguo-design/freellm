@@ -39,6 +39,7 @@ class AdsenseContentAuditTests(unittest.TestCase):
         self.assertFalse([r for r in result["rows"] if r.get("error")])
         quality = result["sourceData"]["offers"]
         self.assertEqual(quality["expiredSitemapLeaks"], [])
+        self.assertEqual(quality["nonIndexableSitemapLeaks"], [])
         self.assertEqual(quality["missingChineseWhy"], [])
         self.assertEqual(quality["missingChineseFreeSummary"], [])
         self.assertEqual(quality["missingOfficialEvidence"], [])
@@ -66,6 +67,7 @@ class AdsenseContentAuditTests(unittest.TestCase):
             )
             offers = report["offers"]
             self.assertEqual(offers["expiredSitemapLeaks"], ["old"])
+            self.assertEqual(offers["nonIndexableSitemapLeaks"], ["old"])
             self.assertEqual(offers["staleVerificationReview"][0]["id"], "current")
             self.assertEqual(offers["missingChineseWhy"], ["current"])
             self.assertEqual(offers["missingChineseFreeSummary"], ["current"])
