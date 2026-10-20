@@ -88,7 +88,9 @@
       "cnMs": 309,
       "intlMs": 413
     },
-    "lastObservedAt": "2026-10-20"
+    "lastObservedAt": "2026-10-20",
+    "whyZh": "腾讯云 CodeBuddy 个人体验计划价格为 ¥0，包含每月积分和代码补全次数。它属于 IDE 产品订阅，不是不限量的通用 API Key。",
+    "freeSummaryZh": "每月 500 积分 · 5,000 次代码补全"
   },
   {
     "id": "qoder",
@@ -193,7 +195,8 @@
         "sourceUrl": "https://docs.qoder.com/zh/events/flashoffer"
       }
     ],
-    "lastObservedAt": "2026-10-20"
+    "lastObservedAt": "2026-10-20",
+    "whyZh": "Qoder 官方活动页说明，国际版个人用户可在活动期间免费使用 Qwen3.8-Flash（Credits 计费系数为 0）。原定 2026 年 9 月 30 日结束的活动已延期，新的结束时间尚未公布；免费账号和余额为 0 的个人账号也适用，但 Teams / Enterprise 不适用。"
   },
   {
     "id": "trae",
@@ -292,7 +295,8 @@
       "quotaTier": "high",
       "reason": "实测 205ms · 官方长期免费",
       "reasonEn": "205 ms measured · permanently free"
-    }
+    },
+    "whyZh": "TRAE 中国版官方定价页列出 ¥0 的个人计划。具体功能额度应以当前产品模式和官方规则为准，本站不猜测固定 Token 数量。"
   },
   {
     "id": "comate",
@@ -391,7 +395,9 @@
       "reason": "实测 191ms · 官方长期免费",
       "reasonEn": "191 ms measured · permanently free"
     },
-    "lastObservedAt": "2026-10-20"
+    "lastObservedAt": "2026-10-20",
+    "whyZh": "百度 Comate 官方定价页列有 Auto-Free 免费兜底模式，可在常规模型额度不足时继续使用，但该模式有单独的每小时额度限制。",
+    "freeSummaryZh": "Auto-Free 兜底模式每小时 15 万 Token"
   },
   {
     "id": "doubao",
@@ -485,7 +491,9 @@
       "cnMs": 327,
       "intlMs": 953
     },
-    "lastObservedAt": "2026-10-20"
+    "lastObservedAt": "2026-10-20",
+    "whyZh": "这是首月优惠而非永久免费方案。页面同时列出首月价格和续费价格，避免把促销误认为长期免费。",
+    "freeSummaryZh": "首月 ¥9.9 · 续费 ¥40 / 月"
   },
   {
     "id": "glm",
@@ -581,7 +589,8 @@
     },
     "expires_at": "2026-10-07",
     "expired_scope": "promotion",
-    "lastObservedAt": "2026-10-20"
+    "lastObservedAt": "2026-10-20",
+    "whyZh": "GLM-5.3-Flash 的夜间活动及错峰活动均已结束。本条仅保留为已结束活动的历史记录，不再将其描述为当前免费入口；现行 Coding Plan 价格和额度请以官方 FAQ 为准。"
   },
   {
     "id": "longcat-2-0",
@@ -748,7 +757,8 @@
       "cnHost": "api.longcat.chat",
       "cnMs": 228,
       "intlMs": 578
-    }
+    },
+    "whyZh": "美团 LongCat 官方文档列出 LongCat-2.5-Preview 和 LongCat-2.0，支持兼容 OpenAI / Anthropic 的接口并提供 100 万上下文。官方 API 需要账户余额或 Token 资源包，未见长期免费额度规则；LongCat-2.0 开放权重下载是另一条独立的免费路径。"
   },
   {
     "id": "qwen-download",
@@ -851,7 +861,9 @@
       "cnMs": 1516,
       "intlMs": 39
     },
-    "lastObservedAt": "2026-10-20"
+    "lastObservedAt": "2026-10-20",
+    "whyZh": "阿里巴巴官方 Hugging Face 模型卡提供了直接的模型仓库和下载入口。对于开发者笔记本或小型云 GPU，本地运行这个规模的模型通常比超大参数模型更实际。",
+    "freeSummaryZh": "开放权重可免费下载；本地推理需自行准备算力"
   },
   {
     "id": "glm-download",
@@ -951,7 +963,9 @@
       "cnMs": 1328,
       "intlMs": 506
     },
-    "lastObservedAt": "2026-10-20"
+    "lastObservedAt": "2026-10-20",
+    "whyZh": "智谱官方仓库提供 GLM-4.7-Flash 的 Hugging Face 与 ModelScope 下载入口。页面同时列出两者，方便不同网络环境的用户选择。",
+    "freeSummaryZh": "提供 Hugging Face 与 ModelScope 下载入口"
   },
   {
     "id": "sensecore",
@@ -1193,7 +1207,9 @@
       "urlsPerMinute": null,
       "concurrency": 2500
     },
-    "lastObservedAt": "2026-10-20"
+    "lastObservedAt": "2026-10-20",
+    "whyZh": "DeepSeek V4.1 Flash 是当前的 Flash API 模型。官方更新日志要求使用 model=deepseek-flash；旧 V4 Flash 别名已退役，目前暂时转发到 V4.1 Flash。该入口按量计费，并非免费额度。",
+    "freeSummaryZh": "按量付费，不属于免费额度；V4.1 Flash 已替代旧 V4 Flash"
   },
   {
     "id": "opencode-zen-free",
@@ -1348,7 +1364,9 @@
         "note": "限时免费；提供方零留存，不用于训练",
         "sourceUrl": "https://opencode.ai/docs/en/zen/"
       }
-    ]
+    ],
+    "whyZh": "OpenCode Zen 官方文档将 MiMo-V2.6-Flash Free 等部分模型列为限时免费，输入、输出和缓存读取价格均显示为 Free。这是 OpenCode 平台托管的免费路由，不代表小米官方 API 免费；免费期内的交互数据可能用于改进模型，请勿提交机密或敏感信息。",
+    "freeSummaryZh": "MiMo-V2.6-Flash Free 等部分模型限时免费，输入、输出与缓存读取均标为免费"
   },
   {
     "id": "github-copilot-free",
@@ -1448,7 +1466,9 @@
       "cnMs": 1864,
       "intlMs": 394
     },
-    "lastObservedAt": "2026-10-20"
+    "lastObservedAt": "2026-10-20",
+    "whyZh": "GitHub Copilot Free 为支持的编辑器、GitHub 和 Copilot CLI 提供每月代码补全额度，并限制聊天及 Agent 使用量。它是有额度限制的开发者免费计划，不是不限量模型访问。",
+    "freeSummaryZh": "每月 2,000 次代码补全 · 聊天和 Agent 用量受限"
   },
   {
     "id": "cursor-hobby",
@@ -1557,7 +1577,9 @@
       "cnMs": 536,
       "intlMs": 79
     },
-    "lastObservedAt": "2026-10-20"
+    "lastObservedAt": "2026-10-20",
+    "whyZh": "Cursor 官方定价和计划文档列出价格为 $0 的 Hobby 计划，包含有限的 Agent 请求、Chat 和 Tab 补全。官方没有稳定公布固定数值上限，因此这里不编造具体次数。",
+    "freeSummaryZh": "Hobby 免费计划 · Agent、Chat 与 Tab 用量有限"
   },
   {
     "id": "amazon-q-free",
@@ -1654,7 +1676,9 @@
       "cnMs": 1046,
       "intlMs": 218
     },
-    "lastObservedAt": "2026-10-20"
+    "lastObservedAt": "2026-10-20",
+    "whyZh": "AWS 提供持续可用的 Amazon Q Developer Free 层，包含 IDE 和 CLI 使用额度。官方定价页列出每月 50 次 Agentic 请求，以及 Java 升级每月 1,000 行代码的额度。",
+    "freeSummaryZh": "每月 50 次 Agentic 请求"
   },
   {
     "id": "google-antigravity-free",
@@ -1752,7 +1776,9 @@
       "cnMs": null,
       "intlMs": 89
     },
-    "lastObservedAt": "2026-10-20"
+    "lastObservedAt": "2026-10-20",
+    "whyZh": "Google Antigravity 官方定价页列出每月 $0 的个人计划，提供 Tab 补全和命令请求，并受基础每周速率限制约束。Google 将其作为原消费者版 Gemini Code Assist 与 Gemini CLI 用户的迁移路径。",
+    "freeSummaryZh": "个人计划 ¥0 · Tab 补全和命令请求不单独计次，但受每周速率限制"
   },
   {
     "id": "aliyun-qwen-free-quota",
@@ -2037,7 +2063,9 @@
       "cnMs": 1646,
       "intlMs": 117
     },
-    "lastObservedAt": "2026-10-20"
+    "lastObservedAt": "2026-10-20",
+    "whyZh": "Keenable 公布每月免费请求额度，并说明免费额度用完后按请求计费。",
+    "freeSummaryZh": "每月 100,000 次请求免费 · 无需绑卡"
   },
   {
     "id": "tinyfish-search-fetch-free",
@@ -2163,7 +2191,9 @@
         "https://api.tinyfish.io/search"
       ]
     },
-    "lastObservedAt": "2026-10-20"
+    "lastObservedAt": "2026-10-20",
+    "whyZh": "TinyFish 的 Search 和 Fetch 能力免费使用，并通过速率限制控制用量，不直接扣减钱包余额。",
+    "freeSummaryZh": "Search 每分钟 30 次 · Fetch 每分钟 150 个 URL"
   },
   {
     "id": "tinyfish-agent-browser-metered",
@@ -2292,7 +2322,9 @@
         "https://api.tinyfish.io/agent"
       ]
     },
-    "lastObservedAt": "2026-10-20"
+    "lastObservedAt": "2026-10-20",
+    "whyZh": "TinyFish 将付费的网页 Agent 与 Browser 执行能力和免费的 Search / Fetch 基础能力分开计费。",
+    "freeSummaryZh": "未列出免费执行额度；Agent 按步骤、Browser 按分钟计费"
   },
   {
     "id": "tavily-web-free-credits",
@@ -2434,7 +2466,9 @@
       "cnMs": 1858,
       "intlMs": 419
     },
-    "lastObservedAt": "2026-10-20"
+    "lastObservedAt": "2026-10-20",
+    "whyZh": "Tavily 使用统一的积分体系覆盖 Search、Extract、Crawl 和 Map，并提供无需绑卡的每月免费额度；不同接口的积分消耗不同。",
+    "freeSummaryZh": "每月 1,000 API 积分"
   },
   {
     "id": "exa-web-free-credits",
@@ -2573,7 +2607,9 @@
       "cnMs": 1062,
       "intlMs": 154
     },
-    "lastObservedAt": "2026-10-20"
+    "lastObservedAt": "2026-10-20",
+    "whyZh": "Exa 提供按美元计价的注册赠送额度和每月额度，支持 Search、Contents 与 Agent 接口，并分别公布请求速率和单价。",
+    "freeSummaryZh": "每月 $10 额度 · 注册赠送 $20"
   },
   {
     "id": "you-web-free-tier",
@@ -2714,7 +2750,9 @@
       "cnMs": null,
       "intlMs": 2491
     },
-    "lastObservedAt": "2026-10-20"
+    "lastObservedAt": "2026-10-20",
+    "whyZh": "You.com 同时提供无需 API Key 的每日 Search 免费额度，以及按美元计价的 API 赠送额度和低成本 Contents 提取服务。这是两种不同的访问路径。",
+    "freeSummaryZh": "每日 100 次 Search 查询 · 另有 $100 API 赠送额度"
   },
   {
     "id": "firecrawl-web-free-credits",
@@ -2856,7 +2894,9 @@
       "cnMs": 2517,
       "intlMs": 271
     },
-    "lastObservedAt": "2026-10-20"
+    "lastObservedAt": "2026-10-20",
+    "whyZh": "Firecrawl 用统一积分余额覆盖 Search、Scrape、Crawl、Map 等能力，并公布免费额度、并发数和速率限制。Agent 的预览额度应与 Search 积分分开理解。",
+    "freeSummaryZh": "每月 1,000 积分 · 约 500 次搜索或 1,000 个页面"
   },
   {
     "id": "brave-search-free-credits",
@@ -2985,7 +3025,9 @@
       "cnMs": 4311,
       "intlMs": 27
     },
-    "lastObservedAt": "2026-10-20"
+    "lastObservedAt": "2026-10-20",
+    "whyZh": "Brave Search API 每月提供价值 $5 的免费额度，并公布每秒查询能力上限。订阅免费计划仍需要绑定信用卡，但免费档本身不会因此自动变成付费档。",
+    "freeSummaryZh": "每月 $5 免费额度"
   },
   {
     "id": "browserbase-free-tier",
@@ -3119,7 +3161,9 @@
       "cnMs": 1211,
       "intlMs": 449
     },
-    "lastObservedAt": "2026-10-20"
+    "lastObservedAt": "2026-10-20",
+    "whyZh": "Browserbase 将浏览器运行时与 Search、Fetch、Agent 额度组合在同一个免费计划中；浏览器时长、搜索次数和抓取次数是不同的计量单位，不应直接等同。",
+    "freeSummaryZh": "1 小时浏览器时长 + 1,000 次 Search + 1,000 次 Fetch"
   },
   {
     "date": "2026-09-07",
@@ -3225,7 +3269,9 @@
       "cnHost": null,
       "cnMs": null,
       "intlMs": 53
-    }
+    },
+    "whyZh": "Google Gemini API 官方价格页将免费层的输入、输出和上下文缓存价格列为免费。该免费层仍有速率限制；官方也说明免费层数据可能用于改进 Google 产品，数据使用规则与付费层不同。",
+    "freeSummaryZh": "Gemini API 免费层：输入、输出和上下文缓存标价免费"
   },
   {
     "date": "2026-09-07",
@@ -3419,7 +3465,9 @@
       "cnHost": "api.groq.com",
       "cnMs": 759,
       "intlMs": 93
-    }
+    },
+    "whyZh": "Groq 官方限流文档公布了免费计划按模型区分的 RPM、RPD 和 TPM 上限，例如 gpt-oss-120b 为 30 RPM、1K RPD、8K TPM。需要以当前免费模型列表和各模型限额为准。",
+    "freeSummaryZh": "免费计划按模型限制 RPM / RPD / TPM"
   },
   {
     "date": "2026-09-07",
@@ -3524,7 +3572,8 @@
       "cnHost": "api.cerebras.ai",
       "cnMs": 1264,
       "intlMs": 172
-    }
+    },
+    "whyZh": "Cerebras 当前定价说明：添加有效支付方式后可获得一次性 $5 促销额度，激活 30 天后到期；不会自动转入付费使用。额度耗尽或到期后，API 和 Playground 会暂停，除非另行购买 PayGo 额度。"
   },
   {
     "date": "2026-09-07",
@@ -3626,7 +3675,9 @@
       "cnHost": "openrouter.ai",
       "cnMs": 1828,
       "intlMs": 26
-    }
+    },
+    "whyZh": "OpenRouter 官方文档规定，模型 ID 以 :free 结尾的免费变体每分钟最多 20 次请求；日请求上限取决于累计购买额度：累计购买不足 10 美元时为 50 次，达到 10 美元及以上时为 1,000 次。",
+    "freeSummaryZh": ":free 模型每分钟 20 次；每日 50 或 1,000 次，取决于累计购买额度"
   },
   {
     "date": "2026-09-07",
@@ -3728,7 +3779,9 @@
       "cnHost": null,
       "cnMs": null,
       "intlMs": 185
-    }
+    },
+    "whyZh": "Mistral 官方帮助中心说明，默认 Free mode 的限额最低，主要用于评估和原型开发；更高限额需要按量付费计划。",
+    "freeSummaryZh": "默认免费模式：限额较低，适合评估与原型开发"
   },
   {
     "date": "2026-09-07",
@@ -3830,7 +3883,9 @@
       "cnHost": "api.cohere.com",
       "cnMs": 1522,
       "intlMs": 146
-    }
+    },
+    "whyZh": "Cohere 官方定价 FAQ 说明，Trial API Key 的调用免费但有速率限制，不允许用于生产或商业用途。新账户可获得试用访问。",
+    "freeSummaryZh": "Trial API Key 免费但限流，不允许用于生产或商业用途"
   },
   {
     "date": "2026-09-07",
@@ -3932,7 +3987,9 @@
       "cnHost": null,
       "cnMs": null,
       "intlMs": 119
-    }
+    },
+    "whyZh": "Hugging Face 官方 Inference Providers 文档提供免费层，并为 PRO 用户及 Team / Enterprise 组织提供额外额度。",
+    "freeSummaryZh": "包含免费推理额度；PRO 和组织计划另有额外额度"
   },
   {
     "date": "2026-09-07",
@@ -4091,7 +4148,9 @@
       "quotaTier": "very_high",
       "reason": "实测 206ms · 长期免费，价目表 ¥0",
       "reasonEn": "206 ms measured · permanently free, ¥0 list price"
-    }
+    },
+    "whyZh": "硅基流动当前官方价格与模型页面将 XingChenAGI/Xing4.0-29B 等部分模型列为输入、输出均为 ¥0 的模型，并提供 OCR、Embedding、Reranker 和图像模型。免费清单可能变化，应以官方价格页为准。",
+    "freeSummaryZh": "部分官方模型价格为 ¥0，覆盖推理、OCR、Embedding、Reranker 与图像能力"
   },
   {
     "date": "2026-09-07",
@@ -4427,7 +4486,8 @@
         "note": "官方定价页标注限时免费，注明可能按模型或活动阶段调整",
         "sourceUrl": "https://agnes-ai.cn/zh-Hans/docs/pricing"
       }
-    ]
+    ],
+    "freeSummaryZh": "部分 Agnes 模型提供免费 / 默认 API 访问，按接口与模型限流"
   },
   {
     "date": "2026-09-08",
@@ -6429,7 +6489,9 @@
           "note": "核对广州/新加坡端点、鉴权、GET /v1/models 与当前模型参数"
         }
       ]
-    }
+    },
+    "whyZh": "腾讯云 TokenHub 官方文档说明，语言模型和多模态理解模型均提供新用户 100 万 Token 试用包，每个主账号每个模型可领取一次，领取后有效期一年。免费额度耗尽后默认停止服务，除非用户明确启用后付费。",
+    "freeSummaryZh": "每个语言或多模态理解模型提供 100 万新用户 Token 试用包"
   },
   {
     "id": "baidu-qianfan-new-user-free",
@@ -10458,7 +10520,8 @@
         }
       ]
     },
-    "notes": "收录日期 2026-10-10。宣布日期 2026-10-07 来自 10-10 新闻缺口审核，官方文档页本身未写日期。这是付费订阅附送的 API 额度，不是免费档；FreeLLM 未实测领取流程。"
+    "notes": "收录日期 2026-10-10。宣布日期 2026-10-07 来自 10-10 新闻缺口审核，官方文档页本身未写日期。这是付费订阅附送的 API 额度，不是免费档；FreeLLM 未实测领取流程。",
+    "whyZh": "Claude Platform 文档说明，Max 与 Team 付费计划包含每月 Claude API 额度：Max 5x 为 100 美元、Max 20x 为 200 美元，Team 共享额度最高 500 美元。额度可用于 Claude API、Managed Agents、Agent SDK 和 Playground，不适用于 Claude Code；每个账期结束清零，不结转。Free、Pro 和 Enterprise 不符合资格，因此这不是免费档。"
   },
   {
     "id": "joycode",
