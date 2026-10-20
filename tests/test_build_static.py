@@ -308,3 +308,47 @@ class BuildStaticTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+    def test_shared_counts_separate_ended_review_and_current_offers(self):
+        from scripts.site_counts import compute_site_counts, is_active_offer
+
+        offers = [
+            {"id": "active", "status": "verified"},
+            {"id": "ended", "status": "expired"},
+            {"id": "review", "status": "needs_review"},
+            {"id": "past-date", "status": "verified", "expires_at": "2026-10-13"},
+        ]
+        counts = compute_site_counts(offers, [], "2026-10-20")
+        self.assertEqual(counts["offers"], 1)
+        self.assertEqual(counts["offersTotal"], 4)
+        self.assertEqual(counts["offersExpired"], 2)
+        self.assertEqual(counts["offersNeedsReview"], 1)
+        self.assertEqual(counts["offersInactive"], 3)
+        self.assertFalse(is_active_offer(offers[1], "2026-10-20"))
+        self.assertFalse(is_active_offer(offers[2], "2026-10-20"))
+        self.assertFalse(is_active_offer(offers[3], "2026-10-20"))
+
+    def test_static_catalog_uses_chinese_overlay_and_hides_non_current_offers(self):
+        from scripts.build_static import render_static_catalog
+
+        data = [
+            {
+                "id": "active", "status": "verified", "title": "Active offer", "provider": "Provider",
+                "freeSummary": "ENGLISH-ONLY-FREE-SUMMARY", "freeSummaryZh": "中文免费额度摘要",
+                "validitySummary": "Ongoing", "accessSummary": "Global", "lastVerifiedAt": "2026-10-20",
+            },
+            {
+                "id": "review", "status": "needs_review", "title": "REVIEW-ONLY-TITLE", "provider": "Provider",
+                "freeSummary": "REVIEW-ONLY-SUMMARY", "lastVerifiedAt": "2026-10-20",
+            },
+            {
+                "id": "ended", "status": "expired", "title": "ENDED-ONLY-TITLE", "provider": "Provider",
+                "freeSummary": "ENDED-ONLY-SUMMARY", "lastVerifiedAt": "2026-10-20",
+            },
+        ]
+        rendered = render_static_catalog(data, reference_date="2026-10-20")
+        self.assertIn("中文免费额度摘要", rendered)
+        self.assertNotIn("ENGLISH-ONLY-FREE-SUMMARY", rendered)
+        self.assertNotIn("REVIEW-ONLY-TITLE", rendered)
+        self.assertNotIn("ENDED-ONLY-TITLE", rendered)
+
