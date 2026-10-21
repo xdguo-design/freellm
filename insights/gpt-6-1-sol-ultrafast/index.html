@@ -4,46 +4,26 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GPT-6.1 Sol 新增 Ultrafast：速度、价格与 Decisions API，开发者怎么选？｜FreeLLM AI 实用观察</title>
-<meta name="description" content="OpenAI API 10 月更新：GPT-6.1 Sol Ultrafast 模式、6 倍标准定价、简单成本示例，以及 GPT-6 Luna 驱动的 Decisions API Beta。">
-<meta name="robots" content="noindex,follow">
+<meta name="description" content="OpenAI API 10 月更新：GPT-6.1 Sol Ultrafast 模式、定价示例，以及 Decisions API Beta。">
+<meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://freellm.top/insights/gpt-6-1-sol-ultrafast/">
 <meta property="og:type" content="article">
 <meta property="og:title" content="GPT-6.1 Sol 新增 Ultrafast：速度、价格与 Decisions API，开发者怎么选？">
-<meta property="og:description" content="OpenAI API 10 月更新：GPT-6.1 Sol Ultrafast 模式、6 倍标准定价、简单成本示例，以及 GPT-6 Luna 驱动的 Decisions API Beta。">
 <meta property="og:url" content="https://freellm.top/insights/gpt-6-1-sol-ultrafast/">
 <link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20260920c">
-<link rel="stylesheet" href="/css/shared-navigation.css?v=20261001b">
-<link rel="stylesheet" href="/css/about-linked-pages.css?v=20261001a">
 <script src="/js/site-navigation.js?v=20261013-overflow"></script>
 </head>
 <body class="fl-ui-v2" data-fl-section="about">
 <aside class="fl-site-rail" aria-label="FreeLLM 主导航"></aside>
-<div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / AI 实用观察</span><span class="fl-site-ribbon-actions"><a href="/insights/">实用观察总览</a><a href="/submit/">提交资源 ↗</a></span></div>
 <header class="info-page-header">
 <p class="info-eyebrow">FREELLM / AI INSIGHTS / 2026-10-11</p>
 <h1>GPT-6.1 Sol 新增 Ultrafast：速度、价格与 Decisions API，开发者怎么选？</h1>
-<p class="info-lead">OpenAI API 10 月更新：GPT-6.1 Sol Ultrafast 模式、6 倍标准定价、简单成本示例，以及 GPT-6 Luna 驱动的 Decisions API Beta。</p>
-<div class="info-links"><a href="/insights/">查看全部 AI 实用观察 →</a><a href="/logs/">查看资源更新日志 →</a></div>
-<div style="margin:22px 0;padding:8px;border:1px solid #e2e8f0;border-radius:18px;background:#fff;overflow:hidden;"><svg viewBox="0 0 1200 320" role="img" aria-label="API 延迟和成本取舍示意图" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg5" x1="0" x2="1"><stop stop-color="#020617"/><stop offset="1" stop-color="#0c4a6e"/></linearGradient></defs><rect width="1200" height="320" rx="18" fill="url(#bg5)"/><g fill="none" stroke="#38bdf8" stroke-width="5" stroke-linecap="round"><path d="M95 102H280L340 62M95 160H280L340 160M95 218H280L340 258"/><path d="M760 160H915"/></g><g fill="#082f49" stroke="#38bdf8" stroke-width="2"><rect x="340" y="30" width="420" height="260" rx="20"/><circle cx="550" cy="105" r="42"/><rect x="400" y="174" width="300" height="76" rx="14"/><rect x="915" y="96" width="205" height="128" rx="16"/></g><g fill="#e0f2fe" font-family="Arial,sans-serif" font-size="24" font-weight="700" text-anchor="middle"><text x="187" y="89">Standard</text><text x="187" y="147">Fast</text><text x="187" y="205">Ultrafast</text><text x="550" y="114">GPT-6.1 Sol</text><text x="550" y="206" font-size="21">速度 vs 成本</text><text x="550" y="235" font-size="17">6× 标准价</text><text x="1017" y="145">Decisions API</text><text x="1017" y="177" font-size="17">类型化输出</text></g></svg></div>
-<div style="padding:16px 18px;border-left:4px solid #0284c7;background:#f8fafc;border-radius:0 10px 10px 0;line-height:1.9;">
-<strong>核验摘要</strong><ul><li><strong>Ultrafast：</strong>使用 <code>model: gpt-6.1-sol</code> 与 <code>service_tier: ultrafast</code>；受组织速率限制与处理区域条件约束。</li><li><strong>官方价格：</strong>标准档短上下文下，输入 $2、缓存输入 $0.10、缓存写入 $2.50、输出 $10 / 每百万 Token；Ultrafast 为标准价的 6 倍。</li><li><strong>Decisions API：</strong>处于 Beta，官方称可把文本和图像转换成类型化答案，速度最高可达 Responses API 的 10 倍；应以自己的任务评测验证。</li></ul>
-</div>
+<p class="info-lead">OpenAI API 10 月更新：GPT-6.1 Sol Ultrafast 模式、定价与 Decisions API Beta。</p>
 </header>
-<main class="info-page-main">
-<article style="max-width:880px;">
-<p>OpenAI API 在 10 月 8 日为 GPT-6.1 Sol 的 Responses API 增加 Ultrafast 档，用于降低生成输出 Token 之间的等待时间。另一个更新是 10 月 6 日进入 Beta 的 Decisions API，由 GPT-6 Luna 将文本和图像转换成类型化答案。</p>
-<h2>先算清楚 Ultrafast 账单</h2><p>按无缓存的简化假设，一次请求用 100,000 输入 Token 与 20,000 输出 Token，标准档大约是 0.20 美元输入 + 0.20 美元输出，共 0.40 美元；全部用 Ultrafast 则约 2.40 美元。真实账单还会受到上下文长度、缓存、处理档位和工具费用等规则影响。</p><h2>什么时候值得开？</h2><ul><li><strong>可以先测：</strong>实时交互、需要多次串行工具调用的 Agent、明显受生成延迟影响的用户体验。</li><li><strong>先别默认开启：</strong>后台批处理、无需立即响应的报告任务，以及可以用较小/较便宜模型完成的分类工作。</li></ul><p>对连续工具调用，OpenAI 官方建议考虑 WebSocket 等持续连接方式，减少每次请求的网络开销。评测时应记录首 Token 时间、端到端耗时、任务成功率、超时和每次成功任务成本，不能只比某个单次速度。</p><h2>怎样调用</h2><p>在 Responses API 请求里将模型设为 <code>gpt-6.1-sol</code>，并将 <code>service_tier</code> 设置为 <code>ultrafast</code>。正式流量增长前先查组织限额，并做标准档与 Ultrafast 的 A/B 测试；所有调用都强制使用最快档通常不是最经济的架构。</p><h2>Decisions API 的定位</h2><p>Decisions API 适合分类、字段抽取和其他可以用固定 Schema 验证的任务，例如给反馈打标签或从图像中提取明确字段。接入前要评估字段遗漏、模糊样本、低置信度与错误输入，并留出人工复核机制。它是 Beta 功能，不应只凭“10 倍更快”的宣传数字作为 SLA 依据。</p><h2>FreeLLM 的选型建议</h2><p>把成本、速率限制、地区和模型能力分开比较：付费高速度档适合明确对延迟敏感的环节，免费 API 或开放权重模型可能适合离线任务和低预算原型，但同样需要核验额度与实际可用性。</p>
-<section style="margin-top:28px;padding:18px;border:1px solid #dbeafe;border-radius:12px;background:#f8fafc;">
-<h2 style="margin-top:0;">在 FreeLLM 继续查找</h2>
-<p>本文对官方信息和仍待确认的条件作了区分。找工具时，可以继续查看目录并在注册/付费之前回到来源页核对额度、价格、权限与地区限制。</p>
-<p class="info-links"><a href="/category/api/">API 资源分类 →</a> · <a href="/guides/free-openai-compatible-apis/">免费 OpenAI 兼容 API 指南 →</a> · <a href="/models/">模型目录 →</a></p>
-<p><a href="/insights/">返回 AI 实用观察总览 →</a></p>
-</section>
-<section style="margin-top:28px;">
-<h2>官方来源</h2><ul><li><a href="https://developers.openai.com/api/docs/changelog" target="_blank" rel="noopener noreferrer">OpenAI API Changelog</a></li><li><a href="https://developers.openai.com/api/docs/models/gpt-6.1-sol" target="_blank" rel="noopener noreferrer">GPT-6.1 Sol 官方模型文档</a></li><li><a href="https://developers.openai.com/api/docs/guides/ultrafast-mode" target="_blank" rel="noopener noreferrer">Ultrafast 官方指南</a></li><li><a href="https://developers.openai.com/api/docs/pricing" target="_blank" rel="noopener noreferrer">OpenAI API 定价页</a></li></ul>
-<p style="font-size:13px;color:#64748b;">核验日期：2026 年 10 月 11 日。工具可用性、价格、额度和政策可能变化；如信息发生变化，以官方最新说明为准。</p>
-</section>
-</article>
-</main>
-<footer class="info-page-footer"><a href="/">FreeLLM 首页</a><a href="/about/">关于 FreeLLM</a><a href="/guide/">使用教程</a><a href="/terms/">使用条款</a></footer>
-<script src="/js/freellm-sync.js?v=20261012-daily-discovery"></script></body></html>
+<main class="info-page-main"><article style="max-width:880px;">
+<p>OpenAI 为 GPT-6.1 Sol 增加 Ultrafast 模式，并推出 Decisions API Beta。选型时把延迟、单价与任务复杂度分开看：简单分类可用更快档，复杂推理仍应实测成功率与返工成本。</p>
+<ul><li>先在同一提示词集上对比标准与 Ultrafast 的延迟与错误率。</li><li>把「更快」与「更便宜」分开核算。</li><li>注册前核对官方额度。</li></ul>
+<p class="info-links"><a href="/category/api/">API 分类 →</a> · <a href="/guides/how-we-verify/">如何核验 →</a></p>
+</article></main>
+<footer class="info-page-footer"><a href="/">FreeLLM</a> · <a href="/insights/">实用观察</a></footer>
+</body></html>
