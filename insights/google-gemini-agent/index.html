@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Google Gemini Agent 重磅发布：跨 Gmail、Drive、代码和数据，企业 AI 进入长任务时代｜FreeLLM AI 实用观察</title>
 <meta name="description" content="拆解 Google Cloud 2026 年 10 月的 Gemini Agent 公告：跨应用执行、持续上下文、多代理编排、MCP 工具连接和企业级权限治理。">
-<meta name="robots" content="noindex,follow">
+<meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://freellm.top/insights/google-gemini-agent/">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Google Gemini Agent 重磅发布：跨 Gmail、Drive、代码和数据，企业 AI 进入长任务时代">
@@ -24,24 +24,20 @@
 <h1>Google Gemini Agent 重磅发布：跨 Gmail、Drive、代码和数据，企业 AI 进入长任务时代</h1>
 <p class="info-lead">拆解 Google Cloud 2026 年 10 月的 Gemini Agent 公告：跨应用执行、持续上下文、多代理编排、MCP 工具连接和企业级权限治理。</p>
 <div class="info-links"><a href="/insights/">查看全部 AI 实用观察 →</a><a href="/logs/">查看资源更新日志 →</a></div>
-<div style="margin:22px 0;padding:8px;border:1px solid #e2e8f0;border-radius:18px;background:#fff;overflow:hidden;"><svg viewBox="0 0 1200 320" role="img" aria-label="跨应用 AI Agent 工作流示意图" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg2" x1="0" x2="1"><stop stop-color="#eef2ff"/><stop offset="1" stop-color="#dbeafe"/></linearGradient></defs><rect width="1200" height="320" rx="18" fill="url(#bg2)"/><g stroke="#818cf8" stroke-width="4" fill="none" stroke-linecap="round"><path d="M260 160H405M535 160H665M795 160H940"/><path d="M600 160V80H790M600 160V245H790"/></g><g fill="#fff" stroke="#a5b4fc" stroke-width="2"><rect x="65" y="105" width="195" height="110" rx="16"/><rect x="405" y="104" width="130" height="112" rx="18"/><rect x="665" y="30" width="180" height="100" rx="14"/><rect x="665" y="190" width="180" height="100" rx="14"/><rect x="940" y="105" width="190" height="110" rx="16"/></g><g fill="#312e81" font-family="Arial,sans-serif" font-size="22" font-weight="700" text-anchor="middle"><text x="162" y="148">Workspace</text><text x="162" y="180" font-size="17">Gmail · Drive · Docs</text><text x="470" y="151">Agent</text><text x="470" y="180" font-size="16">规划 · 调工具</text><text x="755" y="72">Data / CRM</text><text x="755" y="100" font-size="16">查询与分析</text><text x="755" y="231">Dev tools</text><text x="755" y="260" font-size="16">Git · Jira · MCP</text><text x="1035" y="148">交付结果</text><text x="1035" y="180" font-size="17">带证据与审计</text></g></svg></div>
-<div style="padding:16px 18px;border-left:4px solid #6366f1;background:#f8fafc;border-radius:0 10px 10px 0;line-height:1.9;">
-<strong>核验摘要</strong><ul><li><strong>公告中明确提及：</strong>Gmail、Drive、Docs、Slides、Sheets、Chat、Calendar 等 Workspace 入口，以及企业工具、数据平台和 MCP Server 连接方向。</li><li><strong>能力主轴：</strong>持续执行、多代理协调、技能/工具调用、模型路由与企业权限治理。</li><li><strong>仍需确认：</strong>各功能的具体套餐、正式开放时间、地区与个人免费账号是否可用。企业公告不能直接等同于个人版免费功能。</li></ul>
-</div>
 </header>
 <main class="info-page-main">
 <article style="max-width:880px;">
 <p>Google Cloud 在 2026 年 10 月 8 日公布 Gemini Agent，方向是从一个入口规划并执行跨应用工作：把目标拆成步骤、连接业务工具、保留任务上下文，并把结果送回用户正在使用的工作环境。</p>
-<h2>为什么这不只是“更聪明的聊天框”？</h2><p>传统聊天模型通常以一条回答结束；Agent 则要对任务负责，能跨工具读取资料、执行步骤并交付结果。随着任务从数秒扩展到数小时，产品需要提供可恢复的状态、失败记录、操作审计和权限边界。</p><h2>优先试点的四种低风险工作流</h2><ul><li>项目周报：只读指定文档和工单，生成草稿但不直接发送。</li><li>研发分流：整理 issue 标签并建议负责人，写入操作由人工确认。</li><li>数据分析：先输出 SQL、口径和时间范围，再生成报表。</li><li>代码审阅：阅读 PR diff 并提出测试建议，不自动合并、不自动部署。</li></ul><h2>自己搭建 Agent 时的六个控制点</h2><p>先写清完成条件；把允许使用的工具列成白名单；为每个系统配置最小权限；设置最大步骤数、超时、重试和成本上限；对删除、付款、发送与发布等不可逆操作设置人工审批；最后用过去真实任务做离线评估，比较成功率与返工时间。</p><h2>关于免费和可用性</h2><p>截至本次核验，Google Cloud 的公告能够确认产品方向和工作能力，但没有在同一页面列出所有 SKU 的完整价格、全部开放日期和个人账号资格。不要把演示截图或企业客户案例当作已经向所有免费用户开放的证明。</p><h2>FreeLLM 相关资源</h2><p>如果要自行搭建工作流，可先比较现有工具、Skills、模型和 API 条件；尤其要把“模型免费”与“运行时、工具调用、数据连接均免费”分开核算。</p>
+<h2>为什么这不只是“更聪明的聊天框”？</h2><p>传统聊天模型通常以一条回答结束；Agent 则要对任务负责，能跨工具读取资料、执行步骤并交付结果。</p>
+<h2>优先试点的四种低风险工作流</h2><ul><li>项目周报：只读指定文档和工单，生成草稿但不直接发送。</li><li>研发分流：整理 issue 标签并建议负责人，写入操作由人工确认。</li><li>数据分析：先输出 SQL、口径和时间范围，再生成报表。</li><li>代码审阅：阅读 PR diff 并提出测试建议，不自动合并。</li></ul>
+<h2>关于免费和可用性</h2><p>企业公告不能直接等同于个人版免费功能。截至核验时，完整价格、开放日期与个人账号资格仍需以官方页面为准。</p>
 <section style="margin-top:28px;padding:18px;border:1px solid #dbeafe;border-radius:12px;background:#f8fafc;">
 <h2 style="margin-top:0;">在 FreeLLM 继续查找</h2>
-<p>本文对官方信息和仍待确认的条件作了区分。找工具时，可以继续查看目录并在注册/付费之前回到来源页核对额度、价格、权限与地区限制。</p>
-<p class="info-links"><a href="/tools/">工具箱 →</a> · <a href="/skills/">Skills 目录 →</a> · <a href="/models/">模型目录 →</a></p>
-<p><a href="/insights/">返回 AI 实用观察总览 →</a></p>
+<p class="info-links"><a href="/tools/">工具箱 →</a> · <a href="/skills/">Skills 目录 →</a> · <a href="/guides/how-we-verify/">如何核验 →</a></p>
 </section>
 <section style="margin-top:28px;">
 <h2>官方来源</h2><ul><li><a href="https://cloud.google.com/blog/products/ai-machine-learning/welcome-to-gemini-at-work-2026" target="_blank" rel="noopener noreferrer">Google Cloud 官方博客（2026-10-08）</a></li></ul>
-<p style="font-size:13px;color:#64748b;">核验日期：2026 年 10 月 11 日。工具可用性、价格、额度和政策可能变化；如信息发生变化，以官方最新说明为准。</p>
+<p style="font-size:13px;color:#64748b;">核验日期：2026 年 10 月 11 日。</p>
 </section>
 </article>
 </main>
