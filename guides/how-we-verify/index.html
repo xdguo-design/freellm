@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN" class="fl-pastel-ui">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FreeLLM 如何核验免费 AI 资源：官方来源、证据分级与实测流程｜FreeLLM</title>
+<meta name="description" content="公开 FreeLLM 的核验流程：如何区分官方来源与二手信息、免费机制如何标注、什么情况下才标记「已实测」，以及使用前自查清单。">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://freellm.top/guides/how-we-verify/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FreeLLM 如何核验免费 AI 资源：官方来源、证据分级与实测流程">
+<meta property="og:description" content="公开 FreeLLM 的核验流程：如何区分官方来源与二手信息、免费机制如何标注、什么情况下才标记「已实测」，以及使用前自查清单。">
+<meta property="og:url" content="https://freellm.top/guides/how-we-verify/">
+<link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20260920c">
+<link rel="stylesheet" href="/css/shared-navigation.css?v=20261001b">
+<link rel="stylesheet" href="/css/about-linked-pages.css?v=20261001a">
+<script src="/js/site-navigation.js?v=20261013-overflow"></script>
+</head>
+<body class="fl-ui-v2" data-fl-section="about">
+<aside class="fl-site-rail" aria-label="FreeLLM 主导航"></aside>
+<div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / 使用指南</span><span class="fl-site-ribbon-actions"><a href="/guide/">全部指南</a><a href="/submit/">提交资源 ↗</a></span></div>
+<header class="info-page-header">
+<p class="info-eyebrow">FREELLM / GUIDE / HOW WE VERIFY</p>
+<h1>FreeLLM 如何核验免费 AI 资源</h1>
+<p class="info-lead">我们不销售模型，也不替任何平台背书。目录里的「免费」必须能对应到可核对的机制：官方文档、价格页、活动规则或可复现的实测记录。本文说明核验标准、证据分级与使用前自查清单。</p>
+<div class="info-links"><a href="/about/">关于 FreeLLM →</a><a href="/insights/">AI 实用观察 →</a><a href="/evaluations/">实测榜 →</a></div>
+</header>
+<main class="info-page-main">
+<article style="max-width:880px;line-height:1.8;">
+
+<section>
+<h2>1. 我们在核验什么</h2>
+<p>FreeLLM 收录的是「可公开使用的免费或限免 AI 能力」：网页工具、API 额度、开放权重模型、限时活动等。核验目标不是证明某产品永远免费，而是在<strong>某个时间点</strong>说明：免费机制是什么、边界在哪里、证据来自哪里。</p>
+<ul>
+<li><strong>可访问性</strong>：公开入口是否仍可打开，是否需要付费墙或地区限制。</li>
+<li><strong>免费机制</strong>：免费层、新人额度、活动期限、速率限制是否写清楚。</li>
+<li><strong>可复核性</strong>：关键结论能否对应到官方页面、changelog 或可复现测试。</li>
+</ul>
+</section>
+
+<section>
+<h2>2. 证据分级</h2>
+<ol>
+<li><strong>一级（优先）</strong>：厂商官方文档、定价页、产品更新公告、GitHub README/Release。</li>
+<li><strong>二级</strong>：官方博客、可核对的产品内界面截图（注明日期与账号类型）。</li>
+<li><strong>三级（仅作线索）</strong>：第三方汇总、社群截图；不会单独作为「已确认免费」的依据。</li>
+</ol>
+<p>若只有三级线索，我们会标注「待核验」或暂缓收录，而不是写成确定结论。</p>
+</section>
+
+<section>
+<h2>3. 「已实测」如何标注</h2>
+<p>只有在我们用自有账号完成最小可复现步骤后，才会标记「已实测」：</p>
+<ul>
+<li>注册/登录路径可走通；</li>
+<li>至少完成一次目标能力调用（例如一次对话、一次 API 请求）；</li>
+<li>记录日期、模型/产品 ID、平台与可见限制（RPM、日额度等）。</li>
+</ul>
+<p>没有完成上述步骤的条目，最多写「来源已核对」，不会冒充实测。</p>
+</section>
+
+<section>
+<h2>4. 评分与榜单</h2>
+<p>公开评分必须绑定：测试集或任务说明、模型/产品精确 ID、平台、日期与原始结果摘要。宣传分、模糊「体验很好」不会进入实测榜。</p>
+</section>
+
+<section>
+<h2>5. 使用前自查清单（给读者）</h2>
+<ol>
+<li>打开官方定价/文档，确认免费档是否仍存在。</li>
+<li>核对地区、账号类型、模型白名单与速率限制。</li>
+<li>用自己的账号发最小请求，观察鉴权与计费行为。</li>
+<li>不要把「限时活动」理解成「永久免费」；活动结束后以官方最新说明为准。</li>
+<li>向未知条款的端点提交密钥或保密代码前，先读隐私与数据条款。</li>
+</ol>
+</section>
+
+<section>
+<h2>6. 错误与更新</h2>
+<p>免费政策变化很快。若你发现目录与官方不一致，欢迎通过 <a href="/submit/">提交资源</a> 告知；我们会按证据分级更新或下架，并在日志中保留变更痕迹。</p>
+</section>
+
+<section style="margin-top:28px;padding:18px;border:1px solid #dbeafe;border-radius:12px;background:#f8fafc;">
+<h2 style="margin-top:0;">相关入口</h2>
+<p class="info-links">
+<a href="/about/">关于与原则 →</a> ·
+<a href="/evaluations/">实测榜 →</a> ·
+<a href="/logs/">资源更新日志 →</a> ·
+<a href="/insights/">AI 实用观察 →</a>
+</p>
+</section>
+
+</article>
+</main>
+<footer class="info-page-footer">
+<a href="/">FreeLLM 首页</a>
+<a href="/about/">关于</a>
+<a href="/guide/">使用教程</a>
+<a href="/terms/">使用条款</a>
+</footer>
+<script src="/js/freellm-sync.js?v=20261012-daily-discovery"></script>
+</body>
+</html>
