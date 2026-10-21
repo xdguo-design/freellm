@@ -3,47 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mistral Large 4 深度解读：1T 参数、多模态与开放权重前，开发者该测什么？｜FreeLLM AI 实用观察</title>
-<meta name="description" content="Mistral Large 4 已开放公开预览 API，并计划在 10 月底发布权重。本文梳理多模态、长上下文、评估方法与官方参数口径差异。">
-<meta name="robots" content="noindex,follow">
+<title>Mistral Large 4 深度解读：公开预览、多模态与开放权重前该测什么｜FreeLLM AI 实用观察</title>
+<meta name="description" content="Mistral Large 4 公开预览 API 与权重计划；多模态、长上下文评估与参数口径差异。">
+<meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://freellm.top/insights/mistral-large-4/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mistral Large 4 深度解读：1T 参数、多模态与开放权重前，开发者该测什么？">
-<meta property="og:description" content="Mistral Large 4 已开放公开预览 API，并计划在 10 月底发布权重。本文梳理多模态、长上下文、评估方法与官方参数口径差异。">
+<meta property="og:title" content="Mistral Large 4 深度解读：公开预览、多模态与开放权重前该测什么">
 <meta property="og:url" content="https://freellm.top/insights/mistral-large-4/">
 <link rel="stylesheet" href="/css/freellm-pastel-ui.css?v=20260920c">
-<link rel="stylesheet" href="/css/shared-navigation.css?v=20261001b">
-<link rel="stylesheet" href="/css/about-linked-pages.css?v=20261001a">
 <script src="/js/site-navigation.js?v=20261013-overflow"></script>
 </head>
 <body class="fl-ui-v2" data-fl-section="about">
 <aside class="fl-site-rail" aria-label="FreeLLM 主导航"></aside>
-<div class="fl-site-ribbon"><span class="fl-site-ribbon-title">FREE AI INDEX / AI 实用观察</span><span class="fl-site-ribbon-actions"><a href="/insights/">实用观察总览</a><a href="/submit/">提交资源 ↗</a></span></div>
 <header class="info-page-header">
 <p class="info-eyebrow">FREELLM / AI INSIGHTS / 2026-10-11</p>
-<h1>Mistral Large 4 深度解读：1T 参数、多模态与开放权重前，开发者该测什么？</h1>
-<p class="info-lead">Mistral Large 4 已开放公开预览 API，并计划在 10 月底发布权重。本文梳理多模态、长上下文、评估方法与官方参数口径差异。</p>
-<div class="info-links"><a href="/insights/">查看全部 AI 实用观察 →</a><a href="/logs/">查看资源更新日志 →</a></div>
-<div style="margin:22px 0;padding:8px;border:1px solid #e2e8f0;border-radius:18px;background:#fff;overflow:hidden;"><svg viewBox="0 0 1200 320" role="img" aria-label="稀疏专家模型与多模态输入示意图" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg3" x1="0" x2="1"><stop stop-color="#0f172a"/><stop offset="1" stop-color="#7c2d12"/></linearGradient></defs><rect width="1200" height="320" rx="18" fill="url(#bg3)"/><g stroke="#fdba74" stroke-width="2" fill="none" opacity=".8"><path d="M145 75L310 160L145 245M310 160L455 70M310 160L455 160M310 160L455 250M590 70L760 160M590 160L760 160M590 250L760 160M760 160L965 160"/></g><g fill="#7c2d12" stroke="#fdba74" stroke-width="2"><circle cx="145" cy="75" r="34"/><circle cx="145" cy="245" r="34"/><circle cx="310" cy="160" r="47"/><rect x="455" y="40" width="135" height="60" rx="12"/><rect x="455" y="130" width="135" height="60" rx="12"/><rect x="455" y="220" width="135" height="60" rx="12"/><circle cx="760" cy="160" r="56"/><rect x="965" y="107" width="165" height="106" rx="16"/></g><g fill="#fff7ed" font-family="Arial,sans-serif" font-size="20" font-weight="700" text-anchor="middle"><text x="145" y="82" font-size="16">Text</text><text x="145" y="252" font-size="16">Vision</text><text x="310" y="167" font-size="21">MoE</text><text x="522" y="77" font-size="18">Code</text><text x="522" y="167" font-size="18">Agent</text><text x="522" y="257" font-size="18">Docs</text><text x="760" y="154">1T 级</text><text x="760" y="181" font-size="17">多模态模型</text><text x="1047" y="152">公开预览</text><text x="1047" y="180" font-size="17">API 测试</text></g></svg></div>
-<div style="padding:16px 18px;border-left:4px solid #ea580c;background:#f8fafc;border-radius:0 10px 10px 0;line-height:1.9;">
-<strong>核验摘要</strong><ul><li><strong>官方公告：</strong>模型属于 1T 级总参数的原生多模态模型，定位涵盖编码、Agent 工作流与视觉理解。</li><li><strong>公开预览：</strong>可通过 Mistral Studio API 试用，但 API 预览不等于免费。</li><li><strong>参数口径待复核：</strong>官方公告写 52B active parameters，部分官方模型文档则出现 49B。本文保留这一差异，不自行选择一个数字当作定论。</li><li><strong>发布时间：</strong>官方公告写“10 月底发布权重”，不应根据第三方或生成式配图把日期精确到某一天。</li></ul>
-</div>
+<h1>Mistral Large 4 深度解读：公开预览与开放权重前该测什么</h1>
+<p class="info-lead">公开预览 API 不等于免费或可本地部署；权重发布前应先用统一题集评估。</p>
 </header>
-<main class="info-page-main">
-<article style="max-width:880px;">
-<p>Mistral AI 于 2026 年 10 月 6 日开放 Mistral Large 4 的公开预览 API，并表示计划在 10 月底发布权重。现阶段适合通过统一测试集评估代码、多模态、长上下文与 Agent 行为；在权重真正发布前，不宜把它写成“已经可本地部署”。</p>
-<h2>开放权重前，先测五类任务</h2><ol><li><strong>多文件代码：</strong>先读目录与依赖，再修一个小 bug，记录测试通过率和无关文件改动。</li><li><strong>长文档问答：</strong>要求引用证据，并加入资料中没有答案的问题，检查模型是否编造。</li><li><strong>多模态理解：</strong>用公开图表、截图和扫描文档评估标签、单位、图例和字段提取。</li><li><strong>工具调用：</strong>验证函数参数是否符合 Schema，以及工具失败后能否恢复。</li><li><strong>预算对比：</strong>在相同提示词与数据下，测成功率、延迟、输出长度、人工返工和每次成功任务成本。</li></ol><h2>不要把公开预览当成免费</h2><p>Mistral Studio 的模型页面会列出输入、缓存输入和输出的分项价格；价格可能随促销或产品更新变化。测试前先检查控制台实际计费和预算上限，尤其注意长上下文、循环工具调用和重试。</p><h2>等权重发布后，还要重新评估</h2><p>“开放权重”也不能自动推导出某种许可证允许所有商用方式，或能在一张普通显卡上运行。正式部署前应核对许可证、权重来源、推理框架支持、量化损失、显存需求、吞吐量和安全策略。</p><h2>对免费 AI 资源索引的处理原则</h2><p>在权重文件公开并完成核验前，应把它标记为“公开预览 API / 权重待发布”，而不是“已验证可本地运行”。等文件、许可证和部署要求明确后，再补充模型卡及实测记录。</p>
-<section style="margin-top:28px;padding:18px;border:1px solid #dbeafe;border-radius:12px;background:#f8fafc;">
-<h2 style="margin-top:0;">在 FreeLLM 继续查找</h2>
-<p>本文对官方信息和仍待确认的条件作了区分。找工具时，可以继续查看目录并在注册/付费之前回到来源页核对额度、价格、权限与地区限制。</p>
-<p class="info-links"><a href="/category/open-weights/">开放权重模型专题 →</a> · <a href="/models/">模型目录 →</a> · <a href="/logs/">最近更新日志 →</a></p>
-<p><a href="/insights/">返回 AI 实用观察总览 →</a></p>
-</section>
-<section style="margin-top:28px;">
-<h2>官方来源</h2><ul><li><a href="https://mistral.ai/news/mistral-large-4/" target="_blank" rel="noopener noreferrer">Mistral 官方公告（2026-10-06）</a></li><li><a href="https://docs.mistral.ai/models/mistral-large" target="_blank" rel="noopener noreferrer">Mistral 官方模型文档</a></li><li><a href="https://docs.mistral.ai/models/mistral-large-4-0" target="_blank" rel="noopener noreferrer">官方模型文档另一版本（参数口径需核对）</a></li></ul>
-<p style="font-size:13px;color:#64748b;">核验日期：2026 年 10 月 11 日。工具可用性、价格、额度和政策可能变化；如信息发生变化，以官方最新说明为准。</p>
-</section>
-</article>
-</main>
-<footer class="info-page-footer"><a href="/">FreeLLM 首页</a><a href="/about/">关于 FreeLLM</a><a href="/guide/">使用教程</a><a href="/terms/">使用条款</a></footer>
-<script src="/js/freellm-sync.js?v=20261012-daily-discovery"></script></body></html>
+<main class="info-page-main"><article style="max-width:880px;">
+<p>Mistral Large 4 已开放公开预览 API，并计划发布权重。现阶段适合通过统一测试集评估代码、多模态、长上下文与工具调用；在权重真正公开前，不宜写成「已可本地部署」。</p>
+<h2>开放权重前建议测的五类任务</h2>
+<ol><li>多文件代码修复与无关改动控制</li><li>长文档问答与防幻觉</li><li>图表/截图等多模态提取</li><li>工具调用 Schema 符合度</li><li>延迟、成本与人工返工对比</li></ol>
+<p class="info-links"><a href="/category/open-weights/">开放权重专题 →</a> · <a href="/evaluations/">实测榜 →</a> · <a href="/guides/how-we-verify/">如何核验 →</a></p>
+</article></main>
+<footer class="info-page-footer"><a href="/">FreeLLM</a> · <a href="/insights/">实用观察</a></footer>
+</body></html>
