@@ -463,6 +463,11 @@
     }).sort(function(a,b){
       var priority=actionPriorityRank(a.level)-actionPriorityRank(b.level);
       if(priority)return priority;
+      // A failed live CORS probe is an immediate P0 and must remain visible
+      // in the capped action queue instead of being buried by less urgent P0s.
+      var corsA=a.reasons.some(function(reason){return reason.code==='cors_failed';})?0:1;
+      var corsB=b.reasons.some(function(reason){return reason.code==='cors_failed';})?0:1;
+      if(corsA!==corsB)return corsA-corsB;
       var reasonCount=b.reasons.length-a.reasons.length;
       if(reasonCount)return reasonCount;
       var age=b.age-a.age;
