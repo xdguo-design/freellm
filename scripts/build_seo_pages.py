@@ -7627,7 +7627,9 @@ def _remove_legacy_global_nav(content: str) -> str:
 
 
 def _ensure_static_site_chrome(content: str, path: Path) -> str:
-    if path.suffix != ".html":
+    if path.suffix != ".html" or path == Path("offers/index.html"):
+        # The resource directory is an authored standalone landing page with its own
+        # responsive header; do not replace it with the generated sidebar shell.
         return content
     section = _visual_section_for_path(path)
     items = [
