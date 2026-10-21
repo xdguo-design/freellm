@@ -20,6 +20,7 @@ DEFAULT_ROOT = Path(__file__).resolve().parents[1]
 HOMEPAGE_FILE = Path("design/free-china-ai-index.html")
 SITEMAPS = (
     "sitemap-pages.xml",
+    "sitemap-news.xml",
     "sitemap-offers.xml",
     "sitemap-providers.xml",
     "sitemap-models.xml",
@@ -38,6 +39,7 @@ SCAN_ROOTS = (
     "providers",
     "logs",
     "skills",
+    "news",
 )
 ROBOTS_RE = re.compile(
     r'<meta\s+[^>]*name=["\']robots["\'][^>]*content=["\']([^"\']+)["\']',

@@ -1,0 +1,244 @@
+name: wechat-ai-news
+
+# Daily Chinese AI brief built from WeChat official-account RSS feeds.
+#
+# Triggered by the Octop platform cron (workflow_dispatch) with an in-GitHub
+# schedule as the cloud fallback. Every run is gated before the commit, and a
+# day without enough relevant news writes nothing at all -- a thin article is
+# worse than no article.
+#
+# The commit target defaults to the branch the run was started on:
+#   * Octop dispatches on `dev`  -> article lands on dev (development flow)
+#   * the schedule runs on the default branch -> article lands on main
+# Exactly one branch per day matters: the idempotency guard skips a day whose
+# article already exists on the target branch.
+
+on:
+  schedule:
+    - cron: "0 4 * * *" # 12:00 Asia/Shanghai, fallback for the 08:00 platform trigger
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: "Branch to commit the article to (empty = the branch this run was started on)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wechat-ai-news
+  cancel-in-progress: false
+
+env:
+  SITE_URL: https://freellm.top
+  NEWS_LLM_BASE_URL: https://api.siliconflow.cn/v1
+  NEWS_LLM_MODEL: deepseek-ai/DeepSeek-V3
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Resolve target branch and Beijing date
+        id: ctx
+        run: |
+          target="${{ inputs.target_branch }}"
+          if [ -z "$target" ]; then target="${GITHUB_REF_NAME}"; fi
+          echo "target=$target" >> "$GITHUB_OUTPUT"
+          echo "today=$(TZ=Asia/Shanghai date +%F)" >> "$GITHUB_OUTPUT"
+          echo "Target branch: $target"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.ctx.outputs.target }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Idempotency guard (today already published?)
+        id: guard
+        run: |
+          if [ -f "data/news/${{ steps.ctx.outputs.today }}.json" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Today's article already exists on ${{ steps.ctx.outputs.target }}; nothing to do."
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install test dependencies
+        if: steps.guard.outputs.exists != 'true'
+        run: python -m pip install --disable-pip-version-check pytest
+
+      - name: Collect WeChat AI news (last 3 days)
+        if: steps.guard.outputs.exists != 'true'
+        run: >-
+          python -m crawler.cli wechat-scan
+          --sources data/wechat-news-sources.json
+          --out "data/news-digest/${{ steps.ctx.outputs.today }}-raw.json"
+          --window-days 3
+          --timeout 15
+
+      - name: Score against the FreeLLM topic
+        id: score
+        if: steps.guard.outputs.exists != 'true'
+        env:
+          TODAY: ${{ steps.ctx.outputs.today }}
+        run: |
+          python -m crawler.cli wechat-score \
+            --raw "data/news-digest/${TODAY}-raw.json" \
+            --out "data/news-digest/${TODAY}.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          digest = json.loads(Path(f"data/news-digest/{os.environ['TODAY']}.json").read_text(encoding="utf-8"))
+          accepted = len(digest.get("accepted") or [])
+          config = json.loads(Path("data/wechat-news-config.json").read_text(encoding="utf-8"))
+          minimum = int(config.get("minArticleItems") or 3)
+          print(f"accepted items: {accepted} (minimum {minimum})")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
+              handle.write(f"publishable={'true' if accepted >= minimum else 'false'}\n")
+          PY
+
+      - name: Generate the daily article (LLM, fails closed)
+        if: steps.score.outputs.publishable == 'true'
+        env:
+          NEWS_LLM_API_KEY: ${{ secrets.SILICONFLOW_API_KEY }}
+        run: >-
+          python scripts/generate_news_article.py
+          --digest "data/news-digest/${{ steps.ctx.outputs.today }}.json"
+
+      - name: Detect generated article
+        id: article
+        if: always() && steps.score.outputs.publishable == 'true'
+        run: |
+          if [ -f "data/news/${{ steps.ctx.outputs.today }}.json" ]; then
+            echo "written=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "written=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::no article was written today (see the generation step for the reason)"
+          fi
+
+      - name: Build static pages (renders /news/, sitemaps and feed)
+        if: steps.article.outputs.written == 'true'
+        run: python scripts/build_seo_pages.py --data data/offers.json --output . --site-url "$SITE_URL"
+
+      - name: Gate - news pipeline unit tests
+        if: steps.article.outputs.written == 'true'
+        run: >-
+          python -m unittest
+          tests.test_wechat_news
+          tests.test_wechat_relevance
+          tests.test_generate_news_article
+          tests.test_news_pages
+          tests.test_wechat_news_workflow
+          -v
+
+      - name: Gate - generated output is current
+        if: steps.article.outputs.written == 'true'
+        run: python scripts/build_seo_pages.py --data data/offers.json --output . --site-url "$SITE_URL" --check
+
+      - name: Gate - news pages pass the page audit
+        if: steps.article.outputs.written == 'true'
+        run: |
+          python scripts/audit_all_pages.py --report all-pages-audit.json
+          python - <<'PY'
+          import json, sys
+          from pathlib import Path
+          report = json.loads(Path("all-pages-audit.json").read_text(encoding="utf-8"))
+          # The site-wide gate is blocked by pre-existing issues elsewhere
+          # (/prompts/ has no page yet), so the daily job enforces the news
+          # section only; dev pushes still run the full suite via daily-check.
+          bad = [row for row in report["pages"] if row["path"].startswith("news/") and row["errors"]]
+          for row in bad:
+              for error in row["errors"]:
+                  print(f"::error::{row['path']}: {error}")
+          if bad:
+              sys.exit(f"{len(bad)} news page(s) failed the audit")
+          print(f"news pages audited clean ({sum(1 for row in report['pages'] if row['path'].startswith('news/'))} page(s))")
+          PY
+
+      - name: Gate - sitemap entries resolve to generated files
+        if: steps.article.outputs.written == 'true'
+        run: |
+          python - <<'PY'
+          import sys
+          from pathlib import Path
+          from urllib.parse import urlparse
+          from xml.etree import ElementTree
+
+          path = Path("sitemap-news.xml")
+          if not path.is_file():
+              sys.exit("sitemap-news.xml is missing")
+          tree = ElementTree.parse(path)
+          ns = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+          urls = [loc.text.strip() for loc in tree.findall(".//sm:loc", ns) if loc.text]
+          if not urls:
+              sys.exit("sitemap-news.xml lists no URL")
+          for url in urls:
+              relative = urlparse(url).path.strip("/")
+              target = Path(relative) / "index.html"
+              if not target.is_file():
+                  sys.exit(f"sitemap URL has no generated file: {url} -> {target}")
+          print(f"sitemap-news.xml: {len(urls)} URL(s) resolve")
+          PY
+
+      - name: Commit and push the daily article
+        if: steps.article.outputs.written == 'true'
+        env:
+          TARGET: ${{ steps.ctx.outputs.target }}
+          TODAY: ${{ steps.ctx.outputs.today }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- "data/news/${TODAY}.json" news sitemap-news.xml sitemap.xml sitemap-pages.xml feed.xml \
+            offers category guides models providers logs skills
+          if git diff --cached --quiet; then
+            echo "No content changes to commit."
+            exit 0
+          fi
+          git commit -m "content: AI 日报 ${TODAY}"
+          git push origin "HEAD:${TARGET}"
+
+      - name: Upload audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wechat-ai-news-${{ steps.ctx.outputs.today }}
+          path: |
+            data/news-digest/
+            all-pages-audit.json
+          if-no-files-found: warn
+
+      - name: Job summary
+        if: always()
+        env:
+          TODAY: ${{ steps.ctx.outputs.today }}
+          TARGET: ${{ steps.ctx.outputs.target }}
+          EXISTS: ${{ steps.guard.outputs.exists }}
+          PUBLISHABLE: ${{ steps.score.outputs.publishable }}
+          WRITTEN: ${{ steps.article.outputs.written }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          lines = [
+              f"## WeChat AI news brief - {os.environ.get('TODAY', '')}",
+              "",
+              f"- target branch: `{os.environ.get('TARGET', '')}`",
+              f"- already published before this run: `{os.environ.get('EXISTS', '')}`",
+              f"- topic gate publishable: `{os.environ.get('PUBLISHABLE', '')}`",
+              f"- article written: `{os.environ.get('WRITTEN', '')}`",
+          ]
+          record_path = Path(f"data/news/{os.environ.get('TODAY', '')}.json")
+          if record_path.is_file():
+              record = json.loads(record_path.read_text(encoding="utf-8"))
+              lines.append(f"- article: {record.get('titleZh')} ({len(record.get('items') or [])} items)")
+              for item in record.get("items") or []:
+                  lines.append(f"  - [{item.get('account')}] {item.get('title')}")
+          lines.extend(["", "digest evidence: attached artifact `wechat-ai-news-` + date"])
+          Path(os.environ["GITHUB_STEP_SUMMARY"]).write_text("\n".join(lines) + "\n", encoding="utf-8")
+          PY

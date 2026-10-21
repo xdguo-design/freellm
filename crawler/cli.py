@@ -21,6 +21,8 @@ from .github_discovery import (
     validate_peer_registry,
 )
 from .schema import validate_offers
+from .wechat_news import collect_wechat_news, validate_source_registry as validate_wechat_source_registry
+from .wechat_relevance import build_relevant_digest, digest_is_publishable, extract_site_entities
 from scripts.build_discovery_report import build_discovery_report
 
 
@@ -83,6 +85,18 @@ def main(argv: list[str] | None = None) -> int:
     signals = commands.add_parser("signals")
     signals.add_argument("--input", required=True)
     signals.add_argument("--out", required=True)
+
+    wechat_scan = commands.add_parser("wechat-scan", help="collect WeChat AI news feeds inside the recent window")
+    wechat_scan.add_argument("--sources", required=True)
+    wechat_scan.add_argument("--out", required=True)
+    wechat_scan.add_argument("--window-days", type=int, default=3)
+    wechat_scan.add_argument("--timeout", type=int, default=15)
+
+    wechat_score = commands.add_parser("wechat-score", help="score a raw WeChat digest against the site topic")
+    wechat_score.add_argument("--raw", required=True)
+    wechat_score.add_argument("--data-dir", default="data")
+    wechat_score.add_argument("--config", default="data/wechat-news-config.json")
+    wechat_score.add_argument("--out", required=True)
 
     log = commands.add_parser("log")
     log.add_argument("--models", required=True)
@@ -252,6 +266,37 @@ def main(argv: list[str] | None = None) -> int:
         _write_json(args.out, merged)
         rejected_count = sum(1 for record in incoming if validate_signals([record]))
         print(f"signals: {len(merged)} records, {rejected_count} rejected")
+        return 0
+    if args.command == "wechat-scan":
+        sources = _read_json(args.sources)
+        registry_errors = validate_wechat_source_registry(sources)
+        if registry_errors:
+            print("invalid WeChat source registry:")
+            print("\n".join(f"- {error}" for error in registry_errors))
+            return 1
+        digest = collect_wechat_news(sources, window_days=args.window_days, timeout=args.timeout)
+        _write_json(args.out, digest)
+        healthy = sum(1 for row in digest["sources"] if row["status"] == "ok")
+        failed = sum(1 for row in digest["sources"] if row["status"] not in {"ok", "disabled"})
+        print(f"wechat-scan: {len(digest['items'])} items in {args.window_days}d window, {healthy} healthy, {failed} failed sources")
+        for row in digest["sources"]:
+            if row["status"] not in {"ok", "disabled"}:
+                print(f"::warning::source {row['id']}: {row['status']} ({row['error']})")
+        return 1 if healthy == 0 else 0
+    if args.command == "wechat-score":
+        raw = _read_json(args.raw)
+        config = _read_json(args.config)
+        data_dir = args.data_dir
+        entities = extract_site_entities(
+            _read_json(f"{data_dir}/models.json") if Path(f"{data_dir}/models.json").is_file() else [],
+            _read_json(f"{data_dir}/providers.json") if Path(f"{data_dir}/providers.json").is_file() else [],
+            config.get("extraEntities"),
+        )
+        digest = build_relevant_digest(raw, entities, config)
+        _write_json(args.out, digest)
+        publishable, reason = digest_is_publishable(digest, config)
+        print(f"wechat-score: {digest['stats']['collected']} collected, {digest['stats']['accepted']} accepted, {digest['stats']['rejected']} rejected")
+        print(f"publishable: {'yes' if publishable else 'no'}{'' if publishable else f' ({reason})'}")
         return 0
     if args.command == "log":
         previous = _read_json(args.previous) if args.previous and Path(args.previous).is_file() else None

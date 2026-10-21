@@ -475,6 +475,7 @@ ALL_MODELS_PAGE_PATH = "/models/all/"
 MODEL_CENTER_PAGE_PATH = "/models/center/"
 PROVIDERS_PAGE_PATH = "/providers/"
 CHANGE_LOG_PAGE_PATH = "/logs/"
+NEWS_PAGE_PATH = "/news/"
 SKILLS_PAGE_PATH = "/skills/"
 WORKFLOW_PAGE_PATH = "/workflow/"
 LEGACY_WORKFLOW_PAGE_PATH = "/skills/lab/"
@@ -5100,7 +5101,7 @@ h1,h2,h3,h4 { font-family:var(--font-serif); font-weight:400; color:var(--ink); 
 </style>'''
     style += STATIC_LOCALE_SCRIPT
     page = f'''<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>每日发现 · FreeLLM</title><meta name="description" content="FreeLLM 每日发现：近 7 天新出现的免费模型、限免活动和开发工具，逐条附官方来源；恢复、下线和来源异常也如实记录。"><link rel="canonical" href="{_esc(page_url)}">{_hreflang_links(site_url, CHANGE_LOG_PAGE_PATH)}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{ADSENSE_SCRIPT}{VERCEL_ANALYTICS_SCRIPT}{GA4_SCRIPT}{STATIC_LOCALE_STYLE}</head><body data-static-locale="true"><main class="daily-log-dashboard"><header class="log-hero"><div class="log-hero-top"><div><div class="log-kicker">DAILY DISCOVERIES / 每日发现</div><h1><span lang="zh-CN">每日发现，<br>这一周的 AI 新可能</span><span lang="en">Daily discoveries: what is new this week</span></h1><p class="lead"><span lang="zh-CN">每天从官方来源找出新出现的免费模型、限免活动和开发工具，写清楚能免费用多少、用到什么时候。同一个项目只在第一次出现的那天记一次。</span><span lang="en">Every day we look through official sources for newly free models, limited-time offers and developer tools, and note how much is free and for how long.</span></p></div><div class="log-hero-meta"><div><span>{_locale_pair('最新日期', 'Latest date')}</span><strong>{_esc(dates[0] if dates else '—')}</strong></div><div><span>{_locale_pair('近 7 天发现', 'Last 7 days')}</span><strong>{_locale_pair(f'{week_total} 项', f'{week_total} items')}</strong></div><div><span>{_locale_pair('目录状态', 'Directory state')}</span><strong>{_locale_pair(latest_status, latest_status_en)}</strong></div></div></div><div class="log-hero-actions"><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair('返回首页', 'Back to FreeLLM')}</a><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('查看模型目录', 'Open model directory')}</a></div></header>{discovery_week}{reference_modules}{history_archive}<footer class="log-footer"><p>{_locale_pair('下线只在来源成功时判定；来源抓取失败不会被误报为下线。', 'Offline is only recorded after a successful source snapshot; a failed fetch is never treated as offline.')}</p>{_static_locale_nav()}</footer></main>{style}</body></html>'''
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>每日发现 · FreeLLM</title><meta name="description" content="FreeLLM 每日发现：近 7 天新出现的免费模型、限免活动和开发工具，逐条附官方来源；恢复、下线和来源异常也如实记录。"><link rel="canonical" href="{_esc(page_url)}">{_hreflang_links(site_url, CHANGE_LOG_PAGE_PATH)}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{ADSENSE_SCRIPT}{VERCEL_ANALYTICS_SCRIPT}{GA4_SCRIPT}{STATIC_LOCALE_STYLE}</head><body data-static-locale="true"><main class="daily-log-dashboard"><header class="log-hero"><div class="log-hero-top"><div><div class="log-kicker">DAILY DISCOVERIES / 每日发现</div><h1><span lang="zh-CN">每日发现，<br>这一周的 AI 新可能</span><span lang="en">Daily discoveries: what is new this week</span></h1><p class="lead"><span lang="zh-CN">每天从官方来源找出新出现的免费模型、限免活动和开发工具，写清楚能免费用多少、用到什么时候。同一个项目只在第一次出现的那天记一次。</span><span lang="en">Every day we look through official sources for newly free models, limited-time offers and developer tools, and note how much is free and for how long.</span></p></div><div class="log-hero-meta"><div><span>{_locale_pair('最新日期', 'Latest date')}</span><strong>{_esc(dates[0] if dates else '—')}</strong></div><div><span>{_locale_pair('近 7 天发现', 'Last 7 days')}</span><strong>{_locale_pair(f'{week_total} 项', f'{week_total} items')}</strong></div><div><span>{_locale_pair('目录状态', 'Directory state')}</span><strong>{_locale_pair(latest_status, latest_status_en)}</strong></div></div></div><div class="log-hero-actions"><a href="{_esc(_absolute(site_url, '/'))}">{_locale_pair('返回首页', 'Back to FreeLLM')}</a><a href="{_esc(_absolute(site_url, ALL_MODELS_PAGE_PATH))}">{_locale_pair('查看模型目录', 'Open model directory')}</a><a href="{_esc(_absolute(site_url, NEWS_PAGE_PATH))}">{_locale_pair('AI 日报', 'AI brief')}</a></div></header>{discovery_week}{reference_modules}{history_archive}<footer class="log-footer"><p>{_locale_pair('下线只在来源成功时判定；来源抓取失败不会被误报为下线。', 'Offline is only recorded after a successful source snapshot; a failed fetch is never treated as offline.')}</p>{_static_locale_nav()}</footer></main>{style}</body></html>'''
 
 
     canonical = f'<link rel="canonical" href="{_esc(page_url)}">'
@@ -5130,6 +5131,145 @@ h1,h2,h3,h4 { font-family:var(--font-serif); font-weight:400; color:var(--ink); 
     return page.replace(canonical, canonical + social, 1)
 
 
+def news_url(record: dict) -> str:
+    date = str(record.get("date") or "")
+    return f"/news/{date}/" if date else NEWS_PAGE_PATH
+
+
+NEWS_PAGE_STYLE = '''<style>
+''' + EDITORIAL_TOKENS_CSS + '''
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0; color:var(--ink); background:var(--canvas); font:400 15px/1.6 var(--font-sans); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+a { color:var(--accent); }
+h1,h2,h3 { font-family:var(--font-serif); font-weight:400; color:var(--ink); }
+.news-daily { max-width:860px; margin:0 auto; padding:24px 18px 64px; }
+.news-hero { padding:clamp(22px,4vw,40px); border:1px solid var(--line); border-radius:8px; background:var(--surface); }
+.news-kicker { color:var(--accent); font:500 11px/1.4 var(--font-mono); letter-spacing:.12em; text-transform:uppercase; }
+.news-hero h1 { margin:12px 0 10px; font-size:clamp(28px,4.6vw,44px); line-height:1.15; letter-spacing:-.02em; }
+.news-hero .lead { margin:0; color:var(--ink-secondary); font-size:15.5px; line-height:1.75; }
+.news-hero-meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; }
+.news-hero-meta span { padding:4px 11px; border-radius:9999px; background:var(--accent-soft); color:var(--accent); font:500 11.5px/1.6 var(--font-mono); }
+.news-list { margin:18px 0 0; padding:0; list-style:none; }
+.news-day-link { display:block; margin:0 0 10px; padding:15px 17px; border:1px solid var(--line); border-radius:8px; background:var(--surface); text-decoration:none; transition:border-color .15s; }
+.news-day-link:hover { border-color:var(--ink-tertiary); }
+.news-day-link time { display:block; color:var(--ink-tertiary); font:500 12px/1.5 var(--font-mono); }
+.news-day-link strong { display:block; margin:5px 0 4px; color:var(--ink); font:600 16px/1.5 var(--font-sans); }
+.news-day-link p { margin:0; color:var(--ink-secondary); font-size:13px; line-height:1.6; }
+.news-day-link .news-day-count { display:inline-block; margin-top:7px; color:var(--ink-tertiary); font:400 11.5px/1.5 var(--font-mono); }
+.news-items { margin:20px 0 0; padding:0; list-style:none; }
+.news-item { margin:0 0 14px; padding:17px 19px; border:1px solid var(--line); border-radius:8px; background:var(--surface); }
+.news-item-head { display:flex; gap:13px; align-items:flex-start; }
+.news-item-index { flex:none; width:26px; height:26px; border-radius:50%; background:var(--accent-soft); color:var(--accent); font:600 12px/26px var(--font-mono); text-align:center; }
+.news-item h3 { margin:0; font-size:17px; line-height:1.5; }
+.news-item h3 a { color:var(--ink); text-decoration:none; }
+.news-item h3 a:hover { color:var(--accent); text-decoration:underline; }
+.news-item-meta { display:flex; gap:6px 14px; flex-wrap:wrap; margin:5px 0 0; color:var(--ink-tertiary); font:400 12px/1.5 var(--font-mono); }
+.news-item-meta span + span::before { content:"· "; }
+.news-item-summary { margin:10px 0 0; color:var(--ink); font-size:14.5px; line-height:1.75; }
+.news-item-tags { display:flex; gap:6px; flex-wrap:wrap; margin:10px 0 0; }
+.news-tag { padding:2px 9px; border:1px solid var(--line); border-radius:9999px; color:var(--ink-secondary); background:var(--surface-soft); font:500 11px/1.6 var(--font-mono); }
+.news-related { display:flex; gap:7px; flex-wrap:wrap; margin:11px 0 0; padding-top:10px; border-top:1px solid var(--line-soft); }
+.news-related a { padding:4px 11px; border:1px solid var(--line); border-radius:9999px; color:var(--accent); font-size:12px; text-decoration:none; }
+.news-related a:hover { border-color:var(--ink-tertiary); }
+.news-empty { margin:18px 0; padding:16px 18px; border:1px dashed var(--line); border-radius:8px; background:var(--surface-soft); }
+.news-empty strong { display:block; }
+.news-empty p { margin:5px 0 0; color:var(--ink-secondary); font-size:13px; }
+.news-footer { margin-top:32px; padding-top:18px; border-top:1px solid var(--line); color:var(--ink-secondary); font-size:12.5px; line-height:1.75; }
+.news-footer a { color:var(--accent); }
+@media (max-width:720px) { .news-daily { padding:12px 8px 42px; } .news-item { padding:14px 15px; } }
+</style>'''
+
+
+def _news_published_label(value: object) -> str:
+    text = str(value or "")
+    if len(text) >= 16:
+        return text[:16].replace("T", " ")
+    return text or "时间未知"
+
+
+def _news_item_markup(index: int, item: dict, site_url: str) -> str:
+    tags = "".join(f'<span class="news-tag">{_esc(tag)}</span>' for tag in item.get("tags") or [])
+    related = item.get("relatedLinks") or []
+    related_markup = ""
+    if related:
+        links = "".join(
+            f'<a href="{_esc(_absolute(site_url, str(link.get("url"))))}">{_esc(link.get("label"))}</a>'
+            for link in related
+            if isinstance(link, dict) and link.get("url")
+        )
+        if links:
+            related_markup = f'<div class="news-related">{links}</div>'
+    return (
+        f'<li class="news-item" id="news-item-{index}"><div class="news-item-head">'
+        f'<span class="news-item-index" aria-hidden="true">{index:02d}</span><div>'
+        f'<h3><a href="{_esc(str(item.get("url") or ""))}" rel="nofollow noopener" target="_blank">{_esc(item.get("title"))}</a></h3>'
+        f'<div class="news-item-meta"><span>{_esc(item.get("account"))}</span><span>{_esc(_news_published_label(item.get("publishedAt")))}</span></div>'
+        f'</div></div>'
+        f'<p class="news-item-summary">{_esc(item.get("summaryZh"))}</p>'
+        f'<div class="news-item-tags">{tags}</div>{related_markup}</li>'
+    )
+
+
+def render_news_index_page(news: list[dict], site_url: str) -> str:
+    """List every published daily article, newest first."""
+    page_url = _absolute(site_url, NEWS_PAGE_PATH)
+    sorted_news = sorted(news, key=lambda record: str(record.get("date") or ""), reverse=True)
+    indexable = bool(sorted_news)
+    days = []
+    for record in sorted_news:
+        items = record.get("items") or []
+        days.append(
+            f'<li><a class="news-day-link" href="{_esc(_absolute(site_url, news_url(record)))}">'
+            f'<time>{_esc(record.get("date"))}</time><strong>{_esc(record.get("titleZh"))}</strong>'
+            f'<p>{_esc(record.get("summaryZh"))}</p>'
+            f'<span class="news-day-count">{len(items)} 条新闻</span></a></li>'
+        )
+    body = "".join(days) or (
+        '<div class="news-empty"><strong>日报即将开始 / The daily brief has not started yet.</strong>'
+        '<p>每个工作日自动汇总微信公众号近 3 天的 AI 新闻，只收录与免费额度、开源模型和 AI 工具有关的内容。</p></div>'
+    )
+    schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": "FreeLLM AI 日报", "url": page_url, "inLanguage": ["zh-CN"], "dateModified": sorted_news[0].get("date") if sorted_news else None}
+    title = "AI 日报 · FreeLLM"
+    description = "每日汇总微信公众号近 3 天的 AI 新闻：免费额度、开源模型与 AI 工具动态，逐条附来源链接。"
+    robots = '<meta name="robots" content="index,follow,max-image-preview:large">' if indexable else '<meta name="robots" content="noindex,follow">'
+    adsense = ADSENSE_SCRIPT if indexable else ""
+    page = f'''<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{title}</title><meta name="description" content="{description}">{robots}<link rel="canonical" href="{_esc(page_url)}">{_hreflang_links(site_url, NEWS_PAGE_PATH)}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{adsense}{VERCEL_ANALYTICS_SCRIPT}{GA4_SCRIPT}{STATIC_LOCALE_STYLE}</head><body data-static-locale="true"><main class="news-daily"><header class="news-hero"><div class="news-kicker">DAILY AI BRIEF / AI 日报</div><h1>每天读过的 AI 新闻，<br>替你汇成一页</h1><p class="lead"><span lang="zh-CN">每个工作日自动抓取微信公众号近 3 天的 AI 报道，按 FreeLLM 的主题（免费额度、开源模型、AI 工具）筛选后写成中文日报；每条都带原文链接，额度与条款以官方页面为准。</span><span lang="en">A daily Chinese brief of WeChat AI coverage from the last three days, filtered for free quotas, open-weight models and AI tools, with source links.</span></p><div class="news-hero-meta"><span>{len(sorted_news)} 期日报</span><span>近 3 天窗口</span><span>来源：微信公众号</span></div><p style="margin:14px 0 0"><a href="{_esc(_absolute(site_url, CHANGE_LOG_PAGE_PATH))}">查看官方来源每日发现 →</a></p></header><ul class="news-list">{body}</ul><footer class="news-footer"><p>日报内容由公开报道经 AI 摘要整理生成，仅作事实归纳与外链导航，不构成全文转载。</p>{_static_locale_nav()}</footer></main>{NEWS_PAGE_STYLE}</body></html>'''
+    social = _social_meta(site_url, page_url, title, description, "website", indexable=indexable)
+    canonical = f'<link rel="canonical" href="{_esc(page_url)}">'
+    return page.replace(canonical, canonical + social, 1)
+
+
+def render_news_article_page(record: dict, site_url: str) -> str:
+    """Render one daily article from its data/news record."""
+    page_url = _absolute(site_url, news_url(record))
+    items = record.get("items") or []
+    item_markup = "".join(_news_item_markup(index, item, site_url) for index, item in enumerate(items, start=1))
+    title = str(record.get("titleZh") or "AI 日报")
+    description = str(record.get("summaryZh") or "")[:150]
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "NewsArticle",
+        "headline": title,
+        "description": description,
+        "datePublished": record.get("createdAt") or f"{record.get('date')}T00:00:00+08:00",
+        "dateModified": record.get("createdAt") or f"{record.get('date')}T00:00:00+08:00",
+        "inLanguage": ["zh-CN"],
+        "mainEntityOfPage": page_url,
+        "url": page_url,
+        "author": {"@type": "Organization", "name": "FreeLLM", "url": _absolute(site_url, "/")},
+        "publisher": {"@type": "Organization", "name": "FreeLLM", "url": _absolute(site_url, "/")},
+        "image": _absolute(site_url, SHARE_IMAGE_PATH),
+    }
+    generated_by = str(record.get("generatedBy") or "AI")
+    page = f'''<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{_esc(title)} · FreeLLM</title><meta name="description" content="{_esc(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="{_esc(page_url)}">{_hreflang_links(site_url, news_url(record))}<script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>{ADSENSE_SCRIPT}{VERCEL_ANALYTICS_SCRIPT}{GA4_SCRIPT}{STATIC_LOCALE_STYLE}</head><body data-static-locale="true"><main class="news-daily"><header class="news-hero"><div class="news-kicker">DAILY AI BRIEF / AI 日报</div><h1>{_esc(title)}</h1><p class="lead">{_esc(record.get("summaryZh"))}</p><div class="news-hero-meta"><span>{_esc(record.get("date"))}</span><span>{len(items)} 条新闻</span><span>来源：微信公众号</span></div><p style="margin:14px 0 0"><a href="{_esc(_absolute(site_url, NEWS_PAGE_PATH))}">查看全部日报 →</a></p></header><ul class="news-items">{item_markup}</ul><footer class="news-footer"><p>本页由微信公众号公开报道经 AI 摘要整理生成（{_esc(generated_by)}），仅作事实归纳与外链导航，不构成全文转载；免费额度、定价与条款请以各官方页面为准。</p><p><a href="{_esc(_absolute(site_url, CHANGE_LOG_PAGE_PATH))}">官方来源每日发现</a> · <a href="{_esc(_absolute(site_url, '/'))}">返回 FreeLLM 首页</a></p>{_static_locale_nav()}</footer></main>{NEWS_PAGE_STYLE}</body></html>'''
+    social = _social_meta(site_url, page_url, title, description, "article")
+    canonical = f'<link rel="canonical" href="{_esc(page_url)}">'
+    return page.replace(canonical, canonical + social, 1)
+
+
 def _load_daily_logs(data_path: Path) -> list[dict]:
     log_dir = data_path.parent / "daily-log"
     if not log_dir.is_dir():
@@ -5140,6 +5280,18 @@ def _load_daily_logs(data_path: Path) -> list[dict]:
         if isinstance(value, dict):
             logs.append(value)
     return logs
+
+
+def _load_news(data_path: Path) -> list[dict]:
+    news_dir = data_path.parent / "news"
+    if not news_dir.is_dir():
+        return []
+    records = []
+    for path in sorted(news_dir.glob("*.json")):
+        value = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(value, dict) and str(value.get("date") or ""):
+            records.append(value)
+    return sorted(records, key=lambda record: str(record.get("date") or ""), reverse=True)
 
 
 def _format_star_count(value) -> str:
@@ -6499,7 +6651,7 @@ def render_legacy_workflow_redirect(site_url: str) -> str:
     )
 
 
-SITEMAP_SECTIONS: tuple[str, ...] = ("pages", "offers", "providers", "models", "english")
+SITEMAP_SECTIONS: tuple[str, ...] = ("pages", "news", "offers", "providers", "models", "english")
 
 
 def public_api_review_urls() -> list[str]:
@@ -6523,6 +6675,7 @@ def sitemap_section_paths(
     categories: list[str],
     models: list[dict] | None = None,
     providers: list[dict] | None = None,
+    news: list[dict] | None = None,
 ) -> dict[str, list[str]]:
     """Split sitemap URLs per section so GSC reports indexing progress per group.
 
@@ -6569,6 +6722,7 @@ def sitemap_section_paths(
     indexable_slugs = indexable_model_slugs(models or [])
     sections = {
         "pages": page_paths,
+        "news": ([NEWS_PAGE_PATH] + [news_url(record) for record in news]) if news else [],
         "offers": [offer_url(offer) for offer in offers if offer.get("status") != "needs_review"],
         "providers": [provider_url(provider) for provider in (providers or [])],
         "models": [f"/models/{slug}/" for slug in sorted(indexable_slugs)],
@@ -6604,12 +6758,14 @@ def render_sitemaps(
     site_url: str,
     models: list[dict] | None = None,
     providers: list[dict] | None = None,
+    news: list[dict] | None = None,
 ) -> dict[Path, str]:
-    sections = sitemap_section_paths(offers, categories, models, providers)
+    sections = sitemap_section_paths(offers, categories, models, providers, news)
     sections["english"] = list(ENGLISH_LOCALE_PATHS.values())
     files = {
         Path(f"sitemap-{section}.xml"): render_url_sitemap(paths, site_url)
         for section, paths in sections.items()
+        if paths
     }
     files[Path("sitemap.xml")] = render_sitemap_index(site_url, sections)
     return files
@@ -6657,7 +6813,7 @@ def _feed_news_items(daily_logs: list[dict] | None, site_url: str) -> list[dict]
     return items
 
 
-def render_feed(offers: list[dict], site_url: str, daily_logs: list[dict] | None = None) -> str:
+def render_feed(offers: list[dict], site_url: str, daily_logs: list[dict] | None = None, news: list[dict] | None = None) -> str:
     """Render an Atom feed of the newest catalog entries and curated news.
 
     One date convention with /logs/: every entry is dated by its Asia/Shanghai
@@ -6684,6 +6840,19 @@ def render_feed(offers: list[dict], site_url: str, daily_logs: list[dict] | None
         })
     offer_titles = {item["title"].strip() for item in items}
     items.extend(item for item in _feed_news_items(daily_logs, site_url) if item["title"].strip() not in offer_titles)
+    for record in news or []:
+        day = str(record.get("date") or "")
+        if not day:
+            continue
+        link = _absolute(site_url, news_url(record))
+        items.append({
+            "date": day,
+            "sortKey": f"news/{day}",
+            "title": str(record.get("titleZh") or f"AI 日报 {day}"),
+            "link": link,
+            "id": link,
+            "summary": str(record.get("summaryZh") or ""),
+        })
     ordered = sorted(items, key=lambda item: (item["date"], item["sortKey"]), reverse=True)[:FEED_ENTRY_LIMIT]
 
     feed_updated = ordered[0]["date"] if ordered else "1970-01-01"
@@ -6741,7 +6910,7 @@ def _skill_content_files(skills: list[dict], data_dir: Path | None) -> dict[Path
     return files
 
 
-def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None = None, operations: list[dict] | None = None, daily_logs: list[dict] | None = None, skills: list[dict] | None = None, recipes: list[dict] | None = None, data_dir: Path | None = None, vendor_directory: list[dict] | None = None) -> tuple[dict[Path, str], list[str]]:
+def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None = None, operations: list[dict] | None = None, daily_logs: list[dict] | None = None, skills: list[dict] | None = None, recipes: list[dict] | None = None, data_dir: Path | None = None, vendor_directory: list[dict] | None = None, news: list[dict] | None = None) -> tuple[dict[Path, str], list[str]]:
     categories = [
         category
         for category in CATEGORY_DEFINITIONS
@@ -6753,8 +6922,14 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
     latest_daily_log = max(daily_logs or [], key=lambda item: str(item.get("date") or ""), default={})
     count_reference_date = reference_date_for(latest_daily_log.get("date"))
     files: dict[Path, str] = {
-        **render_sitemaps(offers, categories, site_url, model_catalog, providers),
-        Path(FEED_PATH): render_feed(offers, site_url, daily_logs if daily_logs is not None else _load_daily_logs((Path(data_dir) if data_dir is not None else ACCESS_DATA_DIR) / "offers.json")),
+        **render_sitemaps(offers, categories, site_url, model_catalog, providers, news),
+        Path(FEED_PATH): render_feed(offers, site_url, daily_logs if daily_logs is not None else _load_daily_logs((Path(data_dir) if data_dir is not None else ACCESS_DATA_DIR) / "offers.json"), news),
+        Path("news") / "index.html": render_news_index_page(news or [], site_url),
+        **{
+            Path("news") / str(record.get("date")) / "index.html": render_news_article_page(record, site_url)
+            for record in news or []
+            if record.get("date")
+        },
         Path("skills") / "index.html": render_skills_page(skills or [], site_url, recipes or []),
         Path("skills") / "examples" / "index.html": render_skill_examples_page(skills or [], _load_skill_eval_results(data_dir), site_url),
         Path("skills") / "learn" / "index.html": render_skill_learn_page(skills or [], _load_skill_eval_results(data_dir), site_url),
@@ -7403,6 +7578,8 @@ def _visual_section_for_path(path: Path) -> str:
         return "tools"
     if first == "logs":
         return "logs"
+    if first == "news":
+        return "news"
     if first in {"models", "providers", "offers", "category", "guides"}:
         return "models"
     if first in {"about", "links", "privacy", "terms"}:
@@ -7725,8 +7902,9 @@ def build_site(data_path: str | Path, output_root: str | Path, site_url: str = S
     skills = _merge_skill_tests(skills, _load_skill_tests(data_path, skills))
     recipes = _load_skill_recipes(data_path, skills)
     daily_logs = _load_daily_logs(data_path)
+    news = _load_news(data_path)
     vendor_directory = _load_vendor_directory(data_path)
-    files, categories = _expected_files(offers, site_url.rstrip("/"), models, operations, daily_logs, skills, recipes, data_dir=data_path.parent, vendor_directory=vendor_directory)
+    files, categories = _expected_files(offers, site_url.rstrip("/"), models, operations, daily_logs, skills, recipes, data_dir=data_path.parent, vendor_directory=vendor_directory, news=news)
     files = {
         relative: (_append_legal_links(content) if relative.suffix == ".html" else content)
         for relative, content in files.items()
