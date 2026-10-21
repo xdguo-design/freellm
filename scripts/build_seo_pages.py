@@ -6572,7 +6572,7 @@ def sitemap_section_paths(
     indexable_slugs = indexable_model_slugs(models or [])
     sections = {
         "pages": page_paths,
-        "offers": [offer_url(offer) for offer in offers if offer.get("status") != "needs_review"],
+        "offers": ["/offers/", *[offer_url(offer) for offer in offers if offer.get("status") != "needs_review"]],
         "providers": [provider_url(provider) for provider in (providers or [])],
         "models": [f"/models/{slug}/" for slug in sorted(indexable_slugs)],
     }
@@ -6836,7 +6836,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
     static_root = Path(__file__).resolve().parents[1]
     for relative in (
         "about/index.html", "links/index.html", "privacy/index.html", "terms/index.html",
-        "favorites/index.html", "submit/index.html", "tools/index.html",
+        "favorites/index.html", "submit/index.html", "tools/index.html", "offers/index.html",
     ):
         source = static_root / relative
         if source.is_file():
@@ -7596,7 +7596,9 @@ def _remove_legacy_global_nav(content: str) -> str:
 
 
 def _ensure_static_site_chrome(content: str, path: Path) -> str:
-    if path.suffix != ".html":
+    if path.suffix != ".html" or path == Path("offers/index.html"):
+        # The resource directory is an authored standalone landing page with its own
+        # responsive header; do not replace it with the generated sidebar shell.
         return content
     section = _visual_section_for_path(path)
     items = [
