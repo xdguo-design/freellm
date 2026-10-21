@@ -6601,7 +6601,7 @@ def sitemap_section_paths(
     indexable_slugs = indexable_model_slugs(models or [])
     sections = {
         "pages": page_paths,
-        "offers": [offer_url(offer) for offer in offers if _offer_is_indexable(offer)],
+        "offers": ["/offers/", *[offer_url(offer) for offer in offers if _offer_is_indexable(offer)]],
         "providers": [provider_url(provider) for provider in (providers or [])],
         "models": [f"/models/{slug}/" for slug in sorted(indexable_slugs)],
     }
@@ -6867,7 +6867,7 @@ def _expected_files(offers: list[dict], site_url: str, models: list[dict] | None
     static_root = Path(__file__).resolve().parents[1]
     for relative in (
         "about/index.html", "links/index.html", "privacy/index.html", "terms/index.html",
-        "favorites/index.html", "submit/index.html", "tools/index.html",
+        "favorites/index.html", "submit/index.html", "tools/index.html", "offers/index.html",
     ):
         source = static_root / relative
         if source.is_file():
