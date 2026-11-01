@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-10-31T02:07:40+00:00",
+  "checkedAt": "2026-11-01T01:59:24+00:00",
   "sourceCount": 7,
-  "okCount": 6,
-  "changedCount": 6,
+  "okCount": 7,
+  "changedCount": 4,
   "sources": [
     {
       "id": "openai-api-changelog",
@@ -23,17 +23,27 @@
         "model",
         "deprecation"
       ],
-      "changed": true,
-      "previousSha256": "afa891e7aecacbc6e4109c4d948aa5f00d01d333d616145d7d81bdc802e5b68a"
+      "changed": false,
+      "previousSha256": "ab56f2bd66de5b0a34a8cf3f566d704326c25e206ec7dd6a44bffa06e06f9682"
     },
     {
       "id": "openai-news",
       "vendor": "OpenAI",
       "kind": "news",
       "url": "https://openai.com/news/",
-      "status": "http_error",
-      "httpStatus": 403,
-      "error": "HTTP Error 403: Forbidden",
+      "status": "ok",
+      "httpStatus": 200,
+      "finalUrl": "https://openai.com/news/",
+      "title": "OpenAI News | OpenAI",
+      "bytes": 391965,
+      "sha256": "c7ad60e9f5517665f42bb378eb4962ff1e4c8afaf1866b8ad8c273231b6e9c90",
+      "matchedKeywords": [
+        "Product",
+        "Research",
+        "Codex",
+        "Agent",
+        "API"
+      ],
       "changed": false,
       "previousSha256": null
     },
@@ -46,8 +56,8 @@
       "httpStatus": 200,
       "finalUrl": "https://www.anthropic.com/news",
       "title": "Newsroom \\ Anthropic",
-      "bytes": 348899,
-      "sha256": "64df2f96f96a1fa77ee538811e3a77a1e1e40e95ddee4f27c68ba28c4a9a1bcc",
+      "bytes": 349010,
+      "sha256": "59df24e8ab3bbe4cb2fdaba2b34da9234340d71b9d501f0774d1b4c7d38251d0",
       "matchedKeywords": [
         "Claude",
         "Agent",
@@ -56,7 +66,7 @@
         "model"
       ],
       "changed": true,
-      "previousSha256": "bf1e7729dab3ac3bb878aae98ed61824cddd227677cba44c67b17556d436145a"
+      "previousSha256": "64df2f96f96a1fa77ee538811e3a77a1e1e40e95ddee4f27c68ba28c4a9a1bcc"
     },
     {
       "id": "gemini-api-changelog",
@@ -68,7 +78,7 @@
       "finalUrl": "https://ai.google.dev/gemini-api/docs/changelog",
       "title": "Release notes  |  Gemini API  |  Google AI for Developers",
       "bytes": 177004,
-      "sha256": "a8ae1d2979683968801c62d0e5ec75649b7fa0ace21e8754edf098597cc655fd",
+      "sha256": "3ec3a8aa9a81c3e0f3ba1eaef5d7a35944b7bc1b2b9f17136a34c95f4e3778ca",
       "matchedKeywords": [
         "Computer Use",
         "Managed Agents",
@@ -78,7 +88,7 @@
         "Gemini"
       ],
       "changed": true,
-      "previousSha256": "6d47dafb15f36c5996a27c3324dda7709303ff8da2060ef8de12509e6801f00d"
+      "previousSha256": "a8ae1d2979683968801c62d0e5ec75649b7fa0ace21e8754edf098597cc655fd"
     },
     {
       "id": "deepseek-api-changelog",
@@ -98,8 +108,8 @@
         "pricing",
         "retired"
       ],
-      "changed": true,
-      "previousSha256": "50fd946778a9f59dee69bcb5a4d5c848976d1f10eb2c49b032beabcedb6b11a5"
+      "changed": false,
+      "previousSha256": "378f15f656736e564c9933946765200968e359063ad41e60dc6ae20127afc040"
     },
     {
       "id": "alibaba-model-lifecycle",
@@ -111,7 +121,7 @@
       "finalUrl": "https://help.aliyun.com/en/model-studio/newly-released-models",
       "title": "Model lifecycle and updates_Alibaba Cloud Model Studio(Model Studio)-Alibaba Cloud Model Studio(Model Studio)-阿里云帮助中心",
       "bytes": 1286120,
-      "sha256": "370aaa51fbb960aca40a34046d97dfd7a3265f9bf6005d89d3511e020477ee3f",
+      "sha256": "9339ce653c718b70e30f56dbe4d24abca183e0e8272e187e53bd986aa6c6c6dd",
       "matchedKeywords": [
         "Agent",
         "Visual understanding",
@@ -119,7 +129,7 @@
         "release"
       ],
       "changed": true,
-      "previousSha256": "b0a30893fd94d39120054add34617e63f9c454d4697883a42d1e957fedafa8d4"
+      "previousSha256": "370aaa51fbb960aca40a34046d97dfd7a3265f9bf6005d89d3511e020477ee3f"
     },
     {
       "id": "alibaba-model-studio-release-notes",
@@ -131,7 +141,7 @@
       "finalUrl": "https://help.aliyun.com/en/model-studio/model-release-notes",
       "title": "Model Studio release notes and feature updates - Model Studio-Alibaba Cloud Model Studio(Model Studio)-阿里云帮助中心",
       "bytes": 157491,
-      "sha256": "6637f9b019e5f75394fe277928ac773077ff51d2cf186b836a95f2d11cb44656",
+      "sha256": "f2c289163571c33ca2aa39e33649d13883b07b36182f4db4721810a6fc1957f5",
       "matchedKeywords": [
         "Feature updates",
         "free quota",
@@ -140,7 +150,7 @@
         "Agent"
       ],
       "changed": true,
-      "previousSha256": "b216eebb546435d9da5e9b99c5bbb4ac1f010f703b70d410bab6696b3a0a3caa"
+      "previousSha256": "6637f9b019e5f75394fe277928ac773077ff51d2cf186b836a95f2d11cb44656"
     }
   ]
 }
