@@ -1,7 +1,7 @@
 {
-  "checkedAt": "2026-11-01T01:59:24+00:00",
+  "checkedAt": "2026-11-02T02:11:27+00:00",
   "sourceCount": 7,
-  "okCount": 7,
+  "okCount": 6,
   "changedCount": 4,
   "sources": [
     {
@@ -31,21 +31,11 @@
       "vendor": "OpenAI",
       "kind": "news",
       "url": "https://openai.com/news/",
-      "status": "ok",
-      "httpStatus": 200,
-      "finalUrl": "https://openai.com/news/",
-      "title": "OpenAI News | OpenAI",
-      "bytes": 391965,
-      "sha256": "c7ad60e9f5517665f42bb378eb4962ff1e4c8afaf1866b8ad8c273231b6e9c90",
-      "matchedKeywords": [
-        "Product",
-        "Research",
-        "Codex",
-        "Agent",
-        "API"
-      ],
+      "status": "http_error",
+      "httpStatus": 403,
+      "error": "HTTP Error 403: Forbidden",
       "changed": false,
-      "previousSha256": null
+      "previousSha256": "c7ad60e9f5517665f42bb378eb4962ff1e4c8afaf1866b8ad8c273231b6e9c90"
     },
     {
       "id": "anthropic-news",
@@ -56,8 +46,8 @@
       "httpStatus": 200,
       "finalUrl": "https://www.anthropic.com/news",
       "title": "Newsroom \\ Anthropic",
-      "bytes": 349010,
-      "sha256": "59df24e8ab3bbe4cb2fdaba2b34da9234340d71b9d501f0774d1b4c7d38251d0",
+      "bytes": 348801,
+      "sha256": "40aed290d1b03b3699901a98ad8056ff4b5544649d1aa580db9d9c13599905ff",
       "matchedKeywords": [
         "Claude",
         "Agent",
@@ -66,7 +56,7 @@
         "model"
       ],
       "changed": true,
-      "previousSha256": "64df2f96f96a1fa77ee538811e3a77a1e1e40e95ddee4f27c68ba28c4a9a1bcc"
+      "previousSha256": "59df24e8ab3bbe4cb2fdaba2b34da9234340d71b9d501f0774d1b4c7d38251d0"
     },
     {
       "id": "gemini-api-changelog",
@@ -77,8 +67,8 @@
       "httpStatus": 200,
       "finalUrl": "https://ai.google.dev/gemini-api/docs/changelog",
       "title": "Release notes  |  Gemini API  |  Google AI for Developers",
-      "bytes": 177004,
-      "sha256": "3ec3a8aa9a81c3e0f3ba1eaef5d7a35944b7bc1b2b9f17136a34c95f4e3778ca",
+      "bytes": 177008,
+      "sha256": "64e70b331b0b9d3d5779c20924e32c1b5305ac3e8a5bb6d9942cbb3f78d18772",
       "matchedKeywords": [
         "Computer Use",
         "Managed Agents",
@@ -88,7 +78,7 @@
         "Gemini"
       ],
       "changed": true,
-      "previousSha256": "a8ae1d2979683968801c62d0e5ec75649b7fa0ace21e8754edf098597cc655fd"
+      "previousSha256": "3ec3a8aa9a81c3e0f3ba1eaef5d7a35944b7bc1b2b9f17136a34c95f4e3778ca"
     },
     {
       "id": "deepseek-api-changelog",
@@ -121,7 +111,7 @@
       "finalUrl": "https://help.aliyun.com/en/model-studio/newly-released-models",
       "title": "Model lifecycle and updates_Alibaba Cloud Model Studio(Model Studio)-Alibaba Cloud Model Studio(Model Studio)-阿里云帮助中心",
       "bytes": 1286120,
-      "sha256": "9339ce653c718b70e30f56dbe4d24abca183e0e8272e187e53bd986aa6c6c6dd",
+      "sha256": "a78d479b29653a53884811c8429e70e6060f97c809d29fbf6736c0fc540f8e02",
       "matchedKeywords": [
         "Agent",
         "Visual understanding",
@@ -129,7 +119,7 @@
         "release"
       ],
       "changed": true,
-      "previousSha256": "370aaa51fbb960aca40a34046d97dfd7a3265f9bf6005d89d3511e020477ee3f"
+      "previousSha256": "9339ce653c718b70e30f56dbe4d24abca183e0e8272e187e53bd986aa6c6c6dd"
     },
     {
       "id": "alibaba-model-studio-release-notes",
@@ -141,7 +131,7 @@
       "finalUrl": "https://help.aliyun.com/en/model-studio/model-release-notes",
       "title": "Model Studio release notes and feature updates - Model Studio-Alibaba Cloud Model Studio(Model Studio)-阿里云帮助中心",
       "bytes": 157491,
-      "sha256": "f2c289163571c33ca2aa39e33649d13883b07b36182f4db4721810a6fc1957f5",
+      "sha256": "88ec78328ef4d186d7e95f1ab36ee59707bcd8f0992aaaa5980a6f3f187a6fb9",
       "matchedKeywords": [
         "Feature updates",
         "free quota",
@@ -150,7 +140,7 @@
         "Agent"
       ],
       "changed": true,
-      "previousSha256": "6637f9b019e5f75394fe277928ac773077ff51d2cf186b836a95f2d11cb44656"
+      "previousSha256": "f2c289163571c33ca2aa39e33649d13883b07b36182f4db4721810a6fc1957f5"
     }
   ]
 }
